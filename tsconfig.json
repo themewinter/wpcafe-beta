@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "target": "ES2016",
+        "module": "ES2020",
+        "lib": ["esnext", "dom", "dom.iterable"],
+        "useDefineForClassFields": true,
+        "skipLibCheck": true,
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+
+        /* Bundler mode */
+        "moduleResolution": "node",
+        "isolatedModules": true,
+        "noEmit": true,
+        "jsx": "react-jsx",
+
+        /* Linting */
+        "strict": true,
+        "noUnusedLocals": true,
+        "noUncheckedIndexedAccess": true,
+        "noUnusedParameters": true,
+        "noImplicitAny": true,
+        "noFallthroughCasesInSwitch": true,
+        "experimentalDecorators": true,
+        "baseUrl": "./assets/src",
+        "paths": {
+            "@/*": ["./*"]
+        }
+    },
+    "include": ["assets/src", "tools", "__mocks__"],
+    "exclude": ["node_modules"]
+}

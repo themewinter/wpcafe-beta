@@ -1,0 +1,1 @@
+{"version":3,"file":"chunks/js/assets_src_admin_modules_food-ordering_router_routeDefinition_ts.js","mappings":";;;;;;;;;;;;;AAAO,IAAMA,cAAc,GAAG,YAAY,C","sources":["webpack://wp-cafe/./assets/src/admin/modules/food-ordering/router/routeDefinition.ts"],"sourcesContent":["export const FOOD_MENU_PATH = \"/food-menu\";\n"],"names":["FOOD_MENU_PATH"],"sourceRoot":""}
