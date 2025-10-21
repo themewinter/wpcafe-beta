@@ -76,15 +76,15 @@ function RegisterModule(handlerName) {
       function Module() {
         var _this;
         _classCallCheck(this, Module);
-        var _a, _b;
+        var _a;
         for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
           args[_key] = arguments[_key];
         }
         _this = _callSuper(this, Module, [].concat(args));
         // @ts-ignore
-        _this.state = ((_b = (_a = window.wp) === null || _a === void 0 ? void 0 : _a.wpCafeI18nLoader) === null || _b === void 0 ? void 0 : _b.state) || {
+        _this.state = ((_a = window.wpCafeI18nLoader) === null || _a === void 0 ? void 0 : _a.state) || {
           baseUrl: null,
-          locale: "en_US",
+          locale: "en-US",
           domainMap: {},
           domainPaths: {}
         };
@@ -121,7 +121,7 @@ function ValidateDownloadI18n(_target, _propertyKey, descriptor) {
             console.warn("i18n state not properly initialized");
             return _context.a(2);
           case 1:
-            if (!(state.locale === "en_US")) {
+            if (!(state.locale === "en-US")) {
               _context.n = 2;
               break;
             }

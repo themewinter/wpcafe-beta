@@ -30,7 +30,9 @@ class Frontend_Assets extends Base_Assets {
         wp_enqueue_style( 'wpc-public' );
         wp_enqueue_style( 'wpc-location-selector' );
 
+        wp_enqueue_script( 'wpcafe-packages' );
         wp_enqueue_script( 'wpcafe-frontend-scripts' );
+        
         wp_enqueue_script( 'wpc-flatpicker' );
         wp_enqueue_script( 'wpc-public' );
         wp_enqueue_script( 'wpc-location-selector' );
@@ -75,7 +77,7 @@ class Frontend_Assets extends Base_Assets {
             'wc_cart_empty'             => function_exists( 'WC' ) ? WC()->cart->is_empty() : false,
         ] );
 
-        wp_localize_script( 'wpcafe-frontend-scripts', 'wpCafe', Localize::get_frontend() );
+        wp_localize_script( 'wpcafe-packages', 'wpCafe',  Localize::get_frontend() );
     }
 
     /**
@@ -102,6 +104,16 @@ class Frontend_Assets extends Base_Assets {
             ],
             'wpc-location-selector'    => [
                 'src'       => wpcafe()->assets_url . '/js/location-selector.js',
+                'deps'      => ['jquery'],
+                'in_footer' => true,
+            ],
+            'wpcafe-packages'     => [
+                'src'       => wpcafe()->assets_url . '/build/js/packages.js',
+                'deps'      => ['wp-i18n'],
+                'in_footer' => true,
+            ], 
+            'wpc-tip'    => [
+                'src'       => wpcafe()->assets_url . '/js/tip.js',
                 'deps'      => ['jquery'],
                 'in_footer' => true,
             ],
@@ -134,6 +146,9 @@ class Frontend_Assets extends Base_Assets {
             ],
             'wpc-icon'    => [
                 'src' => wpcafe()->assets_url . '/css/wpc-icon.css',
+            ],
+            'wpc-tip'    => [
+                'src' => wpcafe()->assets_url . '/css/tip.css',
             ],
         ];
 

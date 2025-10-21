@@ -17,7 +17,7 @@ class Location_Model {
      *
      * @var string
      */
-    public $restaurants_name;
+    public $restaurant_name;
 
     /**
      * Store location
@@ -26,19 +26,27 @@ class Location_Model {
      */
     public $location;
 
+
+    /**
+     * store enable custom coordinates
+     *
+     * @var bool|null
+     */
+    public $enable_custom_coordinates;
+
     /**
      * Override open hours
      *
      * @var bool
      */
-    public $override_open_hours;
+    public $override_restaurant_schedule;
 
     /**
      * Store open hours
      *
      * @var array
      */
-    public $open_hours;
+    public $restaurant_schedule;
 
     /**
      * Enable pickup
@@ -52,7 +60,14 @@ class Location_Model {
      *
      * @var int
      */
-    public $pickup_minmum_order_amount;
+    public $pickup_minimum_order_amount;
+
+    /**
+     * Pickup prepare time
+     *
+     * @var int
+     */
+    public $pickup_prepare_time;
 
     /**
      * Pickup food prepare time
@@ -109,6 +124,13 @@ class Location_Model {
      * @var int|null
      */
     public $reservation_advanced;
+
+    /**
+     * How far in advance reservations can be made (in days)
+     *
+     * @var int|null
+     */
+    public $reservation_early_booking_time;
 
     /**
      * Time slots available for reservation
@@ -169,7 +191,125 @@ class Location_Model {
     /**
      * @var string The custom taxonomy slug used to manage locations.
      */
-    protected static $taxonomy = 'wpcafe_location';
+    public static $taxonomy = 'wpcafe_location';
+
+    /**
+     * Store pickup schedule
+     *
+     * @var array
+     */
+    public  $pickup_schedule;
+
+     /**
+     * Store whether to multiply booking amount with number of guests
+     *
+     * @var bool
+     */
+    public  $multiply_booking_amount_with_guests;
+
+    /**
+     * Store blocked timeslot statuses
+     *
+     * @var array
+     */
+    public  $block_timeslot_statuses;
+
+    /**
+     * Store override pickup schedule
+     *
+     * @var array
+     */
+    public $override_pickup_schedule;
+
+    /**
+     * Store pickup slot interval
+     *
+     * @var int
+     */
+    public  $pickup_slot_interval;
+
+    /**
+     * Store delivery schedule
+     *
+     * @var array
+     */
+    public $delivery_schedule;
+
+    /**
+     * Store override delivery schedule
+     *
+     * @var array
+     */
+    public $override_delivery_schedule;
+
+    /**
+     * Store reservation status
+     *
+     * @var string
+     */
+    public $reservation_status;
+
+    /**
+     * store restaurant slot interval 
+     * 
+     * @var int
+     */
+    public $slot_interval;
+    /**
+     * Store reservation schedule
+     *
+     * @var array
+     */
+    public $reservation_schedule;
+
+    /**
+     * Store override reservation schedule
+     *
+     * @var array
+     */
+    public $override_reservation_schedule;
+
+    /**
+     * Store reservation slot interval
+     *
+     * @var int
+     */
+    public $reservation_slot_interval;
+
+    /**
+     * Store delivery slot interval
+     *
+     * @var int
+     */
+    public $delivery_slot_interval;
+
+    /** 
+     * Enable reservation
+     * 
+     * @var bool
+     */
+    public $enable_reservation;
+
+    /**
+     * Reservation total seat capacity
+     *
+     * @var int
+     */
+    public $reservation_total_seat_capacity;
+
+    /**
+     * Layout of seatmap.
+     * 
+     * @var object
+     */
+    public $visual_table_layout;
+
+    /**
+     * Reservation booking amount
+     *
+     * @var int
+     */
+    public $reservation_booking_amount;
 
     /**
      * Constructor to populate the model with data.
@@ -199,12 +339,12 @@ class Location_Model {
 
         foreach ( $meta as $key => $value ) {
             if ( property_exists( $instance, $key ) ) {
-                $instance->$key = maybe_unserialize($value[0]);
+                $instance->$key = get_term_meta( $term_id, $key, true );
             }
         }
 
-        if ( empty($instance->restaurants_name) ) {
-            $instance->restaurants_name = $term->name;
+        if ( empty($instance->restaurant_name) ) {
+            $instance->restaurant_name = $term->name;
         }
 
         return $instance;
@@ -221,7 +361,7 @@ class Location_Model {
         $term = wp_insert_term( $name, self::$taxonomy );
         if ( is_wp_error( $term ) ) return $term;
 
-        $instance = new self( array_merge( ['term_id' => $term['term_id'], 'restaurants_name' => $name], $fields ) );
+        $instance = new self( array_merge( ['term_id' => $term['term_id'], 'restaurant_name' => $name], $fields ) );
         $instance->save();
 
         return $instance;
@@ -319,7 +459,7 @@ class Location_Model {
             $args['meta_query'] = [
                 'relation' => 'OR',
                 [
-                    'key'   => 'restaurants_name',
+                    'key'   => 'restaurant_name',
                     'value' => $search,
                     'compare' => 'LIKE',
                 ],

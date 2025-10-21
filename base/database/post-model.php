@@ -451,5 +451,16 @@ abstract class Post_Model implements JsonSerializable {
         // Implement this method on concreate model class
         return [];
     }
+
+    /**
+     * Returns an array of the keys of the $fillable property.
+     *
+     * This array can be used to check if a key is fillable or not.
+     *
+     * @return array
+     */
+    public function get_fillable_keys() {
+        return array_keys($this->fillable);
+    }
 }
 

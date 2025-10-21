@@ -242,9 +242,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/format.js");
-/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/isValid.js");
-/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/parse.js");
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/isValid.js");
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/parse.js");
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/helpers */ "./assets/src/helpers/index.ts");
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
@@ -263,6 +263,7 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
  * Date utility functions for reservation list
  */
 
+
 /**
  * Format date string for display
  * @param dateString - Date in DD-MM-YYYY format
@@ -270,15 +271,9 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
  */
 var formatDateForDisplay = function formatDateForDisplay(dateString) {
   try {
-    // Handle DD-MM-YYYY format from API
-    var parsedDate = (0,date_fns__WEBPACK_IMPORTED_MODULE_3__.parse)(dateString, "dd-MM-yyyy", new Date());
-    if ((0,date_fns__WEBPACK_IMPORTED_MODULE_2__.isValid)(parsedDate)) {
-      return (0,date_fns__WEBPACK_IMPORTED_MODULE_1__.format)(parsedDate, "MMMM d, yyyy");
-    }
-    // Fallback: try other common date formats
-    var isoDate = (0,date_fns__WEBPACK_IMPORTED_MODULE_3__.parse)(dateString, "yyyy-MM-dd", new Date());
-    if ((0,date_fns__WEBPACK_IMPORTED_MODULE_2__.isValid)(isoDate)) {
-      return (0,date_fns__WEBPACK_IMPORTED_MODULE_1__.format)(isoDate, "MMMM d, yyyy");
+    var isoDate = (0,date_fns__WEBPACK_IMPORTED_MODULE_2__.parse)(dateString, "yyyy-MM-dd", new Date());
+    if ((0,date_fns__WEBPACK_IMPORTED_MODULE_1__.isValid)(isoDate)) {
+      return (0,_helpers__WEBPACK_IMPORTED_MODULE_3__.wpDateFormat)(isoDate);
     }
     return dateString;
   } catch (_a) {
@@ -313,9 +308,9 @@ var groupReservationsByDate = function groupReservationsByDate(reservationList) 
   }).sort(function (a, b) {
     // Sort by date (newest first)
     try {
-      var dateA = (0,date_fns__WEBPACK_IMPORTED_MODULE_3__.parse)(a.date, "dd-MM-yyyy", new Date());
-      var dateB = (0,date_fns__WEBPACK_IMPORTED_MODULE_3__.parse)(b.date, "dd-MM-yyyy", new Date());
-      if ((0,date_fns__WEBPACK_IMPORTED_MODULE_2__.isValid)(dateA) && (0,date_fns__WEBPACK_IMPORTED_MODULE_2__.isValid)(dateB)) {
+      var dateA = (0,date_fns__WEBPACK_IMPORTED_MODULE_2__.parse)(a.date, "dd-MM-yyyy", new Date());
+      var dateB = (0,date_fns__WEBPACK_IMPORTED_MODULE_2__.parse)(b.date, "dd-MM-yyyy", new Date());
+      if ((0,date_fns__WEBPACK_IMPORTED_MODULE_1__.isValid)(dateA) && (0,date_fns__WEBPACK_IMPORTED_MODULE_1__.isValid)(dateB)) {
         return dateB.getTime() - dateA.getTime();
       }
       // Fallback: string comparison
@@ -448,8 +443,8 @@ var foodOrderOptions = [{
 }];
 // Helper function to safely parse date strings
 var parseDateString = function parseDateString(dateStr) {
-  var parsed = (0,date_fns__WEBPACK_IMPORTED_MODULE_3__.parse)(dateStr, "yyyy-MM-dd", new Date());
-  return (0,date_fns__WEBPACK_IMPORTED_MODULE_2__.isValid)(parsed) ? parsed : undefined;
+  var parsed = (0,date_fns__WEBPACK_IMPORTED_MODULE_2__.parse)(dateStr, "yyyy-MM-dd", new Date());
+  return (0,date_fns__WEBPACK_IMPORTED_MODULE_1__.isValid)(parsed) ? parsed : undefined;
 };
 
 /***/ }),
@@ -2075,6 +2070,44 @@ var Reservations = /*#__PURE__*/function (_ApiBase) {
         }, _callee5, this);
       }));
     }
+  }, {
+    key: "getReservationsTimeSlots",
+    value: function getReservationsTimeSlots(params) {
+      return __awaiter(this, void 0, void 0, /*#__PURE__*/_regenerator().m(function _callee6() {
+        return _regenerator().w(function (_context6) {
+          while (1) switch (_context6.n) {
+            case 0:
+              return _context6.a(2, this.get("time-slots", params));
+          }
+        }, _callee6, this);
+      }));
+    }
+  }, {
+    key: "getSeatCapacity",
+    value: function getSeatCapacity(params) {
+      return __awaiter(this, void 0, void 0, /*#__PURE__*/_regenerator().m(function _callee7() {
+        return _regenerator().w(function (_context7) {
+          while (1) switch (_context7.n) {
+            case 0:
+              return _context7.a(2, this.get("reservation-capacity", params));
+          }
+        }, _callee7, this);
+      }));
+    }
+  }, {
+    key: "cancelReservation",
+    value: function cancelReservation(params) {
+      return __awaiter(this, void 0, void 0, /*#__PURE__*/_regenerator().m(function _callee8() {
+        var query;
+        return _regenerator().w(function (_context8) {
+          while (1) switch (_context8.n) {
+            case 0:
+              query = new URLSearchParams(params).toString();
+              return _context8.a(2, this.put("reservation-cancel?".concat(query), {}));
+          }
+        }, _callee8, this);
+      }));
+    }
   }]);
 }(_api_base__WEBPACK_IMPORTED_MODULE_1__["default"]);
 
@@ -2255,7 +2288,8 @@ var reservationFormCustomization = [{
     required: false,
     visible: false,
     inGroup: true,
-    isPro: true
+    isPro: true,
+    module: "table_layout"
   }, {
     id: "name",
     label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Your Name", "wpcafe"),
@@ -2283,7 +2317,7 @@ var reservationFormCustomization = [{
     id: "total_guest",
     label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Total Guests", "wpcafe"),
     type: "number",
-    placeholder: "1",
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Number of Guests", "wpcafe"),
     required: true,
     visible: true,
     notDeletable: true
@@ -2300,7 +2334,8 @@ var reservationFormCustomization = [{
     type: "food_menu",
     required: false,
     visible: false,
-    isPro: true
+    isPro: true,
+    module: "food_ordering"
   }]
 }];
 var defaultSettings = {
@@ -2324,6 +2359,7 @@ var pagination = {
 var stores = (_c = (_b = (_a = window === null || window === void 0 ? void 0 : window.wp) === null || _a === void 0 ? void 0 : _a.hooks) === null || _b === void 0 ? void 0 : _b.applyFilters) === null || _c === void 0 ? void 0 : _c.call(_b, "wpcafe_stores", {
   modules: "wpcafe/modules",
   settings: "wpcafe/settings",
+  sidebar: "wpcafe/sidebar",
   onboard: "wpcafe/onboard",
   reservation: "wpcafe/reservation",
   location: "wpcafe/location",
@@ -2505,6 +2541,38 @@ var generateRandomId = function generateRandomId() {
 
 /***/ }),
 
+/***/ "./assets/src/helpers/getDefaultDateRange.ts":
+/*!***************************************************!*\
+  !*** ./assets/src/helpers/getDefaultDateRange.ts ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getDefaultDateRange: () => (/* binding */ getDefaultDateRange)
+/* harmony export */ });
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/addMonths.js");
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/format.js");
+/**
+ * External Dependencies
+ */
+
+/**
+ * Get default date range for reservation system
+ * Returns today's date as start and 15th of next month as end
+ */
+var getDefaultDateRange = function getDefaultDateRange() {
+  var today = new Date();
+  var nextMonth = (0,date_fns__WEBPACK_IMPORTED_MODULE_0__.addMonths)(today, 1);
+  var fifteenthOfNextMonth = new Date(nextMonth.getFullYear(), nextMonth.getMonth(), 15);
+  return {
+    startDate: (0,date_fns__WEBPACK_IMPORTED_MODULE_1__.format)(today, "yyyy-MM-dd"),
+    endDate: (0,date_fns__WEBPACK_IMPORTED_MODULE_1__.format)(fifteenthOfNextMonth, "yyyy-MM-dd")
+  };
+};
+
+/***/ }),
+
 /***/ "./assets/src/helpers/index.ts":
 /*!*************************************!*\
   !*** ./assets/src/helpers/index.ts ***!
@@ -2517,6 +2585,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   formatDate: () => (/* reexport safe */ _formatDate__WEBPACK_IMPORTED_MODULE_3__.formatDate),
 /* harmony export */   generateRandomId: () => (/* reexport safe */ _generateRandomId__WEBPACK_IMPORTED_MODULE_6__.generateRandomId),
 /* harmony export */   getDateFnsLocale: () => (/* reexport safe */ _dateLocales__WEBPACK_IMPORTED_MODULE_2__.getDateFnsLocale),
+/* harmony export */   getDefaultDateRange: () => (/* reexport safe */ _getDefaultDateRange__WEBPACK_IMPORTED_MODULE_8__.getDefaultDateRange),
 /* harmony export */   openNotification: () => (/* reexport safe */ _openNotification__WEBPACK_IMPORTED_MODULE_4__.openNotification),
 /* harmony export */   scrollBottomToModal: () => (/* reexport safe */ _scrollBottomOfShortcodeModal__WEBPACK_IMPORTED_MODULE_7__.scrollBottomToModal),
 /* harmony export */   scrollTop: () => (/* reexport safe */ _scrollTop__WEBPACK_IMPORTED_MODULE_0__.scrollTop),
@@ -2531,6 +2600,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wpDateFormat__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./wpDateFormat */ "./assets/src/helpers/wpDateFormat.ts");
 /* harmony import */ var _generateRandomId__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./generateRandomId */ "./assets/src/helpers/generateRandomId.ts");
 /* harmony import */ var _scrollBottomOfShortcodeModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./scrollBottomOfShortcodeModal */ "./assets/src/helpers/scrollBottomOfShortcodeModal.ts");
+/* harmony import */ var _getDefaultDateRange__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./getDefaultDateRange */ "./assets/src/helpers/getDefaultDateRange.ts");
+
 
 
 
@@ -2719,12 +2790,13 @@ __webpack_require__.r(__webpack_exports__);
 // Shared helpers to format dates using WordPress date_format
 // Supports common PHP date() tokens: d,j,S,m,n,M,F,y,Y,D,l
 // Escaping with \\ is supported to output literal characters.
-function wpDateFormat(date) {
-  var locale = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "en-US";
-  var _a;
+function wpDateFormat(date, locale) {
+  var _a, _b, _c;
   var pattern = (_a = window === null || window === void 0 ? void 0 : window.wpCafe) === null || _a === void 0 ? void 0 : _a.date_format;
+  // Use provided locale, fallback to wpCafeI18nLoader locale, then navigator language, finally 'en-US'
+  var resolvedLocale = locale || ((_c = (_b = window === null || window === void 0 ? void 0 : window.wpCafeI18nLoader) === null || _b === void 0 ? void 0 : _b.state) === null || _c === void 0 ? void 0 : _c.locale) || (typeof navigator !== "undefined" ? navigator.language : "en-US");
   var fallback = function fallback() {
-    return date.toLocaleDateString(locale, {
+    return date.toLocaleDateString(resolvedLocale, {
       day: "2-digit",
       month: "long",
       year: "numeric"
@@ -2737,7 +2809,7 @@ function wpDateFormat(date) {
   var day = date.getDate();
   var monthIndex = date.getMonth();
   var year = date.getFullYear();
-  var resolved = locale || (typeof navigator !== "undefined" ? navigator.language : "en-US");
+  var resolved = resolvedLocale;
   var monthLong = new Intl.DateTimeFormat(resolved, {
     month: "long"
   }).format(date);

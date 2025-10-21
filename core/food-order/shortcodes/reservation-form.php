@@ -30,6 +30,7 @@ class Reservation_Form extends Base_Shortcode {
             'date_selector'    => 'date_picker',
             'reservation_style' => 'style-1',
             'form_display_type' => 'wizard',
+            'image_link'       => '',
         ];
 
         // Parse and merge attributes with defaults
@@ -37,9 +38,11 @@ class Reservation_Form extends Base_Shortcode {
 
         ob_start();
         ?>
-<div id="wpc-reservation-form" data-date-selector="<?php echo esc_attr( $atts['date_selector'] ); ?>"
+<div class="wpc-reservation-form-root" data-component="wpc-reservation-form"
+    data-date-selector="<?php echo esc_attr( $atts['date_selector'] ); ?>"
     data-reservation-style="<?php echo esc_attr( $atts['reservation_style'] ); ?>"
-    data-form-display-type="<?php echo esc_attr( $atts['form_display_type'] ); ?>">
+    data-form-display-type="<?php echo esc_attr( $atts['form_display_type'] ); ?>"
+    data-image-link="<?php echo esc_url( $atts['image_link'] ); ?>">
 </div>
 <?php
         return ob_get_clean();

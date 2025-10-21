@@ -248,8 +248,7 @@ var useNavigationHandler = function useNavigationHandler(_ref) {
   var _useSettingsApi = (0,_admin_features_settings_hooks_useSettingsApi__WEBPACK_IMPORTED_MODULE_2__["default"])(),
     editSettings = _useSettingsApi.editSettings;
   var navigateToDashboard = function navigateToDashboard() {
-    navigate("/");
-    window.location.reload();
+    window.location.href = "admin.php?page=wpcafe#/";
     (0,_helpers__WEBPACK_IMPORTED_MODULE_3__.scrollTop)();
   };
   var skipAllSteps = function skipAllSteps() {

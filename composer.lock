@@ -1,0 +1,119 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "f9559ea0fee5976523b5df99bbed7487",
+    "packages": [
+        {
+            "name": "arraytics/plugin-notice-sdk",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/themewinter/plugin-notice-sdk.git",
+                "reference": "3ecf2f7d69e392a67f4cd887c4d0401a0e3311c1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/themewinter/plugin-notice-sdk/zipball/3ecf2f7d69e392a67f4cd887c4d0401a0e3311c1",
+                "reference": "3ecf2f7d69e392a67f4cd887c4d0401a0e3311c1",
+                "shasum": ""
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Arraytics\\PluginNotice\\": "src/"
+                }
+            },
+            "support": {
+                "source": "https://github.com/themewinter/plugin-notice-sdk/tree/main",
+                "issues": "https://github.com/themewinter/plugin-notice-sdk/issues"
+            },
+            "time": "2025-07-03T10:59:20+00:00"
+        },
+        {
+            "name": "arraytics/tools-sdk",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/themewinter/tools-sdk.git",
+                "reference": "c12c117462b3cae526182512319b90c512fa5ca0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/themewinter/tools-sdk/zipball/c12c117462b3cae526182512319b90c512fa5ca0",
+                "reference": "c12c117462b3cae526182512319b90c512fa5ca0",
+                "shasum": ""
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Arraytics\\ToolsSdk\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Arraytics\\ToolsSdk\\Tests\\": "tests/"
+                }
+            },
+            "description": "A PHP package for tools.",
+            "support": {
+                "source": "https://github.com/themewinter/tools-sdk/tree/main",
+                "issues": "https://github.com/themewinter/tools-sdk/issues"
+            },
+            "time": "2025-08-27T08:44:57+00:00"
+        },
+        {
+            "name": "themewinter/uninstaller_form",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/themewinter/uninstaller_form.git",
+                "reference": "e6abb24fde6d9d8328f71930b007b16002a16b26"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/themewinter/uninstaller_form/zipball/e6abb24fde6d9d8328f71930b007b16002a16b26",
+                "reference": "e6abb24fde6d9d8328f71930b007b16002a16b26",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^10"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "UninstallerForm\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "UninstallerForm\\Tests\\": "tests/"
+                }
+            },
+            "description": "Reusable WordPress plugin uninstaller feedback form with REST API",
+            "support": {
+                "source": "https://github.com/themewinter/uninstaller_form/tree/main",
+                "issues": "https://github.com/themewinter/uninstaller_form/issues"
+            },
+            "time": "2025-08-12T04:07:49+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "themewinter/uninstaller_form": 20,
+        "arraytics/tools-sdk": 20,
+        "arraytics/plugin-notice-sdk": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
+}

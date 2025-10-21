@@ -3,6 +3,7 @@ use WpCafe\Session;
 use WpCafe\Validation\Validator;
 use WpCafe\Validation\Rule_Factory;
 use WpCafe\Settings;
+use WpCafe\Models\Location_Model;
 
 
 /**
@@ -296,5 +297,160 @@ if ( ! function_exists('wpc_get_pages') ) {
         }
 
         return $result;
+    }
+}
+
+if ( ! function_exists( 'wpc_get_reservation_schedule' ) ) {
+    /**
+     * Get reservation schedule
+     *
+     * @return  array
+     */
+    function wpc_get_reservation_schedule() {
+        $selected_location_id = wpc_selected_location_id();
+        $location   = Location_Model::find( $selected_location_id );
+
+        if ( $location && $location->override_reservation_schedule && ! empty( $location->reservation_schedule ) ) {
+            return $location->reservation_schedule;
+        }
+
+        $override_reservation_schedule = wpc_get_option('override_reservation_schedule', false);
+        $reservation_schedule = wpc_get_option('reservation_schedule', []);
+        
+        if ( $override_reservation_schedule && ! empty( $reservation_schedule ) ) {
+            return $reservation_schedule;
+        }
+
+        return wpc_get_option('restaurant_schedule', []);
+    }
+}
+
+if ( ! function_exists( 'wpc_get_reservation_slot_interval' ) ) {
+    /**
+     * Get reservation slot interval
+     *
+     * @return  int
+     */
+    function wpc_get_reservation_slot_interval() {
+        $selected_location_id = wpc_selected_location_id();
+        $location   = Location_Model::find( $selected_location_id );
+
+        if ( $location && $location->override_reservation_schedule && ! empty( $location->reservation_slot_interval ) ) {
+            return $location->reservation_slot_interval;
+        }
+
+        $override_reservation_schedule = wpc_get_option('override_reservation_schedule', false);
+        $reservation_slot_interval = wpc_get_option('reservation_slot_interval', 30);
+        
+        if ( $override_reservation_schedule && ! empty( $reservation_slot_interval ) ) {
+            return $reservation_slot_interval;
+        }
+
+        return wpc_get_option('reservation_slot_interval', 30);
+    }
+}
+
+if ( ! function_exists( 'wpc_get_schedule' ) ) {
+    /**
+     * Get schedule
+     *
+     * @return  array
+     */
+    function wpc_get_schedule() {
+        return wpc_get_option('restaurant_schedule', wpc_get_default_schedule());
+    }
+}
+
+if ( ! function_exists( 'wpc_get_default_schedule' ) ) {
+    /**
+     * Get default schedule
+     *
+     * @return  array
+     */
+    function wpc_get_default_schedule() {
+        return [
+            'Mon' => [
+                'status' => 'on',
+                'slots' => [
+                    [
+                        'start' => '8:00 AM',
+                        'end'   => '10:00 PM',
+                    ],
+                ],
+            ],
+            'Tue' => [
+                'status' => 'on',
+                'slots' => [
+                    [
+                        'start' => '8:00 AM',
+                        'end'   => '10:00 PM',
+                    ],
+                ],
+            ],
+            'Wed' => [
+                'status' => 'on',
+                'slots' => [
+                    [
+                        'start' => '8:00 AM',
+                        'end'   => '10:00 PM',
+                    ],
+                ],
+            ],
+            'Thu' => [
+                'status' => 'on',
+                'slots' => [
+                    [
+                        'start' => '8:00 AM',
+                        'end'   => '10:00 PM',
+                    ],
+                ],
+            ],
+            'Fri' => [
+                'status' => 'on',
+                'slots' => [
+                    [
+                        'start' => '8:00 AM',
+                        'end'   => '10:00 PM',
+                    ],
+                ],
+            ],
+            'Sat' => [
+                'status' => 'off',
+                'slots' => [
+                    [
+                        'start' => '8:00 AM',
+                        'end'   => '10:00 PM',
+                    ],
+                ],
+            ],
+            'Sun' => [
+                'status' => 'off',
+                'slots' => [
+                    [
+                        'start' => '8:00 AM',
+                        'end'   => '10:00 PM',
+                    ],
+                ],
+            ],
+        ];
+    }
+}
+
+if ( ! function_exists( 'wpc_get_reservation_capacity' ) ) {
+    /**
+     * Get reservation capacity
+     *
+     * @return  int
+     */
+    function wpc_get_reservation_capacity() {
+        $selected_location_id = wpc_selected_location_id();
+        $location   = Location_Model::find( $selected_location_id );
+
+        if ( $location && $location->override_reservation_schedule && ! empty( $location->reservation_total_seat_capacity ) ) {
+            return $location->reservation_total_seat_capacity;
+        }
+
+
+        return wpc_get_option( 'reservation_total_seat_capacity', 0 );
     }
 }

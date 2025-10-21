@@ -1152,13 +1152,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   colorField: () => (/* binding */ colorField),
 /* harmony export */   dayScheduleSchema: () => (/* binding */ dayScheduleSchema),
+/* harmony export */   deliverySchema: () => (/* binding */ deliverySchema),
 /* harmony export */   iconField: () => (/* binding */ iconField),
 /* harmony export */   numberField: () => (/* binding */ numberField),
+/* harmony export */   pickupSchema: () => (/* binding */ pickupSchema),
+/* harmony export */   reservationSchema: () => (/* binding */ reservationSchema),
+/* harmony export */   restaurantInfoSchema: () => (/* binding */ restaurantInfoSchema),
 /* harmony export */   scheduleDays: () => (/* binding */ scheduleDays),
+/* harmony export */   scheduleManagementSchema: () => (/* binding */ scheduleManagementSchema),
 /* harmony export */   scheduleSchema: () => (/* binding */ scheduleSchema),
 /* harmony export */   settingsSchema: () => (/* binding */ settingsSchema),
 /* harmony export */   slotSchema: () => (/* binding */ slotSchema),
-/* harmony export */   trueFalseField: () => (/* binding */ trueFalseField)
+/* harmony export */   systemSettingsSchema: () => (/* binding */ systemSettingsSchema),
+/* harmony export */   tippingSchema: () => (/* binding */ tippingSchema),
+/* harmony export */   trueFalseField: () => (/* binding */ trueFalseField),
+/* harmony export */   uiSettingsSchema: () => (/* binding */ uiSettingsSchema),
+/* harmony export */   valueWithUnitField: () => (/* binding */ valueWithUnitField)
 /* harmony export */ });
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
@@ -1206,6 +1215,13 @@ var scheduleSchema = zod__WEBPACK_IMPORTED_MODULE_1__.object(Object.fromEntries(
 var numberField = zod__WEBPACK_IMPORTED_MODULE_1__.number({
   message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Please enter a valid number.", "wpcafe")
 }).nonnegative((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Please enter a non-negative number.", "wpcafe"));
+// Schema for fields with value + unit structure
+var valueWithUnitField = zod__WEBPACK_IMPORTED_MODULE_1__.object({
+  value: zod__WEBPACK_IMPORTED_MODULE_1__.number({
+    message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Please enter a valid number.", "wpcafe")
+  }).nonnegative((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Please enter a non-negative number.", "wpcafe")),
+  unit: zod__WEBPACK_IMPORTED_MODULE_1__.string().min(1, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Unit is required.", "wpcafe"))
+});
 // Color validation schema that accepts both 3-digit (#RGB) and 6-digit (#RRGGBB) hex colors
 var colorField = zod__WEBPACK_IMPORTED_MODULE_1__.string().regex(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/, {
   message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Invalid color format. Use #RGB or #RRGGBB.", "wpcafe")
@@ -1214,9 +1230,12 @@ var iconField = zod__WEBPACK_IMPORTED_MODULE_1__.object({
   type: zod__WEBPACK_IMPORTED_MODULE_1__["enum"](["predefined", "custom"]),
   value: zod__WEBPACK_IMPORTED_MODULE_1__.string()
 });
-var settingsSchema = zod__WEBPACK_IMPORTED_MODULE_1__.object({
+/**
+ * Core restaurant information schema
+ */
+var restaurantInfoSchema = zod__WEBPACK_IMPORTED_MODULE_1__.object({
   restaurant_type: zod__WEBPACK_IMPORTED_MODULE_1__.array(zod__WEBPACK_IMPORTED_MODULE_1__["enum"](["food_ordering", "reservation"])),
-  restaurant_name: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
+  restaurant_name: zod__WEBPACK_IMPORTED_MODULE_1__.string().trim().min(1, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Restaurant name is required", "wpcafe")),
   restaurant_email: zod__WEBPACK_IMPORTED_MODULE_1__.string().email({
     message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Invalid email address", "wpcafe")
   }),
@@ -1226,59 +1245,98 @@ var settingsSchema = zod__WEBPACK_IMPORTED_MODULE_1__.object({
     message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Contact number must not exceed 15 digits.", "wpcafe")
   }).regex(/^[\d+\-\s()]+$/, {
     message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Invalid contact number format.", "wpcafe")
-  }),
+  })
+});
+/**
+ * Schedule management schema
+ */
+var scheduleManagementSchema = zod__WEBPACK_IMPORTED_MODULE_1__.object({
   restaurant_schedule: scheduleSchema,
-  slot_interval: numberField,
+  slot_interval: numberField
+});
+/**
+ * Pickup module schema
+ */
+var pickupSchema = zod__WEBPACK_IMPORTED_MODULE_1__.object({
   // Pickup schedule override
   override_pickup_schedule: trueFalseField.optional(),
   pickup_schedule: scheduleSchema.optional(),
   pickup_slot_interval: numberField.optional(),
-  // Delivery schedule override
-  override_delivery_schedule: trueFalseField.optional(),
-  delivery_schedule: scheduleSchema.optional(),
-  delivery_slot_interval: numberField.optional(),
   pickup_minimum_order_amount: numberField,
   pickup_prepare_time: numberField,
   pickup_show_date_in_checkout_page: zod__WEBPACK_IMPORTED_MODULE_1__.boolean(),
   pickup_show_time_in_checkout_page: zod__WEBPACK_IMPORTED_MODULE_1__.boolean(),
   enable_pickup_message: zod__WEBPACK_IMPORTED_MODULE_1__.boolean(),
-  pickup_message: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
+  pickup_message: zod__WEBPACK_IMPORTED_MODULE_1__.string()
+});
+/**
+ * Delivery module schema
+ */
+var deliverySchema = zod__WEBPACK_IMPORTED_MODULE_1__.object({
+  // Delivery schedule override
+  override_delivery_schedule: trueFalseField.optional(),
+  delivery_schedule: scheduleSchema.optional(),
+  delivery_slot_interval: numberField.optional(),
   delivery_minimum_order_amount: numberField,
   delivery_prepare_time: numberField,
   delivery_show_date_in_checkout_page: zod__WEBPACK_IMPORTED_MODULE_1__.boolean(),
   delivery_show_time_in_checkout_page: zod__WEBPACK_IMPORTED_MODULE_1__.boolean(),
   enable_delivery_message: zod__WEBPACK_IMPORTED_MODULE_1__.boolean(),
-  delivery_message: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
+  delivery_message: zod__WEBPACK_IMPORTED_MODULE_1__.string()
+});
+/**
+ * Reservation module schema
+ */
+var reservationSchema = zod__WEBPACK_IMPORTED_MODULE_1__.object({
+  // Reservation schedule override
+  override_reservation_schedule: trueFalseField.optional(),
+  reservation_schedule: scheduleSchema.optional(),
+  reservation_slot_interval: numberField.optional(),
+  reservation_minimum_guest: numberField,
+  reservation_maximum_guest: numberField,
+  reservation_advanced: valueWithUnitField,
+  reservation_total_seat_capacity: numberField,
+  reservation_booking_amount: numberField,
+  reservation_status: zod__WEBPACK_IMPORTED_MODULE_1__["enum"](["pending", "confirmed", "cancelled"]),
+  multiply_booking_amount_with_guests: zod__WEBPACK_IMPORTED_MODULE_1__.boolean(),
+  reservation_early_booking_time: zod__WEBPACK_IMPORTED_MODULE_1__.union([zod__WEBPACK_IMPORTED_MODULE_1__.literal("any_time"),
+  // When "any_time" is selected, store as string
+  zod__WEBPACK_IMPORTED_MODULE_1__.object({
+    value: zod__WEBPACK_IMPORTED_MODULE_1__.number({
+      message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Please enter a valid number.", "wpcafe")
+    }).nonnegative((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Please enter a non-negative number.", "wpcafe")),
+    unit: zod__WEBPACK_IMPORTED_MODULE_1__["enum"](["days", "weeks", "months"])
+  }) // When other units are selected, store as object
+  ]),
+  // Reservation message override
+  enable_reservation_pending_message: zod__WEBPACK_IMPORTED_MODULE_1__.boolean(),
+  reservation_pending_message: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
+  enable_reservation_confirmed_message: zod__WEBPACK_IMPORTED_MODULE_1__.boolean(),
+  reservation_confirmed_message: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
+  // Reservation form override
+  reservation_form_button_text: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
+  reservation_confirmation_button_text: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
+  reservation_cancellation_button_text: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
+  reservation_close_state: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
+  reservation_business_hour_label: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
+  visual_table_layout: zod__WEBPACK_IMPORTED_MODULE_1__.object()
+});
+/**
+ * Tipping module schema
+ */
+var tippingSchema = zod__WEBPACK_IMPORTED_MODULE_1__.object({
   tipping_calculation_method: zod__WEBPACK_IMPORTED_MODULE_1__["enum"](["fixed_amount", "percentage_amount"]).optional(),
   tip_options: zod__WEBPACK_IMPORTED_MODULE_1__.array(numberField).optional(),
   enable_custom_tipping: zod__WEBPACK_IMPORTED_MODULE_1__.boolean().optional(),
   custom_tipping_label: zod__WEBPACK_IMPORTED_MODULE_1__.string().optional(),
   order_type: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
   enable_order_notification: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
-  enable_order_tip: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
-  table_layout_configuaration: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
-  reservation_minimum_guest: numberField,
-  reservation_maximum_guest: numberField,
-  reservation_advanced: numberField,
-  reservation_total_seat_capacity: numberField,
-  reservation_booking_amount: numberField,
-  reservation_hold_time_late_guest: numberField,
-  reservation_status: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
-  multiply_booking_amount_with_guests: zod__WEBPACK_IMPORTED_MODULE_1__.boolean(),
-  enable_reservation_pending_message: zod__WEBPACK_IMPORTED_MODULE_1__.boolean(),
-  reservation_pending_message: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
-  enable_reservation_confirmed_message: zod__WEBPACK_IMPORTED_MODULE_1__.boolean(),
-  reservation_confirmed_message: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
-  enable_reservation_empty_schedule_message: zod__WEBPACK_IMPORTED_MODULE_1__.boolean(),
-  reservation_empty_schedule_message: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
-  reservation_form_button_text: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
-  reservation_confirmation_button_text: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
-  reservation_cancellation_button_text: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
-  reservation_close_state: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
-  reservation_business_hour_label: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
-  enable_sound_notification: zod__WEBPACK_IMPORTED_MODULE_1__.boolean(),
-  custom_notification_sound: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
-  repeated_sound_minute: zod__WEBPACK_IMPORTED_MODULE_1__.number().min(0),
+  enable_order_tip: zod__WEBPACK_IMPORTED_MODULE_1__.string()
+});
+/**
+ * UI/UX settings schema
+ */
+var uiSettingsSchema = zod__WEBPACK_IMPORTED_MODULE_1__.object({
   primary_color: colorField,
   secondary_color: colorField,
   calendar_language: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
@@ -1289,17 +1347,28 @@ var settingsSchema = zod__WEBPACK_IMPORTED_MODULE_1__.object({
   mini_cart_icon: iconField,
   mini_cart_empty_button_link: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
   cart_icon: iconField,
-  menu_popup_icon: iconField,
+  menu_popup_icon: iconField
+});
+/**
+ * System settings schema
+ */
+var systemSettingsSchema = zod__WEBPACK_IMPORTED_MODULE_1__.object({
+  enable_sound_notification: zod__WEBPACK_IMPORTED_MODULE_1__.boolean(),
+  custom_notification_sound: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
+  repeated_sound_minute: zod__WEBPACK_IMPORTED_MODULE_1__.number().min(0),
+  table_layout_configuaration: zod__WEBPACK_IMPORTED_MODULE_1__.string(),
   enable_custom_holiday: zod__WEBPACK_IMPORTED_MODULE_1__.boolean(),
   custom_holidays: zod__WEBPACK_IMPORTED_MODULE_1__.array(zod__WEBPACK_IMPORTED_MODULE_1__.string()),
   // Array of date strings
   override_product_variation_list_layout: zod__WEBPACK_IMPORTED_MODULE_1__.boolean(),
   override_woocommerce_default_layout: zod__WEBPACK_IMPORTED_MODULE_1__.boolean(),
-  // Setup progress widget tracking
   setup_progress_widget_visited: zod__WEBPACK_IMPORTED_MODULE_1__.boolean().optional(),
-  // Integration configurations
   fluentcrm_webhook_url: zod__WEBPACK_IMPORTED_MODULE_1__.string().optional()
-}).partial(); //all fields are optional
+});
+/**
+ * Complete settings schema - merges all modular schemas
+ */
+var settingsSchema = restaurantInfoSchema.merge(scheduleManagementSchema).merge(pickupSchema).merge(deliverySchema).merge(reservationSchema).merge(tippingSchema).merge(uiSettingsSchema).merge(systemSettingsSchema).partial(); // All fields are optional
 
 /***/ }),
 
@@ -3051,6 +3120,44 @@ var Reservations = /*#__PURE__*/function (_ApiBase) {
         }, _callee5, this);
       }));
     }
+  }, {
+    key: "getReservationsTimeSlots",
+    value: function getReservationsTimeSlots(params) {
+      return __awaiter(this, void 0, void 0, /*#__PURE__*/_regenerator().m(function _callee6() {
+        return _regenerator().w(function (_context6) {
+          while (1) switch (_context6.n) {
+            case 0:
+              return _context6.a(2, this.get("time-slots", params));
+          }
+        }, _callee6, this);
+      }));
+    }
+  }, {
+    key: "getSeatCapacity",
+    value: function getSeatCapacity(params) {
+      return __awaiter(this, void 0, void 0, /*#__PURE__*/_regenerator().m(function _callee7() {
+        return _regenerator().w(function (_context7) {
+          while (1) switch (_context7.n) {
+            case 0:
+              return _context7.a(2, this.get("reservation-capacity", params));
+          }
+        }, _callee7, this);
+      }));
+    }
+  }, {
+    key: "cancelReservation",
+    value: function cancelReservation(params) {
+      return __awaiter(this, void 0, void 0, /*#__PURE__*/_regenerator().m(function _callee8() {
+        var query;
+        return _regenerator().w(function (_context8) {
+          while (1) switch (_context8.n) {
+            case 0:
+              query = new URLSearchParams(params).toString();
+              return _context8.a(2, this.put("reservation-cancel?".concat(query), {}));
+          }
+        }, _callee8, this);
+      }));
+    }
   }]);
 }(_api_base__WEBPACK_IMPORTED_MODULE_1__["default"]);
 
@@ -3228,7 +3335,7 @@ var CardWithToggle = function CardWithToggle(props) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_2__.Card, {
     className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_3__.cn)("border rounded-lg p-0 shadow-none", className),
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_3__.cn)("flex items-center justify-between p-4 min-h-[70px]", showChildren && "border-b border-b-concitional-stock min-h-[76px]"),
+      className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_3__.cn)("flex items-center justify-between p-4 min-h-[70px] flex-wrap gap-3", showChildren && "border-b border-b-concitional-stock min-h-[76px]"),
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "space-y-2",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
@@ -4028,7 +4135,7 @@ var FeatureCard = function FeatureCard(_ref) {
     children: [is_pro && !isProActivated && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "absolute top-0 right-0 w-[50px] h-[50px] overflow-hidden rounded-tr-lg",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "absolute top-0 right-0 w-0 h-0 border-l-[50px] border-l-transparent border-t-[50px] border-t-orange-400"
+        className: "absolute top-0 right-0 w-0 h-0 border-l-[50px] border-l-transparent border-t-[50px] border-primary"
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "absolute top-2 right-2",
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_4__["default"], {
@@ -4069,11 +4176,11 @@ var FeatureCard = function FeatureCard(_ref) {
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "mt-auto p-4 border-t border-gray-100",
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "flex items-center justify-between gap-2",
+        className: "flex items-center justify-between gap-2 flex-wrap",
         children: [doc_link && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_shadcn_components_ui_button__WEBPACK_IMPORTED_MODULE_5__.Button, {
           variant: "ghost",
           onClick: handleReadMoreClick,
-          className: "flex items-center gap-2 text-sm text-neutral-600 hover:text-gray-700 h-auto py-2 px-0 min-h-[32px] ",
+          className: "flex items-center gap-2 text-sm text-neutral-600 hover:text-gray-700 h-auto py-2 px-0 min-h-[32px]",
           children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_3__["default"], {
             size: 16
           }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Read More", "wpcafe")]
@@ -4311,6 +4418,7 @@ var InstructionCard = function InstructionCard(_ref) {
               }), (((_a = item.action.link) === null || _a === void 0 ? void 0 : _a.length) > 0 || ((_b = item.action.label) === null || _b === void 0 ? void 0 : _b.length) > 0) && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_3__["default"], {
                 size: 14
               }), (((_c = item.action.link) === null || _c === void 0 ? void 0 : _c.length) > 0 || ((_d = item.action.label) === null || _d === void 0 ? void 0 : _d.length) > 0) && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("a", {
+                target: "_blank",
                 href: item.action.link,
                 className: "text-danger! text-base font-medium hover:underline",
                 children: item.action.label
@@ -4318,12 +4426,14 @@ var InstructionCard = function InstructionCard(_ref) {
             }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
               className: "flex gap-3 mt-1 text-blue-info",
               children: [item.links.video && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
+                target: "_blank",
                 href: item.links.video,
                 className: "flex items-center gap-1 hover:underline",
                 children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_2__["default"], {
                   className: "w-4 h-4"
                 }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Watch a video", "wpcafe")]
               }), item.links.doc && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
+                target: "_blank",
                 href: item.links.doc,
                 className: "flex items-center gap-1 hover:underline",
                 children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_icons__WEBPACK_IMPORTED_MODULE_5__.DocIcon, {}), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Documentation", "wpcafe")]
@@ -4841,6 +4951,27 @@ __webpack_require__.r(__webpack_exports__);
  */
 var DEFAULT_PRESET_COLORS = ["#000000", "#FFFFFF", "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF", "#FFA500", "#800080", "#FFC0CB", "#A52A2A", "#808080", "#008000", "#000080", "#800000", "#808000", "#008080", "#C0C0C0", "#FF69B4"];
 /**
+ * Helper function to get inverted color (black or white) based on background brightness
+ * @param hexColor - Hex color string
+ * @returns Inverted color (black or white)
+ */
+var getInvertedColor = function getInvertedColor(hexColor) {
+  if (!hexColor || hexColor === "transparent") {
+    return "#000000";
+  }
+  // Remove # if present
+  var hex = hexColor.replace("#", "");
+  // Convert to RGB
+  var r = parseInt(hex.substring(0, 2), 16);
+  var g = parseInt(hex.substring(2, 4), 16);
+  var b = parseInt(hex.substring(4, 6), 16);
+  // Calculate relative luminance
+  // Using the formula: (0.299 * R + 0.587 * G + 0.114 * B)
+  var luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  // Return white for dark colors, black for light colors
+  return luminance > 0.5 ? "#000000" : "#FFFFFF";
+};
+/**
  * ColorPicker Component
  *
  * A color picker component that provides multiple ways to select colors.
@@ -4900,45 +5031,55 @@ var ColorPicker = function ColorPicker(_ref) {
     isValidHexColor = _useColorPicker.isValidHexColor;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
     className: "flex items-center gap-2 ".concat(className || ""),
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "flex-1 relative",
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_7__.Input, {
-        value: inputValue,
-        onChange: handleInputChange,
-        placeholder: placeholder,
-        disabled: disabled,
-        className: "font-mono pr-8 ".concat(!isValidColor ? "border-red-500" : "")
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_shadcn_components_ui_popover__WEBPACK_IMPORTED_MODULE_8__.Popover, {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_shadcn_components_ui_popover__WEBPACK_IMPORTED_MODULE_8__.Popover, {
         open: open,
         onOpenChange: setOpen,
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_popover__WEBPACK_IMPORTED_MODULE_8__.PopoverTrigger, {
           asChild: true,
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_button__WEBPACK_IMPORTED_MODULE_6__.Button, {
-            type: "button",
-            variant: "ghost",
-            disabled: disabled,
-            className: "absolute right-1 top-1/5 -translate-y-1/5 w-8 h-8 p-1 rounded-md ".concat(getDisplayColor() === "transparent" ? "bg-white" : ""),
-            style: {
-              backgroundColor: getDisplayColor() === "transparent" ? "transparent" : getDisplayColor()
-            },
-            size: "sm",
-            children: getDisplayColor() === "transparent" ?
-            // Show checkered pattern when no color is selected
-            (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              className: "w-full h-full relative",
-              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                className: "w-full h-full rounded opacity-30",
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: "relative w-full",
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_7__.Input, {
+              value: inputValue,
+              onChange: handleInputChange,
+              placeholder: placeholder,
+              disabled: disabled,
+              className: "font-mono pr-10 cursor-pointer ".concat(!isValidColor ? "border-red-500" : ""),
+              onClick: function onClick() {
+                return !disabled && setOpen(true);
+              },
+              readOnly: false
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_button__WEBPACK_IMPORTED_MODULE_6__.Button, {
+              type: "button",
+              variant: "ghost",
+              disabled: disabled,
+              className: "absolute right-1 top-1/2 -translate-y-1/2 w-8 h-8 p-1 rounded-md pointer-events-none ".concat(getDisplayColor() === "transparent" ? "bg-white border border-gray-300" : ""),
+              style: {
+                backgroundColor: getDisplayColor() === "transparent" ? "transparent" : getDisplayColor()
+              },
+              size: "sm",
+              children: getDisplayColor() === "transparent" ?
+              // Show checkered pattern when no color is selected
+              (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: "w-full h-full relative",
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                  className: "w-full h-full rounded opacity-30",
+                  style: {
+                    backgroundImage: "linear-gradient(45deg, #ccc 25%, transparent 25%), \n                                                             linear-gradient(-45deg, #ccc 25%, transparent 25%), \n                                                             linear-gradient(45deg, transparent 75%, #ccc 75%), \n                                                             linear-gradient(-45deg, transparent 75%, #ccc 75%)",
+                    backgroundSize: "6px 6px",
+                    backgroundPosition: "0 0, 0 3px, 3px -3px, -3px 0px"
+                  }
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_4__["default"], {
+                  className: "w-4 h-4 text-gray-600 absolute inset-0 m-auto"
+                })]
+              }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_4__["default"], {
+                className: "w-4 h-4 absolute inset-0 m-auto",
                 style: {
-                  backgroundImage: "linear-gradient(45deg, #ccc 25%, transparent 25%), \n                                                         linear-gradient(-45deg, #ccc 25%, transparent 25%), \n                                                         linear-gradient(45deg, transparent 75%, #ccc 75%), \n                                                         linear-gradient(-45deg, transparent 75%, #ccc 75%)",
-                  backgroundSize: "6px 6px",
-                  backgroundPosition: "0 0, 0 3px, 3px -3px, -3px 0px"
+                  color: getInvertedColor(getDisplayColor())
                 }
-              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_4__["default"], {
-                className: "w-4 h-4 text-gray-600 absolute inset-0 m-auto"
-              })]
-            }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_4__["default"], {
-              className: "w-4 h-4 text-white mix-blend-difference"
-            })
+              })
+            })]
           })
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_popover__WEBPACK_IMPORTED_MODULE_8__.PopoverContent, {
           className: "w-64 p-4",
@@ -5033,7 +5174,7 @@ var ColorPicker = function ColorPicker(_ref) {
             })]
           })
         })]
-      })]
+      })
     })
   });
 };
@@ -5075,24 +5216,32 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
+/**
+ * DatePicker Component
+ *
+ * A reusable date picker component that combines an input field with a calendar popup.
+ * Features:
+ * - Manual text input with validation
+ * - Calendar popup for visual date selection
+ * - Disables past dates (only allows today and future dates)
+ * - Supports both controlled and uncontrolled usage
+ * - Accepts Date objects or string dates as initial values
+ * - Configurable locale for date formatting
+ *
+ * @param value - Initial date value (Date object or string). Defaults to today if not provided
+ * @param onChange - Callback function called when date is selected or changed
+ * @param locale - Locale string for date formatting (defaults to "en-US")
+ */
 var DatePicker = function DatePicker(_ref) {
   var value = _ref.value,
     onChange = _ref.onChange,
     _ref$locale = _ref.locale,
-    locale = _ref$locale === void 0 ? "en-US" : _ref$locale,
-    selectedLocationId = _ref.selectedLocationId,
-    _ref$locationSchedule = _ref.locationSchedule,
-    locationSchedule = _ref$locationSchedule === void 0 ? {} : _ref$locationSchedule,
-    _ref$customHolidays = _ref.customHolidays,
-    customHolidays = _ref$customHolidays === void 0 ? [] : _ref$customHolidays;
+    locale = _ref$locale === void 0 ? "en-US" : _ref$locale;
   // Use custom hook to manage all state and event handlers
   var _useDatePicker = (0,_hooks_useDatePicker__WEBPACK_IMPORTED_MODULE_5__.useDatePicker)({
       value: value,
       onChange: onChange,
-      locale: locale,
-      selectedLocationId: selectedLocationId,
-      locationSchedule: locationSchedule,
-      customHolidays: customHolidays
+      locale: locale
     }),
     open = _useDatePicker.open,
     date = _useDatePicker.date,
@@ -5206,8 +5355,13 @@ var FormInput = function FormInput(_ref) {
             className: "text-danger",
             children: "*"
           }) : null, tooltip ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_shadcn_components_ui_tooltip__WEBPACK_IMPORTED_MODULE_3__.Tooltip, {
+            delayDuration: 300,
             children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_tooltip__WEBPACK_IMPORTED_MODULE_3__.TooltipTrigger, {
               className: "ml-2",
+              onFocus: function onFocus(e) {
+                return e.preventDefault();
+              },
+              tabIndex: -1,
               children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_1__["default"], {
                 size: "16px"
               })
@@ -5289,6 +5443,116 @@ var InputWithAddon = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forwardR
     })]
   });
 });
+
+/***/ }),
+
+/***/ "./assets/src/common/components/form-input/InputWithUnitSelector.tsx":
+/*!***************************************************************************!*\
+  !*** ./assets/src/common/components/form-input/InputWithUnitSelector.tsx ***!
+  \***************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   InputWithUnitSelector: () => (/* binding */ InputWithUnitSelector)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _shadcn_components_ui_input__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/shadcn/components/ui/input */ "./assets/src/shadcn/components/ui/input.tsx");
+/* harmony import */ var _shadcn_components_ui_select__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/shadcn/components/ui/select */ "./assets/src/shadcn/components/ui/select.tsx");
+/* harmony import */ var _shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/shadcn/lib/utils */ "./assets/src/shadcn/lib/utils.ts");
+var __rest = undefined && undefined.__rest || function (s, e) {
+  var t = {};
+  for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  }
+  return t;
+};
+
+/**
+ * WordPress dependencies
+ */
+
+/**
+ * External dependencies
+ */
+
+
+
+var InputWithUnitSelector = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(function (_a, ref) {
+  var _b, _c;
+  var value = _a.value,
+    unit = _a.unit,
+    placeholder = _a.placeholder,
+    _a$type = _a.type,
+    type = _a$type === void 0 ? "text" : _a$type,
+    _a$disabled = _a.disabled,
+    disabled = _a$disabled === void 0 ? false : _a$disabled,
+    className = _a.className,
+    unitOptions = _a.unitOptions,
+    onValueChange = _a.onValueChange,
+    onUnitChange = _a.onUnitChange,
+    _a$pos = _a.pos,
+    pos = _a$pos === void 0 ? "end" : _a$pos,
+    _a$hideInputForUnits = _a.hideInputForUnits,
+    hideInputForUnits = _a$hideInputForUnits === void 0 ? [] : _a$hideInputForUnits,
+    props = __rest(_a, ["value", "unit", "placeholder", "type", "disabled", "className", "unitOptions", "onValueChange", "onUnitChange", "pos", "hideInputForUnits"]);
+  var currentUnit = unit || ((_b = unitOptions[0]) === null || _b === void 0 ? void 0 : _b.value);
+  var shouldHideInput = hideInputForUnits.includes(currentUnit || "");
+  var handleValueChange = function handleValueChange(e) {
+    var newValue = type === "number" ? Number(e.target.value) : e.target.value;
+    onValueChange === null || onValueChange === void 0 ? void 0 : onValueChange(newValue);
+  };
+  var handleUnitChange = function handleUnitChange(newUnit) {
+    onUnitChange === null || onUnitChange === void 0 ? void 0 : onUnitChange(newUnit);
+  };
+  var dropdownElement = (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_4__.cn)("border-input", shouldHideInput ? "bg-white flex-1" // White background and flex-1 when input is hidden
+    : "bg-visual-200",
+    // Original background when input is visible
+    !shouldHideInput && (pos === "start" ? "border-r" : "border-l")),
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_shadcn_components_ui_select__WEBPACK_IMPORTED_MODULE_3__.Select, {
+      value: unit || ((_c = unitOptions[0]) === null || _c === void 0 ? void 0 : _c.value),
+      onValueChange: handleUnitChange,
+      disabled: disabled,
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_select__WEBPACK_IMPORTED_MODULE_3__.SelectTrigger, {
+        className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_4__.cn)("border-0 rounded-none", shouldHideInput ? "w-full min-w-[160px] flex-1" // Full width when input is hidden
+        : "w-[120px]"),
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_select__WEBPACK_IMPORTED_MODULE_3__.SelectValue, {})
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_select__WEBPACK_IMPORTED_MODULE_3__.SelectContent, {
+        children: unitOptions.map(function (option) {
+          return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_select__WEBPACK_IMPORTED_MODULE_3__.SelectItem, {
+            value: option.value,
+            children: option.label
+          }, option.value);
+        })
+      })]
+    })
+  });
+  // If input should be hidden, show only the dropdown
+  if (shouldHideInput) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_4__.cn)("flex items-center gap-0 rounded-lg border border-input overflow-hidden w-full", className),
+      children: dropdownElement
+    });
+  }
+  // Normal layout with input and dropdown
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_4__.cn)("flex items-center gap-0 rounded-lg border border-input overflow-hidden", className),
+    children: [pos === "start" && dropdownElement, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_input__WEBPACK_IMPORTED_MODULE_2__.Input, Object.assign({
+      ref: ref,
+      type: type,
+      placeholder: placeholder,
+      value: value || "",
+      onChange: handleValueChange,
+      disabled: disabled,
+      className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_4__.cn)("flex-1 !border-0 rounded-none h-full focus-visible:ring-0 focus-visible:ring-offset-0  focus:shadow-none!", type === "number" && "[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [&[type=number]]:[-moz-appearance:textfield]")
+    }, props)), pos === "end" && dropdownElement]
+  });
+});
+InputWithUnitSelector.displayName = "InputWithUnitSelector";
 
 /***/ }),
 
@@ -5830,7 +6094,6 @@ var UploadAudio = function UploadAudio(_ref) {
     setFileUrl("");
     setFileId(undefined);
   };
-  console.log(fileUrl);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
     className: "flex flex-col gap-2",
     children: fileUrl ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
@@ -5879,7 +6142,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/helpers */ "./assets/src/helpers/index.ts");
-/* harmony import */ var _helpers_formatDate__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/helpers/formatDate */ "./assets/src/helpers/formatDate.ts");
 function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -5893,7 +6155,6 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 /**
  * Internal dependencies
  */
-
 
 /**
  * Validates if a given date is a valid Date object
@@ -5930,12 +6191,7 @@ var useDatePicker = function useDatePicker(_ref) {
   var value = _ref.value,
     onChange = _ref.onChange,
     _ref$locale = _ref.locale,
-    locale = _ref$locale === void 0 ? "en-US" : _ref$locale,
-    selectedLocationId = _ref.selectedLocationId,
-    _ref$locationSchedule = _ref.locationSchedule,
-    locationSchedule = _ref$locationSchedule === void 0 ? {} : _ref$locationSchedule,
-    _ref$customHolidays = _ref.customHolidays,
-    customHolidays = _ref$customHolidays === void 0 ? [] : _ref$customHolidays;
+    locale = _ref$locale === void 0 ? "en-US" : _ref$locale;
   // Controls whether the calendar popup is open
   var _useState = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState2 = _slicedToArray(_useState, 2),
@@ -6026,58 +6282,14 @@ var useDatePicker = function useDatePicker(_ref) {
     setMonth(nextMonth);
   }, []);
   /**
-   * Get day key from date (Mon, Tue, Wed, etc.)
-   */
-  var getDayKey = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (date) {
-    var _a;
-    var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    return (_a = days[date.getDay()]) !== null && _a !== void 0 ? _a : "";
-  }, []);
-  /**
    * Determines if a date should be disabled
-   * Disables past dates, custom holidays, and dates based on location schedule
+   * Disables past dates - only allows today and future dates
    */
   var isDateDisabled = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (date) {
-    // Disable past dates
     var today = new Date();
     today.setHours(0, 0, 0, 0); // Reset time to start of day for accurate comparison
-    if (date < today) {
-      return true;
-    }
-    // Check custom holidays
-    if (customHolidays && customHolidays.length > 0) {
-      var dateString = (0,_helpers_formatDate__WEBPACK_IMPORTED_MODULE_2__.formatDate)(date); // Convert to YYYY-MM-DD format
-      var isCustomHoliday = customHolidays.some(function (holiday) {
-        // Handle both YYYY-MM-DD and M/D/YYYY formats
-        if (holiday.includes("/")) {
-          // Convert M/D/YYYY to Date and compare
-          var parts = holiday.split("/");
-          if (parts.length === 3) {
-            var _month = parseInt(parts[0] || "0", 10);
-            var day = parseInt(parts[1] || "0", 10);
-            var year = parseInt(parts[2] || "0", 10);
-            if (_month && day && year) {
-              var holidayDate = new Date(year, _month - 1, day);
-              return holidayDate.toDateString() === date.toDateString();
-            }
-          }
-          return false;
-        }
-        return holiday === dateString;
-      });
-      if (isCustomHoliday) {
-        return true;
-      }
-    }
-    // Disable dates based on location schedule
-    if (!selectedLocationId) {
-      return false; // If no location selected, don't disable future dates
-    }
-    var dayKey = getDayKey(date);
-    var daySchedule = locationSchedule[dayKey];
-    // Disable if day is marked as "off" in the schedule
-    return (daySchedule === null || daySchedule === void 0 ? void 0 : daySchedule.status) === "off";
-  }, [selectedLocationId, locationSchedule, getDayKey, customHolidays]);
+    return date < today;
+  }, []);
   return {
     // State values
     open: open,
@@ -6090,7 +6302,6 @@ var useDatePicker = function useDatePicker(_ref) {
     handleCalendarSelect: handleCalendarSelect,
     handleOpenChange: handleOpenChange,
     handleMonthChange: handleMonthChange,
-    // Utility functions
     isDateDisabled: isDateDisabled
   };
 };
@@ -6281,6 +6492,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   EmailInput: () => (/* binding */ EmailInput),
 /* harmony export */   FormInput: () => (/* reexport safe */ _common_components_form_input_FormInput__WEBPACK_IMPORTED_MODULE_1__.FormInput),
 /* harmony export */   InputWithAddonInput: () => (/* binding */ InputWithAddonInput),
+/* harmony export */   InputWithUnitSelectorField: () => (/* binding */ InputWithUnitSelectorField),
 /* harmony export */   LinkInput: () => (/* binding */ LinkInput),
 /* harmony export */   LocationInput: () => (/* reexport safe */ _common_components_form_input_location_input___WEBPACK_IMPORTED_MODULE_9__.LocationInput),
 /* harmony export */   NumberInput: () => (/* binding */ NumberInput),
@@ -6302,10 +6514,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_components_form_input_ColorPicker__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/common/components/form-input/ColorPicker */ "./assets/src/common/components/form-input/ColorPicker.tsx");
 /* harmony import */ var _common_components_form_input_RadioInputBox__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/common/components/form-input/RadioInputBox */ "./assets/src/common/components/form-input/RadioInputBox.tsx");
 /* harmony import */ var _common_components_form_input_location_input___WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/common/components/form-input/location-input/ */ "./assets/src/common/components/form-input/location-input/index.tsx");
+/* harmony import */ var _InputWithUnitSelector__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./InputWithUnitSelector */ "./assets/src/common/components/form-input/InputWithUnitSelector.tsx");
 
 /**
  * Internal Dependencies
  */
+
 
 
 
@@ -6558,21 +6772,78 @@ var InputWithAddonInput = function InputWithAddonInput(_ref9) {
     }
   });
 };
-var SelectInput = function SelectInput(_ref0) {
+var InputWithUnitSelectorField = function InputWithUnitSelectorField(_ref0) {
   var control = _ref0.control,
     name = _ref0.name,
     label = _ref0.label,
     placeholder = _ref0.placeholder,
-    options = _ref0.options,
-    defaultValue = _ref0.defaultValue,
+    _ref0$type = _ref0.type,
+    type = _ref0$type === void 0 ? "number" : _ref0$type,
     _ref0$required = _ref0.required,
     required = _ref0$required === void 0 ? false : _ref0$required,
     tooltip = _ref0.tooltip,
-    unit = _ref0.unit,
-    createNewOption = _ref0.createNewOption,
-    valueType = _ref0.valueType,
-    isMulti = _ref0.isMulti,
-    emptyNotice = _ref0.emptyNotice;
+    unitOptions = _ref0.unitOptions,
+    _ref0$disabled = _ref0.disabled,
+    disabled = _ref0$disabled === void 0 ? false : _ref0$disabled,
+    _ref0$hideInputForUni = _ref0.hideInputForUnits,
+    hideInputForUnits = _ref0$hideInputForUni === void 0 ? [] : _ref0$hideInputForUni;
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components_form_input_FormInput__WEBPACK_IMPORTED_MODULE_1__.FormInput, {
+    control: control,
+    name: name,
+    label: label,
+    required: required,
+    tooltip: tooltip,
+    inputField: function inputField(field) {
+      var _a, _b, _c;
+      // Handle different data structures
+      var isStringValue = typeof field.value === "string";
+      var currentValue = isStringValue ? "" : ((_a = field.value) === null || _a === void 0 ? void 0 : _a.value) || "";
+      var currentUnit = isStringValue ? field.value : ((_b = field.value) === null || _b === void 0 ? void 0 : _b.unit) || ((_c = unitOptions[0]) === null || _c === void 0 ? void 0 : _c.value);
+      return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_InputWithUnitSelector__WEBPACK_IMPORTED_MODULE_10__.InputWithUnitSelector, {
+        value: currentValue,
+        unit: currentUnit,
+        placeholder: placeholder,
+        type: type,
+        disabled: disabled,
+        unitOptions: unitOptions,
+        hideInputForUnits: hideInputForUnits,
+        onValueChange: function onValueChange(value) {
+          if (!hideInputForUnits.includes(currentUnit)) {
+            field.onChange(Object.assign(Object.assign({}, field.value), {
+              value: value
+            }));
+          }
+        },
+        onUnitChange: function onUnitChange(unit) {
+          if (hideInputForUnits.includes(unit)) {
+            // For hidden input units, store just the unit as string
+            field.onChange(unit);
+          } else {
+            // For visible input units, store as object
+            field.onChange(Object.assign(Object.assign({}, field.value), {
+              unit: unit
+            }));
+          }
+        }
+      });
+    }
+  });
+};
+var SelectInput = function SelectInput(_ref1) {
+  var control = _ref1.control,
+    name = _ref1.name,
+    label = _ref1.label,
+    placeholder = _ref1.placeholder,
+    options = _ref1.options,
+    defaultValue = _ref1.defaultValue,
+    _ref1$required = _ref1.required,
+    required = _ref1$required === void 0 ? false : _ref1$required,
+    tooltip = _ref1.tooltip,
+    unit = _ref1.unit,
+    createNewOption = _ref1.createNewOption,
+    valueType = _ref1.valueType,
+    isMulti = _ref1.isMulti,
+    emptyNotice = _ref1.emptyNotice;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components_form_input_FormInput__WEBPACK_IMPORTED_MODULE_1__.FormInput, {
     control: control,
     name: name,
@@ -6594,18 +6865,15 @@ var SelectInput = function SelectInput(_ref0) {
     }
   });
 };
-var DateInput = function DateInput(_ref1) {
-  var control = _ref1.control,
-    name = _ref1.name,
-    label = _ref1.label,
-    _ref1$required = _ref1.required,
-    required = _ref1$required === void 0 ? false : _ref1$required,
-    tooltip = _ref1.tooltip,
-    _ref1$locale = _ref1.locale,
-    locale = _ref1$locale === void 0 ? "en-US" : _ref1$locale,
-    selectedLocationId = _ref1.selectedLocationId,
-    locationSchedule = _ref1.locationSchedule,
-    customHolidays = _ref1.customHolidays;
+var DateInput = function DateInput(_ref10) {
+  var control = _ref10.control,
+    name = _ref10.name,
+    label = _ref10.label,
+    _ref10$required = _ref10.required,
+    required = _ref10$required === void 0 ? false : _ref10$required,
+    tooltip = _ref10.tooltip,
+    _ref10$locale = _ref10.locale,
+    locale = _ref10$locale === void 0 ? "en-US" : _ref10$locale;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components_form_input_FormInput__WEBPACK_IMPORTED_MODULE_1__.FormInput, {
     control: control,
     name: name,
@@ -6616,27 +6884,24 @@ var DateInput = function DateInput(_ref1) {
       return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components_form_input_DatePicker__WEBPACK_IMPORTED_MODULE_6__.DatePicker, {
         value: field.value,
         onChange: field.onChange,
-        locale: locale,
-        selectedLocationId: selectedLocationId,
-        locationSchedule: locationSchedule,
-        customHolidays: customHolidays
+        locale: locale
       });
     }
   });
 };
-var DateRangeInput = function DateRangeInput(_ref10) {
-  var control = _ref10.control,
-    name = _ref10.name,
-    label = _ref10.label,
-    _ref10$required = _ref10.required,
-    required = _ref10$required === void 0 ? false : _ref10$required,
-    tooltip = _ref10.tooltip,
-    _ref10$locale = _ref10.locale,
-    locale = _ref10$locale === void 0 ? "en-US" : _ref10$locale,
-    _ref10$align = _ref10.align,
-    align = _ref10$align === void 0 ? "start" : _ref10$align,
-    _ref10$disabled = _ref10.disabled,
-    disabled = _ref10$disabled === void 0 ? false : _ref10$disabled;
+var DateRangeInput = function DateRangeInput(_ref11) {
+  var control = _ref11.control,
+    name = _ref11.name,
+    label = _ref11.label,
+    _ref11$required = _ref11.required,
+    required = _ref11$required === void 0 ? false : _ref11$required,
+    tooltip = _ref11.tooltip,
+    _ref11$locale = _ref11.locale,
+    locale = _ref11$locale === void 0 ? "en-US" : _ref11$locale,
+    _ref11$align = _ref11.align,
+    align = _ref11$align === void 0 ? "start" : _ref11$align,
+    _ref11$disabled = _ref11.disabled,
+    disabled = _ref11$disabled === void 0 ? false : _ref11$disabled;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components_form_input_FormInput__WEBPACK_IMPORTED_MODULE_1__.FormInput, {
     control: control,
     name: name,
@@ -6657,20 +6922,20 @@ var DateRangeInput = function DateRangeInput(_ref10) {
     }
   });
 };
-var TimeRangeInput = function TimeRangeInput(_ref11) {
-  var control = _ref11.control,
-    name = _ref11.name,
-    label = _ref11.label,
-    _ref11$required = _ref11.required,
-    required = _ref11$required === void 0 ? false : _ref11$required,
-    tooltip = _ref11.tooltip,
-    _ref11$align = _ref11.align,
-    align = _ref11$align === void 0 ? "start" : _ref11$align,
-    _ref11$disabled = _ref11.disabled,
-    disabled = _ref11$disabled === void 0 ? false : _ref11$disabled,
-    _ref11$step = _ref11.step,
-    step = _ref11$step === void 0 ? 60 : _ref11$step,
-    placeholder = _ref11.placeholder;
+var TimeRangeInput = function TimeRangeInput(_ref12) {
+  var control = _ref12.control,
+    name = _ref12.name,
+    label = _ref12.label,
+    _ref12$required = _ref12.required,
+    required = _ref12$required === void 0 ? false : _ref12$required,
+    tooltip = _ref12.tooltip,
+    _ref12$align = _ref12.align,
+    align = _ref12$align === void 0 ? "start" : _ref12$align,
+    _ref12$disabled = _ref12.disabled,
+    disabled = _ref12$disabled === void 0 ? false : _ref12$disabled,
+    _ref12$step = _ref12.step,
+    step = _ref12$step === void 0 ? 60 : _ref12$step,
+    placeholder = _ref12.placeholder;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components_form_input_FormInput__WEBPACK_IMPORTED_MODULE_1__.FormInput, {
     control: control,
     name: name,
@@ -6692,21 +6957,21 @@ var TimeRangeInput = function TimeRangeInput(_ref11) {
     }
   });
 };
-var ColorInput = function ColorInput(_ref12) {
-  var control = _ref12.control,
-    name = _ref12.name,
-    label = _ref12.label,
-    _ref12$required = _ref12.required,
-    required = _ref12$required === void 0 ? false : _ref12$required,
-    tooltip = _ref12.tooltip,
-    placeholder = _ref12.placeholder,
-    _ref12$showPresets = _ref12.showPresets,
-    showPresets = _ref12$showPresets === void 0 ? true : _ref12$showPresets,
-    presetColors = _ref12.presetColors,
-    _ref12$allowCustom = _ref12.allowCustom,
-    allowCustom = _ref12$allowCustom === void 0 ? true : _ref12$allowCustom,
-    _ref12$format = _ref12.format,
-    format = _ref12$format === void 0 ? "hex" : _ref12$format;
+var ColorInput = function ColorInput(_ref13) {
+  var control = _ref13.control,
+    name = _ref13.name,
+    label = _ref13.label,
+    _ref13$required = _ref13.required,
+    required = _ref13$required === void 0 ? false : _ref13$required,
+    tooltip = _ref13.tooltip,
+    placeholder = _ref13.placeholder,
+    _ref13$showPresets = _ref13.showPresets,
+    showPresets = _ref13$showPresets === void 0 ? true : _ref13$showPresets,
+    presetColors = _ref13.presetColors,
+    _ref13$allowCustom = _ref13.allowCustom,
+    allowCustom = _ref13$allowCustom === void 0 ? true : _ref13$allowCustom,
+    _ref13$format = _ref13.format,
+    format = _ref13$format === void 0 ? "hex" : _ref13$format;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components_form_input_FormInput__WEBPACK_IMPORTED_MODULE_1__.FormInput, {
     control: control,
     name: name,
@@ -7716,76 +7981,78 @@ var LocationInput = function LocationInput(props) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   AdminCurrency: () => (/* reexport safe */ _price__WEBPACK_IMPORTED_MODULE_23__.AdminCurrency),
-/* harmony export */   AdminPrice: () => (/* reexport safe */ _price__WEBPACK_IMPORTED_MODULE_23__.AdminPrice),
+/* harmony export */   AdminCurrency: () => (/* reexport safe */ _price__WEBPACK_IMPORTED_MODULE_24__.AdminCurrency),
+/* harmony export */   AdminPrice: () => (/* reexport safe */ _price__WEBPACK_IMPORTED_MODULE_24__.AdminPrice),
 /* harmony export */   CardWithToggle: () => (/* reexport safe */ _CardWithToggle__WEBPACK_IMPORTED_MODULE_5__.CardWithToggle),
 /* harmony export */   CheckboxInput: () => (/* reexport safe */ _form_input__WEBPACK_IMPORTED_MODULE_3__.CheckboxInput),
 /* harmony export */   ColorInput: () => (/* reexport safe */ _form_input__WEBPACK_IMPORTED_MODULE_3__.ColorInput),
-/* harmony export */   ComingSoon: () => (/* reexport safe */ _ComingSoon__WEBPACK_IMPORTED_MODULE_24__.ComingSoon),
-/* harmony export */   Container: () => (/* reexport safe */ _layouts__WEBPACK_IMPORTED_MODULE_19__.Container),
-/* harmony export */   DAYS_CONFIG: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_10__.DAYS_CONFIG),
-/* harmony export */   DEFAULT_SLOT_INTERVAL: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_10__.DEFAULT_SLOT_INTERVAL),
-/* harmony export */   DEFAULT_SLOT_TIME: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_10__.DEFAULT_SLOT_TIME),
+/* harmony export */   ColorPicker: () => (/* reexport safe */ _form_input_ColorPicker__WEBPACK_IMPORTED_MODULE_8__.ColorPicker),
+/* harmony export */   ComingSoon: () => (/* reexport safe */ _ComingSoon__WEBPACK_IMPORTED_MODULE_25__.ComingSoon),
+/* harmony export */   Container: () => (/* reexport safe */ _layouts__WEBPACK_IMPORTED_MODULE_20__.Container),
+/* harmony export */   DAYS_CONFIG: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_11__.DAYS_CONFIG),
+/* harmony export */   DEFAULT_SLOT_INTERVAL: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_SLOT_INTERVAL),
+/* harmony export */   DEFAULT_SLOT_TIME: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_SLOT_TIME),
 /* harmony export */   DateInput: () => (/* reexport safe */ _form_input__WEBPACK_IMPORTED_MODULE_3__.DateInput),
 /* harmony export */   DatePicker: () => (/* reexport safe */ _form_input_DatePicker__WEBPACK_IMPORTED_MODULE_7__.DatePicker),
 /* harmony export */   DateRangeInput: () => (/* reexport safe */ _form_input__WEBPACK_IMPORTED_MODULE_3__.DateRangeInput),
-/* harmony export */   DateTimeSettings: () => (/* reexport safe */ _DateTimeSettings__WEBPACK_IMPORTED_MODULE_15__.DateTimeSettings),
-/* harmony export */   DeleteConfirmationDialog: () => (/* reexport safe */ _DeleteConfirmationDialog__WEBPACK_IMPORTED_MODULE_20__.DeleteConfirmationDialog),
-/* harmony export */   DeleteConfirmationPopover: () => (/* reexport safe */ _DeleteConfirmationPopover__WEBPACK_IMPORTED_MODULE_27__.DeleteConfirmationPopover),
+/* harmony export */   DateTimeSettings: () => (/* reexport safe */ _DateTimeSettings__WEBPACK_IMPORTED_MODULE_16__.DateTimeSettings),
+/* harmony export */   DeleteConfirmationDialog: () => (/* reexport safe */ _DeleteConfirmationDialog__WEBPACK_IMPORTED_MODULE_21__.DeleteConfirmationDialog),
+/* harmony export */   DeleteConfirmationPopover: () => (/* reexport safe */ _DeleteConfirmationPopover__WEBPACK_IMPORTED_MODULE_28__.DeleteConfirmationPopover),
 /* harmony export */   Description: () => (/* reexport safe */ _Typography__WEBPACK_IMPORTED_MODULE_2__.Description),
 /* harmony export */   EmailInput: () => (/* reexport safe */ _form_input__WEBPACK_IMPORTED_MODULE_3__.EmailInput),
-/* harmony export */   EmptyScreen: () => (/* reexport safe */ _EmptyScreen__WEBPACK_IMPORTED_MODULE_9__.EmptyScreen),
+/* harmony export */   EmptyScreen: () => (/* reexport safe */ _EmptyScreen__WEBPACK_IMPORTED_MODULE_10__.EmptyScreen),
 /* harmony export */   ErrorBoundary: () => (/* reexport safe */ _error_page__WEBPACK_IMPORTED_MODULE_1__.ErrorBoundary),
 /* harmony export */   ErrorInstructions: () => (/* reexport safe */ _ErrorInstructions__WEBPACK_IMPORTED_MODULE_0__.ErrorInstructions),
 /* harmony export */   ErrorPage: () => (/* reexport safe */ _error_page__WEBPACK_IMPORTED_MODULE_1__.ErrorPage),
 /* harmony export */   FormInput: () => (/* reexport safe */ _form_input__WEBPACK_IMPORTED_MODULE_3__.FormInput),
-/* harmony export */   IconTooltipButton: () => (/* reexport safe */ _IconTooltipButton__WEBPACK_IMPORTED_MODULE_22__.IconTooltipButton),
+/* harmony export */   IconTooltipButton: () => (/* reexport safe */ _IconTooltipButton__WEBPACK_IMPORTED_MODULE_23__.IconTooltipButton),
 /* harmony export */   IconWithDescription: () => (/* reexport safe */ _Typography__WEBPACK_IMPORTED_MODULE_2__.IconWithDescription),
-/* harmony export */   Image: () => (/* reexport safe */ _Image__WEBPACK_IMPORTED_MODULE_11__.Image),
+/* harmony export */   Image: () => (/* reexport safe */ _Image__WEBPACK_IMPORTED_MODULE_12__.Image),
 /* harmony export */   InputWithAddon: () => (/* reexport safe */ _form_input_InputWithAddon__WEBPACK_IMPORTED_MODULE_4__.InputWithAddon),
 /* harmony export */   InputWithAddonInput: () => (/* reexport safe */ _form_input__WEBPACK_IMPORTED_MODULE_3__.InputWithAddonInput),
-/* harmony export */   InstructionCard: () => (/* reexport safe */ _InstructionCard__WEBPACK_IMPORTED_MODULE_13__.InstructionCard),
+/* harmony export */   InputWithUnitSelectorField: () => (/* reexport safe */ _form_input__WEBPACK_IMPORTED_MODULE_3__.InputWithUnitSelectorField),
+/* harmony export */   InstructionCard: () => (/* reexport safe */ _InstructionCard__WEBPACK_IMPORTED_MODULE_14__.InstructionCard),
 /* harmony export */   LinkInput: () => (/* reexport safe */ _form_input__WEBPACK_IMPORTED_MODULE_3__.LinkInput),
 /* harmony export */   LocationInput: () => (/* reexport safe */ _form_input__WEBPACK_IMPORTED_MODULE_3__.LocationInput),
-/* harmony export */   MessageBox: () => (/* reexport safe */ _form_input_MessageBox__WEBPACK_IMPORTED_MODULE_14__.MessageBox),
-/* harmony export */   ModuleConditional: () => (/* reexport safe */ _ModuleConditional__WEBPACK_IMPORTED_MODULE_21__.ModuleConditional),
+/* harmony export */   MessageBox: () => (/* reexport safe */ _form_input_MessageBox__WEBPACK_IMPORTED_MODULE_15__.MessageBox),
+/* harmony export */   ModuleConditional: () => (/* reexport safe */ _ModuleConditional__WEBPACK_IMPORTED_MODULE_22__.ModuleConditional),
 /* harmony export */   Muted: () => (/* reexport safe */ _Typography__WEBPACK_IMPORTED_MODULE_2__.Muted),
-/* harmony export */   NavItem: () => (/* reexport safe */ _layouts__WEBPACK_IMPORTED_MODULE_19__.NavItem),
-/* harmony export */   NavTab: () => (/* reexport safe */ _layouts__WEBPACK_IMPORTED_MODULE_19__.NavTab),
+/* harmony export */   NavItem: () => (/* reexport safe */ _layouts__WEBPACK_IMPORTED_MODULE_20__.NavItem),
+/* harmony export */   NavTab: () => (/* reexport safe */ _layouts__WEBPACK_IMPORTED_MODULE_20__.NavTab),
 /* harmony export */   NumberInput: () => (/* reexport safe */ _form_input__WEBPACK_IMPORTED_MODULE_3__.NumberInput),
-/* harmony export */   ProBtn: () => (/* reexport safe */ _ProBtn__WEBPACK_IMPORTED_MODULE_16__.ProBtn),
+/* harmony export */   ProBtn: () => (/* reexport safe */ _ProBtn__WEBPACK_IMPORTED_MODULE_17__.ProBtn),
 /* harmony export */   RadioInput: () => (/* reexport safe */ _form_input__WEBPACK_IMPORTED_MODULE_3__.RadioInput),
 /* harmony export */   RadioInputBox: () => (/* reexport safe */ _form_input__WEBPACK_IMPORTED_MODULE_3__.RadioInputBox),
-/* harmony export */   ScheduleDay: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_10__.ScheduleDay),
-/* harmony export */   ScheduleErrorDisplay: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_10__.ScheduleErrorDisplay),
-/* harmony export */   ScheduleManagement: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_10__.ScheduleManagement),
-/* harmony export */   SectionInfo: () => (/* reexport safe */ _layouts__WEBPACK_IMPORTED_MODULE_19__.SectionInfo),
+/* harmony export */   ScheduleDay: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_11__.ScheduleDay),
+/* harmony export */   ScheduleErrorDisplay: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_11__.ScheduleErrorDisplay),
+/* harmony export */   ScheduleManagement: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_11__.ScheduleManagement),
+/* harmony export */   SectionInfo: () => (/* reexport safe */ _layouts__WEBPACK_IMPORTED_MODULE_20__.SectionInfo),
 /* harmony export */   SectionTitle: () => (/* reexport safe */ _Typography__WEBPACK_IMPORTED_MODULE_2__.SectionTitle),
 /* harmony export */   SelectBox: () => (/* reexport safe */ _form_input_SelectBox__WEBPACK_IMPORTED_MODULE_6__.SelectBox),
 /* harmony export */   SelectInput: () => (/* reexport safe */ _form_input__WEBPACK_IMPORTED_MODULE_3__.SelectInput),
-/* harmony export */   SettingsItem: () => (/* reexport safe */ _SettingsItem__WEBPACK_IMPORTED_MODULE_12__.SettingsItem),
-/* harmony export */   SingleSwitchBox: () => (/* reexport safe */ _form_input_SingleSwitchBox__WEBPACK_IMPORTED_MODULE_8__.SingleSwitchBox),
-/* harmony export */   SlotItem: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_10__.SlotItem),
-/* harmony export */   StatusBadge: () => (/* reexport safe */ _StatusBadge__WEBPACK_IMPORTED_MODULE_17__.StatusBadge),
+/* harmony export */   SettingsItem: () => (/* reexport safe */ _SettingsItem__WEBPACK_IMPORTED_MODULE_13__.SettingsItem),
+/* harmony export */   SingleSwitchBox: () => (/* reexport safe */ _form_input_SingleSwitchBox__WEBPACK_IMPORTED_MODULE_9__.SingleSwitchBox),
+/* harmony export */   SlotItem: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_11__.SlotItem),
+/* harmony export */   StatusBadge: () => (/* reexport safe */ _StatusBadge__WEBPACK_IMPORTED_MODULE_18__.StatusBadge),
 /* harmony export */   SwitchInput: () => (/* reexport safe */ _form_input__WEBPACK_IMPORTED_MODULE_3__.SwitchInput),
-/* harmony export */   TIME_FORMAT: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_10__.TIME_FORMAT),
-/* harmony export */   Table: () => (/* reexport safe */ _table__WEBPACK_IMPORTED_MODULE_18__.Table),
-/* harmony export */   TableEmptyScreen: () => (/* reexport safe */ _table__WEBPACK_IMPORTED_MODULE_18__.TableEmptyScreen),
-/* harmony export */   TableSkeleton: () => (/* reexport safe */ _table__WEBPACK_IMPORTED_MODULE_18__.TableSkeleton),
+/* harmony export */   TIME_FORMAT: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_11__.TIME_FORMAT),
+/* harmony export */   Table: () => (/* reexport safe */ _table__WEBPACK_IMPORTED_MODULE_19__.Table),
+/* harmony export */   TableEmptyScreen: () => (/* reexport safe */ _table__WEBPACK_IMPORTED_MODULE_19__.TableEmptyScreen),
+/* harmony export */   TableSkeleton: () => (/* reexport safe */ _table__WEBPACK_IMPORTED_MODULE_19__.TableSkeleton),
 /* harmony export */   TextInput: () => (/* reexport safe */ _form_input__WEBPACK_IMPORTED_MODULE_3__.TextInput),
 /* harmony export */   TextareaInput: () => (/* reexport safe */ _form_input__WEBPACK_IMPORTED_MODULE_3__.TextareaInput),
 /* harmony export */   TimeRangeInput: () => (/* reexport safe */ _form_input__WEBPACK_IMPORTED_MODULE_3__.TimeRangeInput),
-/* harmony export */   TimeSelectInput: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_10__.TimeSelectInput),
-/* harmony export */   TopHeader: () => (/* reexport safe */ _layouts__WEBPACK_IMPORTED_MODULE_19__.TopHeader),
-/* harmony export */   UploadAudio: () => (/* reexport safe */ _form_input_UploadAudio__WEBPACK_IMPORTED_MODULE_28__.UploadAudio),
-/* harmony export */   defaultSchedule: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_10__.defaultSchedule),
-/* harmony export */   useScheduleManagement: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_10__.useScheduleManagement),
-/* harmony export */   useScheduleUIState: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_10__.useScheduleUIState),
-/* harmony export */   useSlotManagement: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_10__.useSlotManagement),
-/* harmony export */   validateDayScheduleTimes: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_10__.validateDayScheduleTimes),
-/* harmony export */   validateDayScheduleWithDetails: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_10__.validateDayScheduleWithDetails),
-/* harmony export */   validateSlotUniqueness: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_10__.validateSlotUniqueness),
-/* harmony export */   validateTimeRange: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_10__.validateTimeRange)
+/* harmony export */   TimeSelectInput: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_11__.TimeSelectInput),
+/* harmony export */   TopHeader: () => (/* reexport safe */ _layouts__WEBPACK_IMPORTED_MODULE_20__.TopHeader),
+/* harmony export */   UploadAudio: () => (/* reexport safe */ _form_input_UploadAudio__WEBPACK_IMPORTED_MODULE_29__.UploadAudio),
+/* harmony export */   defaultSchedule: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_11__.defaultSchedule),
+/* harmony export */   useScheduleManagement: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_11__.useScheduleManagement),
+/* harmony export */   useScheduleUIState: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_11__.useScheduleUIState),
+/* harmony export */   useSlotManagement: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_11__.useSlotManagement),
+/* harmony export */   validateDayScheduleTimes: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_11__.validateDayScheduleTimes),
+/* harmony export */   validateDayScheduleWithDetails: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_11__.validateDayScheduleWithDetails),
+/* harmony export */   validateSlotUniqueness: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_11__.validateSlotUniqueness),
+/* harmony export */   validateTimeRange: () => (/* reexport safe */ _schedule_management__WEBPACK_IMPORTED_MODULE_11__.validateTimeRange)
 /* harmony export */ });
 /* harmony import */ var _ErrorInstructions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ErrorInstructions */ "./assets/src/common/components/ErrorInstructions.tsx");
 /* harmony import */ var _error_page__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./error-page */ "./assets/src/common/components/error-page/index.tsx");
@@ -7795,27 +8062,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CardWithToggle__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./CardWithToggle */ "./assets/src/common/components/CardWithToggle.tsx");
 /* harmony import */ var _form_input_SelectBox__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./form-input/SelectBox */ "./assets/src/common/components/form-input/SelectBox.tsx");
 /* harmony import */ var _form_input_DatePicker__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./form-input/DatePicker */ "./assets/src/common/components/form-input/DatePicker.tsx");
-/* harmony import */ var _form_input_SingleSwitchBox__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./form-input/SingleSwitchBox */ "./assets/src/common/components/form-input/SingleSwitchBox.tsx");
-/* harmony import */ var _EmptyScreen__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./EmptyScreen */ "./assets/src/common/components/EmptyScreen.tsx");
-/* harmony import */ var _schedule_management__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./schedule-management */ "./assets/src/common/components/schedule-management/index.ts");
-/* harmony import */ var _Image__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Image */ "./assets/src/common/components/Image.tsx");
-/* harmony import */ var _SettingsItem__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./SettingsItem */ "./assets/src/common/components/SettingsItem.tsx");
-/* harmony import */ var _InstructionCard__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./InstructionCard */ "./assets/src/common/components/InstructionCard.tsx");
-/* harmony import */ var _form_input_MessageBox__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./form-input/MessageBox */ "./assets/src/common/components/form-input/MessageBox.tsx");
-/* harmony import */ var _DateTimeSettings__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./DateTimeSettings */ "./assets/src/common/components/DateTimeSettings.tsx");
-/* harmony import */ var _ProBtn__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./ProBtn */ "./assets/src/common/components/ProBtn.tsx");
-/* harmony import */ var _StatusBadge__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./StatusBadge */ "./assets/src/common/components/StatusBadge.tsx");
-/* harmony import */ var _table__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./table */ "./assets/src/common/components/table/index.ts");
-/* harmony import */ var _layouts__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./layouts */ "./assets/src/common/components/layouts/index.ts");
-/* harmony import */ var _DeleteConfirmationDialog__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./DeleteConfirmationDialog */ "./assets/src/common/components/DeleteConfirmationDialog.tsx");
-/* harmony import */ var _ModuleConditional__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./ModuleConditional */ "./assets/src/common/components/ModuleConditional.tsx");
-/* harmony import */ var _IconTooltipButton__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./IconTooltipButton */ "./assets/src/common/components/IconTooltipButton.tsx");
-/* harmony import */ var _price__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./price */ "./assets/src/common/components/price/index.tsx");
-/* harmony import */ var _ComingSoon__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./ComingSoon */ "./assets/src/common/components/ComingSoon.tsx");
-/* harmony import */ var _FeatureCard__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./FeatureCard */ "./assets/src/common/components/FeatureCard.tsx");
-/* harmony import */ var _ConfigureModal__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./ConfigureModal */ "./assets/src/common/components/ConfigureModal.tsx");
-/* harmony import */ var _DeleteConfirmationPopover__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./DeleteConfirmationPopover */ "./assets/src/common/components/DeleteConfirmationPopover.tsx");
-/* harmony import */ var _form_input_UploadAudio__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./form-input/UploadAudio */ "./assets/src/common/components/form-input/UploadAudio.tsx");
+/* harmony import */ var _form_input_ColorPicker__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./form-input/ColorPicker */ "./assets/src/common/components/form-input/ColorPicker.tsx");
+/* harmony import */ var _form_input_SingleSwitchBox__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./form-input/SingleSwitchBox */ "./assets/src/common/components/form-input/SingleSwitchBox.tsx");
+/* harmony import */ var _EmptyScreen__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./EmptyScreen */ "./assets/src/common/components/EmptyScreen.tsx");
+/* harmony import */ var _schedule_management__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./schedule-management */ "./assets/src/common/components/schedule-management/index.ts");
+/* harmony import */ var _Image__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Image */ "./assets/src/common/components/Image.tsx");
+/* harmony import */ var _SettingsItem__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./SettingsItem */ "./assets/src/common/components/SettingsItem.tsx");
+/* harmony import */ var _InstructionCard__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./InstructionCard */ "./assets/src/common/components/InstructionCard.tsx");
+/* harmony import */ var _form_input_MessageBox__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./form-input/MessageBox */ "./assets/src/common/components/form-input/MessageBox.tsx");
+/* harmony import */ var _DateTimeSettings__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./DateTimeSettings */ "./assets/src/common/components/DateTimeSettings.tsx");
+/* harmony import */ var _ProBtn__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./ProBtn */ "./assets/src/common/components/ProBtn.tsx");
+/* harmony import */ var _StatusBadge__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./StatusBadge */ "./assets/src/common/components/StatusBadge.tsx");
+/* harmony import */ var _table__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./table */ "./assets/src/common/components/table/index.ts");
+/* harmony import */ var _layouts__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./layouts */ "./assets/src/common/components/layouts/index.ts");
+/* harmony import */ var _DeleteConfirmationDialog__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./DeleteConfirmationDialog */ "./assets/src/common/components/DeleteConfirmationDialog.tsx");
+/* harmony import */ var _ModuleConditional__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./ModuleConditional */ "./assets/src/common/components/ModuleConditional.tsx");
+/* harmony import */ var _IconTooltipButton__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./IconTooltipButton */ "./assets/src/common/components/IconTooltipButton.tsx");
+/* harmony import */ var _price__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./price */ "./assets/src/common/components/price/index.tsx");
+/* harmony import */ var _ComingSoon__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./ComingSoon */ "./assets/src/common/components/ComingSoon.tsx");
+/* harmony import */ var _FeatureCard__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./FeatureCard */ "./assets/src/common/components/FeatureCard.tsx");
+/* harmony import */ var _ConfigureModal__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./ConfigureModal */ "./assets/src/common/components/ConfigureModal.tsx");
+/* harmony import */ var _DeleteConfirmationPopover__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./DeleteConfirmationPopover */ "./assets/src/common/components/DeleteConfirmationPopover.tsx");
+/* harmony import */ var _form_input_UploadAudio__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./form-input/UploadAudio */ "./assets/src/common/components/form-input/UploadAudio.tsx");
+
 
 
 
@@ -7986,7 +8255,7 @@ var NavTab = function NavTab(_ref) {
           }, "measure-".concat(item.tab));
         })
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "flex items-center gap-2",
+        className: "flex items-center gap-2 flex-wrap",
         children: [visibleMobileParents.map(function (item) {
           return item.children ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_4__.DropdownMenu, {
             children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_4__.DropdownMenuTrigger, {
@@ -8223,7 +8492,7 @@ var TopHeader = function TopHeader(_ref) {
     rightContent = _ref.rightContent,
     goBack = _ref.goBack;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    className: "sticky top-0 md:top-[30px] z-50 bg-white wcf-custom-shadow",
+    className: "sticky top-0 sm:top-[40px] md:top-[30px] z-50 bg-white wcf-custom-shadow",
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "flex w-full gap-4 items-center justify-between px-6 py-5 flex-wrap",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
@@ -8575,7 +8844,7 @@ var ScheduleDay = function ScheduleDay(_ref) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "space-y-3",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "flex items-start justify-between p-4",
+      className: "flex items-start justify-between flex-wrap gap-4 p-4",
       onMouseEnter: function onMouseEnter() {
         return setShowApplyToAll(true);
       },
@@ -8583,22 +8852,22 @@ var ScheduleDay = function ScheduleDay(_ref) {
         return setShowApplyToAll(false);
       },
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "flex items-center gap-3",
+        className: "flex items-center gap-2",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_8__.Switch, {
           checked: isActive,
           onCheckedChange: handleStatusToggle,
-          className: "data-[state=checked]:bg-orange-500 mt-1"
+          className: "data-[state=checked]:bg-primary mt-1"
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
           className: "text-base font-medium ".concat(isActive ? "text-gray-900" : "text-gray-500"),
           children: dayLabel
         })]
       }), isActive ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "flex flex-col gap-2 items-start",
+        className: "flex flex-col gap-2 items-start flex-wrap",
         children: (_a = schedule === null || schedule === void 0 ? void 0 : schedule.slots) === null || _a === void 0 ? void 0 : _a.map(function (slot, index) {
           return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-            className: "flex items-center justify-between",
+            className: "flex items-center justify-between flex-wrap",
             children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              className: "flex items-center gap-2",
+              className: "flex items-center gap-2 flex-wrap",
               children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TimeSelectInput__WEBPACK_IMPORTED_MODULE_7__.TimeSelectInput, {
                 value: slot.start,
                 onChange: function onChange(value) {
@@ -8614,7 +8883,7 @@ var ScheduleDay = function ScheduleDay(_ref) {
                 }
               })]
             }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              className: "flex items-center gap-2",
+              className: "flex items-center gap-2 flex-wrap",
               children: [index === 0 && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_tooltip__WEBPACK_IMPORTED_MODULE_9__.TooltipProvider, {
                 children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_shadcn_components_ui_tooltip__WEBPACK_IMPORTED_MODULE_9__.Tooltip, {
                   children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_tooltip__WEBPACK_IMPORTED_MODULE_9__.TooltipTrigger, {
@@ -9040,7 +9309,7 @@ var TimeSelectInput = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.forward
       showSearch: true,
       valueType: "string",
       onChange: handleTimeChange,
-      className: "w-32 min-w-32",
+      className: "w-28 min-w-28",
       selectContentClassName: "min-w-[200px]"
     })
   });
@@ -9118,8 +9387,8 @@ var DAYS_CONFIG = [{
  * Weekdays are active by default, weekends are closed
  */
 var defaultSlots = [{
-  start: "12:00 PM",
-  end: "1:00 PM"
+  start: "8:00 AM",
+  end: "10:00 PM"
 }];
 var defaultSchedule = {
   Mon: {
@@ -9805,6 +10074,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _TablePagination__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./TablePagination */ "./assets/src/common/components/table/TablePagination.tsx");
 /* harmony import */ var _TableSkeleton__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./TableSkeleton */ "./assets/src/common/components/table/TableSkeleton.tsx");
 /* harmony import */ var _TableEmptyScreen__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./TableEmptyScreen */ "./assets/src/common/components/table/TableEmptyScreen.tsx");
+/* harmony import */ var _common_components_table_hooks_useTableWidth__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/common/components/table/hooks/useTableWidth */ "./assets/src/common/components/table/hooks/useTableWidth.ts");
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -9820,6 +10090,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 /**
  * Internal Dependencies
  */
+
 
 
 
@@ -9849,7 +10120,6 @@ function Table(_ref) {
     error = _ref.error,
     _ref$className = _ref.className,
     className = _ref$className === void 0 ? "" : _ref$className,
-    scroll = _ref.scroll,
     _ref$rowSelection = _ref.rowSelection,
     rowSelection = _ref$rowSelection === void 0 ? false : _ref$rowSelection,
     _ref$pagination = _ref.pagination,
@@ -9862,6 +10132,8 @@ function Table(_ref) {
     _ref$size = _ref.size,
     size = _ref$size === void 0 ? "default" : _ref$size,
     onRow = _ref.onRow;
+  var _useTableWidth = (0,_common_components_table_hooks_useTableWidth__WEBPACK_IMPORTED_MODULE_8__.useTableWidth)(),
+    width = _useTableWidth.width;
   // Get row key function
   var getRowKey = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useCallback)(function (record, index) {
     if (typeof rowKey === "function") {
@@ -9974,21 +10246,6 @@ function Table(_ref) {
     "default": "",
     large: "text-base"
   };
-  var scrollStyle = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useMemo)(function () {
-    var style = {};
-    if (scroll === null || scroll === void 0 ? void 0 : scroll.x) {
-      if (typeof scroll.x === "number") {
-        style.minWidth = "".concat(scroll.x, "px");
-      } else if (typeof scroll.x === "string") {
-        style.minWidth = scroll.x;
-      }
-    }
-    if (scroll === null || scroll === void 0 ? void 0 : scroll.y) {
-      style.maxHeight = typeof scroll.y === "number" ? "".concat(scroll.y, "px") : scroll.y;
-      style.overflowY = "auto";
-    }
-    return style;
-  }, [scroll]);
   // Handle row click events
   var handleRowClick = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useCallback)(function (record, index) {
     var rowProps = onRow === null || onRow === void 0 ? void 0 : onRow(record, index);
@@ -10004,6 +10261,9 @@ function Table(_ref) {
   if (loading) {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "bg-white rounded-lg border border-gray-200 ".concat(className),
+      style: {
+        width: "".concat(width, "px")
+      },
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TableSkeleton__WEBPACK_IMPORTED_MODULE_6__.TableSkeleton, {
         rows: skeletonConfig.rows,
         columns: skeletonConfig.columns
@@ -10044,68 +10304,67 @@ function Table(_ref) {
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "bg-white rounded-lg border border-gray-200 ".concat(className),
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "overflow-x-auto",
-      style: scrollStyle,
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_3__.ShadcnTable, {
-        className: sizeClasses[size],
-        children: [showHeader && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_3__.TableHeader, {
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_3__.TableRow, {
-            className: "border-gray-200",
-            children: [rowSelection && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_3__.TableHead, {
-              className: "w-12 px-4",
+    style: {
+      width: "".concat(width, "px")
+    },
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_3__.ShadcnTable, {
+      className: sizeClasses[size],
+      children: [showHeader && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_3__.TableHeader, {
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_3__.TableRow, {
+          className: "border-gray-200",
+          children: [rowSelection && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_3__.TableHead, {
+            className: "w-12 px-4",
+            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_checkbox__WEBPACK_IMPORTED_MODULE_4__.Checkbox, {
+              className: "cursor-pointer",
+              checked: selectionState.isAllSelected,
+              // @ts-ignore - indeterminate is supported
+              indeterminate: selectionState.isIndeterminate,
+              onCheckedChange: function onCheckedChange(checked) {
+                return handleSelectAll(!!checked);
+              }
+            })
+          }), columns.map(function (column) {
+            return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_3__.TableHead, {
+              className: "text-gray-600 font-medium px-4 whitespace-nowrap",
+              style: {
+                width: column.width,
+                textAlign: column.align || "left"
+              },
+              children: column.title
+            }, column.key);
+          })]
+        })
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_3__.TableBody, {
+        children: dataSource.map(function (record, index) {
+          var key = getRowKey(record, index);
+          var isSelected = rowSelection && typeof rowSelection !== "boolean" && (rowSelection.selectedRowKeys || []).includes(key);
+          var checkboxProps = rowSelection && typeof rowSelection !== "boolean" && rowSelection.getCheckboxProps ? rowSelection.getCheckboxProps(record) : {};
+          var rowEventHandlers = handleRowClick(record, index);
+          return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_3__.TableRow, Object.assign({
+            className: "border-gray-200 ".concat(isSelected ? "bg-[#fd6cad03]" : "", " ").concat(rowEventHandlers.onClick ? "cursor-pointer hover:bg-gray-50" : "")
+          }, rowEventHandlers, {
+            children: [rowSelection && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_3__.TableCell, {
+              className: "px-4",
               children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_checkbox__WEBPACK_IMPORTED_MODULE_4__.Checkbox, {
                 className: "cursor-pointer",
-                checked: selectionState.isAllSelected,
-                // @ts-ignore - indeterminate is supported
-                indeterminate: selectionState.isIndeterminate,
+                checked: !!isSelected,
+                disabled: checkboxProps.disabled,
                 onCheckedChange: function onCheckedChange(checked) {
-                  return handleSelectAll(!!checked);
+                  return handleRowSelect(record, !!checked);
                 }
               })
             }), columns.map(function (column) {
-              return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_3__.TableHead, {
-                className: "text-gray-600 font-medium px-4 whitespace-nowrap",
+              return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_3__.TableCell, {
+                className: "px-4",
                 style: {
-                  width: column.width,
                   textAlign: column.align || "left"
                 },
-                children: column.title
+                children: renderCell(column, record, index)
               }, column.key);
             })]
-          })
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_3__.TableBody, {
-          children: dataSource.map(function (record, index) {
-            var key = getRowKey(record, index);
-            var isSelected = rowSelection && typeof rowSelection !== "boolean" && (rowSelection.selectedRowKeys || []).includes(key);
-            var checkboxProps = rowSelection && typeof rowSelection !== "boolean" && rowSelection.getCheckboxProps ? rowSelection.getCheckboxProps(record) : {};
-            var rowEventHandlers = handleRowClick(record, index);
-            return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_3__.TableRow, Object.assign({
-              className: "border-gray-200 ".concat(isSelected ? "bg-[#fd6cad03]" : "", " ").concat(rowEventHandlers.onClick ? "cursor-pointer hover:bg-gray-50" : "")
-            }, rowEventHandlers, {
-              children: [rowSelection && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_3__.TableCell, {
-                className: "px-4",
-                children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_checkbox__WEBPACK_IMPORTED_MODULE_4__.Checkbox, {
-                  className: "cursor-pointer",
-                  checked: !!isSelected,
-                  disabled: checkboxProps.disabled,
-                  onCheckedChange: function onCheckedChange(checked) {
-                    return handleRowSelect(record, !!checked);
-                  }
-                })
-              }), columns.map(function (column) {
-                return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_3__.TableCell, {
-                  className: "px-4",
-                  style: {
-                    textAlign: column.align || "left"
-                  },
-                  children: renderCell(column, record, index)
-                }, column.key);
-              })]
-            }), key);
-          })
-        })]
-      })
+          }), key);
+        })
+      })]
     }), pagination && typeof pagination !== "boolean" && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TablePagination__WEBPACK_IMPORTED_MODULE_5__.TablePaginationComponent, Object.assign({}, pagination))]
   });
 }
@@ -10383,6 +10642,70 @@ var TableSkeleton = function TableSkeleton(_ref) {
     })]
   });
 };
+
+/***/ }),
+
+/***/ "./assets/src/common/components/table/hooks/useTableWidth.ts":
+/*!*******************************************************************!*\
+  !*** ./assets/src/common/components/table/hooks/useTableWidth.ts ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useTableWidth: () => (/* binding */ useTableWidth)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _globalConstant__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/globalConstant */ "./assets/src/globalConstant.ts");
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+/**
+ * WordPress Dependencies
+ */
+
+
+/**
+ * Internal Dependencies
+ */
+
+/**
+ * Table Selection Hook
+ *
+ * Manages table row selection state and provides utility functions
+ * for handling single and multiple row selections.
+ */
+function useTableWidth() {
+  var _useSelect = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_1__.useSelect)(function (select) {
+      return select(_globalConstant__WEBPACK_IMPORTED_MODULE_2__.stores === null || _globalConstant__WEBPACK_IMPORTED_MODULE_2__.stores === void 0 ? void 0 : _globalConstant__WEBPACK_IMPORTED_MODULE_2__.stores.sidebar).getSidebarState();
+    }, []),
+    isExpanded = _useSelect.isExpanded;
+  var _useState = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(window.innerWidth - (isExpanded ? 305 : 120)),
+    _useState2 = _slicedToArray(_useState, 2),
+    width = _useState2[0],
+    setWidth = _useState2[1];
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    var handleResize = function handleResize() {
+      return setWidth(window.innerWidth - (isExpanded ? 305 : 120));
+    };
+    window.addEventListener("resize", handleResize);
+    return function () {
+      return window.removeEventListener("resize", handleResize);
+    };
+  }, [isExpanded]);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    setWidth(window.innerWidth - (isExpanded ? 305 : 120));
+  }, [isExpanded]);
+  return {
+    width: width
+  };
+}
 
 /***/ }),
 
@@ -11650,6 +11973,34 @@ var SettingsIcon = function SettingsIcon() {
 
 /***/ }),
 
+/***/ "./assets/src/common/icons/TableIcon.tsx":
+/*!***********************************************!*\
+  !*** ./assets/src/common/icons/TableIcon.tsx ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   TableIcon: () => (/* binding */ TableIcon)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+
+var TableIcon = function TableIcon(props) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", Object.assign({
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 24 24",
+    width: "1em",
+    height: "1em"
+  }, props, {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+      fill: "currentColor",
+      d: "m21.96 9.73l-1.43-5a.996.996 0 0 0-.96-.73H4.43c-.45 0-.84.3-.96.73l-1.43 5c-.18.63.3 1.27.96 1.27h2.2L4 20h2l.67-5h10.67l.66 5h2l-1.2-9H21c.66 0 1.14-.64.96-1.27M6.93 13l.27-2h9.6l.27 2zm-2.6-4l.86-3h13.63l.86 3z"
+    })
+  }));
+};
+
+/***/ }),
+
 /***/ "./assets/src/common/icons/TableReservation.tsx":
 /*!******************************************************!*\
   !*** ./assets/src/common/icons/TableReservation.tsx ***!
@@ -11865,6 +12216,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   ReservationIcon: () => (/* reexport safe */ _ReservationIcon__WEBPACK_IMPORTED_MODULE_2__.ReservationIcon),
 /* harmony export */   RevenueIcon: () => (/* reexport safe */ _RevenueIcon__WEBPACK_IMPORTED_MODULE_9__.RevenueIcon),
 /* harmony export */   SettingsIcon: () => (/* reexport safe */ _SettingsIcon__WEBPACK_IMPORTED_MODULE_15__.SettingsIcon),
+/* harmony export */   TableIcon: () => (/* reexport safe */ _TableIcon__WEBPACK_IMPORTED_MODULE_16__.TableIcon),
 /* harmony export */   TableReservation: () => (/* reexport safe */ _TableReservation__WEBPACK_IMPORTED_MODULE_11__.TableReservation),
 /* harmony export */   TableReservationIcon: () => (/* reexport safe */ _TableReservationIcon__WEBPACK_IMPORTED_MODULE_10__.TableReservationIcon),
 /* harmony export */   TableRoundIcon: () => (/* reexport safe */ _TableRoundIcon__WEBPACK_IMPORTED_MODULE_5__.TableRoundIcon),
@@ -11887,6 +12239,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _FileIcon__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./FileIcon */ "./assets/src/common/icons/FileIcon.tsx");
 /* harmony import */ var _WordpressIcon__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./WordpressIcon */ "./assets/src/common/icons/WordpressIcon.tsx");
 /* harmony import */ var _SettingsIcon__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./SettingsIcon */ "./assets/src/common/icons/SettingsIcon.tsx");
+/* harmony import */ var _TableIcon__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./TableIcon */ "./assets/src/common/icons/TableIcon.tsx");
+
 
 
 
@@ -11980,7 +12334,8 @@ var reservationFormCustomization = [{
     required: false,
     visible: false,
     inGroup: true,
-    isPro: true
+    isPro: true,
+    module: "table_layout"
   }, {
     id: "name",
     label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Your Name", "wpcafe"),
@@ -12008,7 +12363,7 @@ var reservationFormCustomization = [{
     id: "total_guest",
     label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Total Guests", "wpcafe"),
     type: "number",
-    placeholder: "1",
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Number of Guests", "wpcafe"),
     required: true,
     visible: true,
     notDeletable: true
@@ -12025,7 +12380,8 @@ var reservationFormCustomization = [{
     type: "food_menu",
     required: false,
     visible: false,
-    isPro: true
+    isPro: true,
+    module: "food_ordering"
   }]
 }];
 var defaultSettings = {
@@ -12049,6 +12405,7 @@ var pagination = {
 var stores = (_c = (_b = (_a = window === null || window === void 0 ? void 0 : window.wp) === null || _a === void 0 ? void 0 : _a.hooks) === null || _b === void 0 ? void 0 : _b.applyFilters) === null || _c === void 0 ? void 0 : _c.call(_b, "wpcafe_stores", {
   modules: "wpcafe/modules",
   settings: "wpcafe/settings",
+  sidebar: "wpcafe/sidebar",
   onboard: "wpcafe/onboard",
   reservation: "wpcafe/reservation",
   location: "wpcafe/location",
@@ -12230,6 +12587,38 @@ var generateRandomId = function generateRandomId() {
 
 /***/ }),
 
+/***/ "./assets/src/helpers/getDefaultDateRange.ts":
+/*!***************************************************!*\
+  !*** ./assets/src/helpers/getDefaultDateRange.ts ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getDefaultDateRange: () => (/* binding */ getDefaultDateRange)
+/* harmony export */ });
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/addMonths.js");
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/format.js");
+/**
+ * External Dependencies
+ */
+
+/**
+ * Get default date range for reservation system
+ * Returns today's date as start and 15th of next month as end
+ */
+var getDefaultDateRange = function getDefaultDateRange() {
+  var today = new Date();
+  var nextMonth = (0,date_fns__WEBPACK_IMPORTED_MODULE_0__.addMonths)(today, 1);
+  var fifteenthOfNextMonth = new Date(nextMonth.getFullYear(), nextMonth.getMonth(), 15);
+  return {
+    startDate: (0,date_fns__WEBPACK_IMPORTED_MODULE_1__.format)(today, "yyyy-MM-dd"),
+    endDate: (0,date_fns__WEBPACK_IMPORTED_MODULE_1__.format)(fifteenthOfNextMonth, "yyyy-MM-dd")
+  };
+};
+
+/***/ }),
+
 /***/ "./assets/src/helpers/index.ts":
 /*!*************************************!*\
   !*** ./assets/src/helpers/index.ts ***!
@@ -12242,6 +12631,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   formatDate: () => (/* reexport safe */ _formatDate__WEBPACK_IMPORTED_MODULE_3__.formatDate),
 /* harmony export */   generateRandomId: () => (/* reexport safe */ _generateRandomId__WEBPACK_IMPORTED_MODULE_6__.generateRandomId),
 /* harmony export */   getDateFnsLocale: () => (/* reexport safe */ _dateLocales__WEBPACK_IMPORTED_MODULE_2__.getDateFnsLocale),
+/* harmony export */   getDefaultDateRange: () => (/* reexport safe */ _getDefaultDateRange__WEBPACK_IMPORTED_MODULE_8__.getDefaultDateRange),
 /* harmony export */   openNotification: () => (/* reexport safe */ _openNotification__WEBPACK_IMPORTED_MODULE_4__.openNotification),
 /* harmony export */   scrollBottomToModal: () => (/* reexport safe */ _scrollBottomOfShortcodeModal__WEBPACK_IMPORTED_MODULE_7__.scrollBottomToModal),
 /* harmony export */   scrollTop: () => (/* reexport safe */ _scrollTop__WEBPACK_IMPORTED_MODULE_0__.scrollTop),
@@ -12256,6 +12646,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wpDateFormat__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./wpDateFormat */ "./assets/src/helpers/wpDateFormat.ts");
 /* harmony import */ var _generateRandomId__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./generateRandomId */ "./assets/src/helpers/generateRandomId.ts");
 /* harmony import */ var _scrollBottomOfShortcodeModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./scrollBottomOfShortcodeModal */ "./assets/src/helpers/scrollBottomOfShortcodeModal.ts");
+/* harmony import */ var _getDefaultDateRange__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./getDefaultDateRange */ "./assets/src/helpers/getDefaultDateRange.ts");
+
 
 
 
@@ -12444,12 +12836,13 @@ __webpack_require__.r(__webpack_exports__);
 // Shared helpers to format dates using WordPress date_format
 // Supports common PHP date() tokens: d,j,S,m,n,M,F,y,Y,D,l
 // Escaping with \\ is supported to output literal characters.
-function wpDateFormat(date) {
-  var locale = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "en-US";
-  var _a;
+function wpDateFormat(date, locale) {
+  var _a, _b, _c;
   var pattern = (_a = window === null || window === void 0 ? void 0 : window.wpCafe) === null || _a === void 0 ? void 0 : _a.date_format;
+  // Use provided locale, fallback to wpCafeI18nLoader locale, then navigator language, finally 'en-US'
+  var resolvedLocale = locale || ((_c = (_b = window === null || window === void 0 ? void 0 : window.wpCafeI18nLoader) === null || _b === void 0 ? void 0 : _b.state) === null || _c === void 0 ? void 0 : _c.locale) || (typeof navigator !== "undefined" ? navigator.language : "en-US");
   var fallback = function fallback() {
-    return date.toLocaleDateString(locale, {
+    return date.toLocaleDateString(resolvedLocale, {
       day: "2-digit",
       month: "long",
       year: "numeric"
@@ -12462,7 +12855,7 @@ function wpDateFormat(date) {
   var day = date.getDate();
   var monthIndex = date.getMonth();
   var year = date.getFullYear();
-  var resolved = locale || (typeof navigator !== "undefined" ? navigator.language : "en-US");
+  var resolved = resolvedLocale;
   var monthLong = new Intl.DateTimeFormat(resolved, {
     month: "long"
   }).format(date);
@@ -12951,7 +13344,6 @@ var AdvancedDateRangePicker = function AdvancedDateRangePicker(_ref) {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_popover__WEBPACK_IMPORTED_MODULE_6__.PopoverTrigger, {
       asChild: true,
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_button__WEBPACK_IMPORTED_MODULE_5__.Button, {
-        size: "lg",
         variant: "outlineDark",
         className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_11__.cn)("border-input py-2 px-3 h-11", className),
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
@@ -13481,13 +13873,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/chevron-down.js");
-/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/chevron-left.js");
-/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/chevron-right.js");
-/* harmony import */ var react_day_picker__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-day-picker */ "./node_modules/react-day-picker/dist/esm/helpers/getDefaultClassNames.js");
-/* harmony import */ var react_day_picker__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-day-picker */ "./node_modules/react-day-picker/dist/esm/DayPicker.js");
-/* harmony import */ var _shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/shadcn/lib/utils */ "./assets/src/shadcn/lib/utils.ts");
-/* harmony import */ var _shadcn_components_ui_button__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/shadcn/components/ui/button */ "./assets/src/shadcn/components/ui/button.tsx");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/loader-circle.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/chevron-down.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/chevron-left.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/chevron-right.js");
+/* harmony import */ var react_day_picker__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-day-picker */ "./node_modules/react-day-picker/dist/esm/helpers/getDefaultClassNames.js");
+/* harmony import */ var react_day_picker__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-day-picker */ "./node_modules/react-day-picker/dist/esm/DayPicker.js");
+/* harmony import */ var _shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/shadcn/lib/utils */ "./assets/src/shadcn/lib/utils.ts");
+/* harmony import */ var _shadcn_components_ui_button__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/shadcn/components/ui/button */ "./assets/src/shadcn/components/ui/button.tsx");
 var _templateObject, _templateObject2;
 function _taggedTemplateLiteral(e, t) { return t || (t = e.slice(0)), Object.freeze(Object.defineProperties(e, { raw: { value: Object.freeze(t) } })); }
 var __rest = undefined && undefined.__rest || function (s, e) {
@@ -13515,105 +13908,121 @@ function Calendar(_a) {
     buttonVariant = _a$buttonVariant === void 0 ? "ghost" : _a$buttonVariant,
     formatters = _a.formatters,
     components = _a.components,
-    props = __rest(_a, ["className", "classNames", "showOutsideDays", "captionLayout", "buttonVariant", "formatters", "components"]);
-  var defaultClassNames = (0,react_day_picker__WEBPACK_IMPORTED_MODULE_5__.getDefaultClassNames)();
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_day_picker__WEBPACK_IMPORTED_MODULE_6__.DayPicker, Object.assign({
-    showOutsideDays: showOutsideDays,
-    className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("bg-background group/calendar p-3 [--cell-size:--spacing(8)] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent", String.raw(_templateObject || (_templateObject = _taggedTemplateLiteral(["rtl:**:[.rdp-button_next>svg]:rotate-180"], ["rtl:**:[.rdp-button\\_next>svg]:rotate-180"]))), String.raw(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral(["rtl:**:[.rdp-button_previous>svg]:rotate-180"], ["rtl:**:[.rdp-button\\_previous>svg]:rotate-180"]))), className),
-    captionLayout: captionLayout,
-    formatters: Object.assign({
-      formatMonthDropdown: function formatMonthDropdown(date) {
-        return date.toLocaleString("default", {
-          month: "short"
-        });
-      }
-    }, formatters),
-    classNames: Object.assign({
-      root: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("w-fit", defaultClassNames.root),
-      months: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("flex gap-4 flex-col md:flex-row relative", defaultClassNames.months),
-      month: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("flex flex-col w-full gap-4", defaultClassNames.month),
-      nav: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("flex items-center gap-1 w-full absolute top-0 inset-x-0 justify-between", defaultClassNames.nav),
-      button_previous: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)((0,_shadcn_components_ui_button__WEBPACK_IMPORTED_MODULE_8__.buttonVariants)({
-        variant: buttonVariant
-      }), "size-(--cell-size) aria-disabled:opacity-50 p-0 select-none", defaultClassNames.button_previous),
-      button_next: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)((0,_shadcn_components_ui_button__WEBPACK_IMPORTED_MODULE_8__.buttonVariants)({
-        variant: buttonVariant
-      }), "size-(--cell-size) aria-disabled:opacity-50 p-0 select-none", defaultClassNames.button_next),
-      month_caption: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("flex items-center justify-center h-(--cell-size) w-full px-(--cell-size)", defaultClassNames.month_caption),
-      dropdowns: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("w-full flex items-center text-sm font-medium justify-center h-(--cell-size) gap-1.5", defaultClassNames.dropdowns),
-      dropdown_root: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("relative has-focus:border-ring border border-input shadow-xs has-focus:ring-ring/50 has-focus:ring-[3px] rounded-md", defaultClassNames.dropdown_root),
-      dropdown: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("absolute bg-popover inset-0 opacity-0", defaultClassNames.dropdown),
-      caption_label: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("select-none font-medium", captionLayout === "label" ? "text-sm" : "rounded-md pl-2 pr-1 flex items-center gap-1 text-sm h-8 [&>svg]:text-muted-foreground [&>svg]:size-3.5", defaultClassNames.caption_label),
-      table: "w-full border-collapse",
-      weekdays: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("flex", defaultClassNames.weekdays),
-      weekday: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("text-muted-foreground rounded-md flex-1 font-normal text-[0.8rem] select-none", defaultClassNames.weekday),
-      week: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("flex w-full mt-2", defaultClassNames.week),
-      week_number_header: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("select-none w-(--cell-size)", defaultClassNames.week_number_header),
-      week_number: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("text-[0.8rem] select-none text-muted-foreground", defaultClassNames.week_number),
-      day: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("relative w-full h-full p-0 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md group/day aspect-square select-none", defaultClassNames.day),
-      range_start: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("rounded-l-md bg-accent", defaultClassNames.range_start),
-      range_middle: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("rounded-none", defaultClassNames.range_middle),
-      range_end: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("rounded-r-md bg-accent", defaultClassNames.range_end),
-      today: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("bg-accent text-accent-foreground rounded-md data-[selected=true]:rounded-none", defaultClassNames.today),
-      outside: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("text-muted-foreground aria-selected:text-muted-foreground", defaultClassNames.outside),
-      disabled: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("text-muted-foreground opacity-50", defaultClassNames.disabled),
-      hidden: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("invisible", defaultClassNames.hidden)
-    }, classNames),
-    components: Object.assign({
-      Root: function Root(_a) {
-        var className = _a.className,
-          rootRef = _a.rootRef,
-          props = __rest(_a, ["className", "rootRef"]);
-        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", Object.assign({
-          "data-slot": "calendar",
-          ref: rootRef,
-          className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)(className)
-        }, props));
-      },
-      Chevron: function Chevron(_a) {
-        var className = _a.className,
-          orientation = _a.orientation,
-          props = __rest(_a, ["className", "orientation"]);
-        if (orientation === "left") {
+    _a$loading = _a.loading,
+    loading = _a$loading === void 0 ? false : _a$loading,
+    props = __rest(_a, ["className", "classNames", "showOutsideDays", "captionLayout", "buttonVariant", "formatters", "components", "loading"]);
+  var defaultClassNames = (0,react_day_picker__WEBPACK_IMPORTED_MODULE_6__.getDefaultClassNames)();
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "relative",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_day_picker__WEBPACK_IMPORTED_MODULE_7__.DayPicker, Object.assign({
+      showOutsideDays: showOutsideDays,
+      className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("bg-background group/calendar p-3 [--cell-size:--spacing(8)] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent", String.raw(_templateObject || (_templateObject = _taggedTemplateLiteral(["rtl:**:[.rdp-button_next>svg]:rotate-180"], ["rtl:**:[.rdp-button\\_next>svg]:rotate-180"]))), String.raw(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral(["rtl:**:[.rdp-button_previous>svg]:rotate-180"], ["rtl:**:[.rdp-button\\_previous>svg]:rotate-180"]))), loading && "pointer-events-none", className),
+      captionLayout: captionLayout,
+      formatters: Object.assign({
+        formatMonthDropdown: function formatMonthDropdown(date) {
+          return date.toLocaleString("default", {
+            month: "short"
+          });
+        }
+      }, formatters),
+      classNames: Object.assign({
+        root: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("w-fit", defaultClassNames.root),
+        months: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("flex gap-4 flex-col md:flex-row relative", defaultClassNames.months),
+        month: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("flex flex-col w-full gap-4", defaultClassNames.month),
+        nav: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("flex items-center gap-1 w-full absolute top-0 inset-x-0 justify-between", defaultClassNames.nav),
+        button_previous: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)((0,_shadcn_components_ui_button__WEBPACK_IMPORTED_MODULE_9__.buttonVariants)({
+          variant: buttonVariant
+        }), "size-(--cell-size) aria-disabled:opacity-50 p-0 select-none", defaultClassNames.button_previous),
+        button_next: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)((0,_shadcn_components_ui_button__WEBPACK_IMPORTED_MODULE_9__.buttonVariants)({
+          variant: buttonVariant
+        }), "size-(--cell-size) aria-disabled:opacity-50 p-0 select-none", defaultClassNames.button_next),
+        month_caption: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("flex items-center justify-center h-(--cell-size) w-full px-(--cell-size)", defaultClassNames.month_caption),
+        dropdowns: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("w-full flex items-center text-sm font-medium justify-center h-(--cell-size) gap-1.5", defaultClassNames.dropdowns),
+        dropdown_root: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("relative has-focus:border-ring border border-input shadow-xs has-focus:ring-ring/50 has-focus:ring-[3px] rounded-md", defaultClassNames.dropdown_root),
+        dropdown: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("absolute bg-popover inset-0 opacity-0", defaultClassNames.dropdown),
+        caption_label: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("select-none font-medium", captionLayout === "label" ? "text-sm" : "rounded-md pl-2 pr-1 flex items-center gap-1 text-sm h-8 [&>svg]:text-muted-foreground [&>svg]:size-3.5", defaultClassNames.caption_label),
+        table: "w-full border-collapse",
+        weekdays: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("flex", defaultClassNames.weekdays),
+        weekday: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("text-muted-foreground rounded-md flex-1 font-normal text-[0.8rem] select-none", defaultClassNames.weekday),
+        week: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("flex w-full mt-2", defaultClassNames.week),
+        week_number_header: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("select-none w-(--cell-size)", defaultClassNames.week_number_header),
+        week_number: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("text-[0.8rem] select-none text-muted-foreground", defaultClassNames.week_number),
+        day: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("relative w-full h-full p-0 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md group/day aspect-square select-none", defaultClassNames.day),
+        range_start: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("rounded-l-md bg-accent", defaultClassNames.range_start),
+        range_middle: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("rounded-none", defaultClassNames.range_middle),
+        range_end: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("rounded-r-md bg-accent", defaultClassNames.range_end),
+        today: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("bg-accent text-accent-foreground rounded-md data-[selected=true]:rounded-none", defaultClassNames.today),
+        outside: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("text-muted-foreground aria-selected:text-muted-foreground", defaultClassNames.outside),
+        disabled: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("text-muted-foreground opacity-50", defaultClassNames.disabled),
+        hidden: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("invisible", defaultClassNames.hidden)
+      }, classNames),
+      components: Object.assign({
+        Root: function Root(_a) {
+          var className = _a.className,
+            rootRef = _a.rootRef,
+            props = __rest(_a, ["className", "rootRef"]);
+          return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", Object.assign({
+            "data-slot": "calendar",
+            ref: rootRef,
+            className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)(className)
+          }, props));
+        },
+        Chevron: function Chevron(_a) {
+          var className = _a.className,
+            orientation = _a.orientation,
+            props = __rest(_a, ["className", "orientation"]);
+          if (orientation === "left") {
+            return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_4__["default"], Object.assign({
+              className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("size-4", className)
+            }, props));
+          }
+          if (orientation === "right") {
+            return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_5__["default"], Object.assign({
+              className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("size-4", className)
+            }, props));
+          }
           return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_3__["default"], Object.assign({
-            className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("size-4", className)
+            className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("size-4", className)
           }, props));
+        },
+        DayButton: CalendarDayButton,
+        WeekNumber: function WeekNumber(_a) {
+          var children = _a.children,
+            props = __rest(_a, ["children"]);
+          return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("td", Object.assign({}, props, {
+            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+              className: "flex size-(--cell-size) items-center justify-center text-center",
+              children: children
+            })
+          }));
         }
-        if (orientation === "right") {
-          return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_4__["default"], Object.assign({
-            className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("size-4", className)
-          }, props));
-        }
-        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_2__["default"], Object.assign({
-          className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("size-4", className)
-        }, props));
-      },
-      DayButton: CalendarDayButton,
-      WeekNumber: function WeekNumber(_a) {
-        var children = _a.children,
-          props = __rest(_a, ["children"]);
-        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("td", Object.assign({}, props, {
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-            className: "flex size-(--cell-size) items-center justify-center text-center",
-            children: children
-          })
-        }));
-      }
-    }, components)
-  }, props));
+      }, components)
+    }, props)), loading && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "absolute inset-0 bg-white/70 flex justify-center items-center rounded-lg",
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "flex flex-col items-center",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          className: "h-8 w-8 animate-spin text-primary"
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+          className: "mt-3 text-gray-600 text-sm",
+          children: "Loading..."
+        })]
+      })
+    })]
+  });
 }
 function CalendarDayButton(_a) {
   var className = _a.className,
     day = _a.day,
     modifiers = _a.modifiers,
     props = __rest(_a, ["className", "day", "modifiers"]);
-  var defaultClassNames = (0,react_day_picker__WEBPACK_IMPORTED_MODULE_5__.getDefaultClassNames)();
+  var defaultClassNames = (0,react_day_picker__WEBPACK_IMPORTED_MODULE_6__.getDefaultClassNames)();
   var ref = _wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useRef(null);
   _wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect(function () {
     var _a;
     if (modifiers.focused) (_a = ref.current) === null || _a === void 0 ? void 0 : _a.focus();
   }, [modifiers.focused]);
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_button__WEBPACK_IMPORTED_MODULE_8__.Button, Object.assign({
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_button__WEBPACK_IMPORTED_MODULE_9__.Button, Object.assign({
     ref: ref,
     variant: "ghost",
     size: "icon",
@@ -13622,7 +14031,7 @@ function CalendarDayButton(_a) {
     "data-range-start": modifiers.range_start,
     "data-range-end": modifiers.range_end,
     "data-range-middle": modifiers.range_middle,
-    className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground data-[range-middle=true]:bg-accent data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 dark:hover:text-accent-foreground flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70", defaultClassNames.day, className)
+    className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground data-[range-middle=true]:bg-accent data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 dark:hover:text-accent-foreground flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70", defaultClassNames.day, className)
   }, props));
 }
 
@@ -14658,7 +15067,7 @@ function Input(_a) {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", Object.assign({
     type: type,
     "data-slot": "input",
-    className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_1__.cn)("file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input! flex h-11 w-full min-w-0 rounded-md! border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm", "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive", className)
+    className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_1__.cn)("file:text-foreground placeholder:text-muted-foreground/55 selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input! flex h-11 w-full min-w-0 rounded-md! border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm", "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive", className)
   }, props));
 }
 
@@ -15712,11 +16121,14 @@ var __rest = undefined && undefined.__rest || function (s, e) {
 
 function TooltipProvider(_a) {
   var _a$delayDuration = _a.delayDuration,
-    delayDuration = _a$delayDuration === void 0 ? 0 : _a$delayDuration,
-    props = __rest(_a, ["delayDuration"]);
+    delayDuration = _a$delayDuration === void 0 ? 300 : _a$delayDuration,
+    _a$skipDelayDuration = _a.skipDelayDuration,
+    skipDelayDuration = _a$skipDelayDuration === void 0 ? 100 : _a$skipDelayDuration,
+    props = __rest(_a, ["delayDuration", "skipDelayDuration"]);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_radix_ui_react_tooltip__WEBPACK_IMPORTED_MODULE_1__.Provider, Object.assign({
     "data-slot": "tooltip-provider",
-    delayDuration: delayDuration
+    delayDuration: delayDuration,
+    skipDelayDuration: skipDelayDuration
   }, props));
 }
 function Tooltip(_a) {

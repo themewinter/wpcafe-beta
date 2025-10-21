@@ -18,6 +18,7 @@ use WpCafe\Settings\Settings_Service_Provider;
 use WpCafe\Onboard\Onboard_Service_Provider;
 use WpCafe\Reservation\Reservation_Service_Provider;
 use WpCafe\Dashboard\Dashboard_Service_Provider;
+use WpCafe\Payments\Payment_Service_Provider;
 use WpCafe\Integrations\Integration_Service_Provider;
 /**
  * GlobalService Provider class
@@ -46,13 +47,14 @@ class Global_Service_Provider implements Provider_Contract {
         'location'      => Location_Service_Provider::class,
         'products'      => Products_Service_Provider::class,
         'dashboard'     => Dashboard_Service_Provider::class,
+        'payments'      => Payment_Service_Provider::class,
         'integrations'  => Integration_Service_Provider::class,
     ];
 
     /**
      * GlobalServiceProvider
      *
-     * @return  [type]  [return description]
+     * @return  void
      */
     public function __construct() {
         $this->container = wpcafe_container();
@@ -63,7 +65,7 @@ class Global_Service_Provider implements Provider_Contract {
     /**
      * Register all module providers
      *
-     * @return  vod
+     * @return  void
      */
     public function register() {
         $providers = $this->get_providers();
@@ -101,7 +103,7 @@ class Global_Service_Provider implements Provider_Contract {
     /**
      * Get providers
      *
-     * @return  array
+     * @return  array The providers.
      */
     private function get_providers() {
         return apply_filters( 'wpcafe_service_providers', $this->providers );

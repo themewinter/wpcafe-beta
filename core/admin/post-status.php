@@ -54,13 +54,31 @@ class Post_Status implements Hookable_Service_Contract {
             'label_count'               => _n_noop( 'Confirmed <span class="count">(%s)</span>', 'Confirmed <span class="count">(%s)</span>', 'wpcafe' ),
         ] );
 
-        register_post_status( 'pending', [
-            'label'                     => _x( 'Confirmed', 'wpcafe' ),
+        register_post_status( 'pending_payment', [
+            'label'                     => _x( 'Pending Payment', 'wpcafe' ),
             'public'                    => true,
             'exclude_from_search'       => false,
             'show_in_admin_all_list'    => false,
             'show_in_admin_status_list' => false,
-            'label_count'               => _n_noop( 'Confirmed <span class="count">(%s)</span>', 'Confirmed <span class="count">(%s)</span>', 'wpcafe' ),
+            'label_count'               => _n_noop( 'Pending Payment <span class="count">(%s)</span>', 'Pending Payment <span class="count">(%s)</span>', 'wpcafe' ),
+        ] );
+
+        register_post_status( 'refunded', [
+            'label'                     => _x( 'Refunded', 'wpcafe' ),
+            'public'                    => true,
+            'exclude_from_search'       => false,
+            'show_in_admin_all_list'    => false,
+            'show_in_admin_status_list' => false,
+            'label_count'               => _n_noop( 'Refunded <span class="count">(%s)</span>', 'Refunded <span class="count">(%s)</span>', 'wpcafe' ),
+        ] );
+
+        register_post_status( 'cancelled', [
+            'label'                     => _x( 'Cancelled', 'wpcafe' ),
+            'public'                    => true,
+            'exclude_from_search'       => false,
+            'show_in_admin_all_list'    => false,
+            'show_in_admin_status_list' => false,
+            'label_count'               => _n_noop( 'Cancelled <span class="count">(%s)</span>', 'Cancelled <span class="count">(%s)</span>', 'wpcafe' ),
         ] );
     }
 }

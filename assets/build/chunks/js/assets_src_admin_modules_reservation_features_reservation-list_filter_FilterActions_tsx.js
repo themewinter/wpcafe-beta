@@ -242,9 +242,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/format.js");
-/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/isValid.js");
-/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/parse.js");
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/isValid.js");
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/parse.js");
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/helpers */ "./assets/src/helpers/index.ts");
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
@@ -263,6 +263,7 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
  * Date utility functions for reservation list
  */
 
+
 /**
  * Format date string for display
  * @param dateString - Date in DD-MM-YYYY format
@@ -270,15 +271,9 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
  */
 var formatDateForDisplay = function formatDateForDisplay(dateString) {
   try {
-    // Handle DD-MM-YYYY format from API
-    var parsedDate = (0,date_fns__WEBPACK_IMPORTED_MODULE_3__.parse)(dateString, "dd-MM-yyyy", new Date());
-    if ((0,date_fns__WEBPACK_IMPORTED_MODULE_2__.isValid)(parsedDate)) {
-      return (0,date_fns__WEBPACK_IMPORTED_MODULE_1__.format)(parsedDate, "MMMM d, yyyy");
-    }
-    // Fallback: try other common date formats
-    var isoDate = (0,date_fns__WEBPACK_IMPORTED_MODULE_3__.parse)(dateString, "yyyy-MM-dd", new Date());
-    if ((0,date_fns__WEBPACK_IMPORTED_MODULE_2__.isValid)(isoDate)) {
-      return (0,date_fns__WEBPACK_IMPORTED_MODULE_1__.format)(isoDate, "MMMM d, yyyy");
+    var isoDate = (0,date_fns__WEBPACK_IMPORTED_MODULE_2__.parse)(dateString, "yyyy-MM-dd", new Date());
+    if ((0,date_fns__WEBPACK_IMPORTED_MODULE_1__.isValid)(isoDate)) {
+      return (0,_helpers__WEBPACK_IMPORTED_MODULE_3__.wpDateFormat)(isoDate);
     }
     return dateString;
   } catch (_a) {
@@ -313,9 +308,9 @@ var groupReservationsByDate = function groupReservationsByDate(reservationList) 
   }).sort(function (a, b) {
     // Sort by date (newest first)
     try {
-      var dateA = (0,date_fns__WEBPACK_IMPORTED_MODULE_3__.parse)(a.date, "dd-MM-yyyy", new Date());
-      var dateB = (0,date_fns__WEBPACK_IMPORTED_MODULE_3__.parse)(b.date, "dd-MM-yyyy", new Date());
-      if ((0,date_fns__WEBPACK_IMPORTED_MODULE_2__.isValid)(dateA) && (0,date_fns__WEBPACK_IMPORTED_MODULE_2__.isValid)(dateB)) {
+      var dateA = (0,date_fns__WEBPACK_IMPORTED_MODULE_2__.parse)(a.date, "dd-MM-yyyy", new Date());
+      var dateB = (0,date_fns__WEBPACK_IMPORTED_MODULE_2__.parse)(b.date, "dd-MM-yyyy", new Date());
+      if ((0,date_fns__WEBPACK_IMPORTED_MODULE_1__.isValid)(dateA) && (0,date_fns__WEBPACK_IMPORTED_MODULE_1__.isValid)(dateB)) {
         return dateB.getTime() - dateA.getTime();
       }
       // Fallback: string comparison
@@ -448,8 +443,8 @@ var foodOrderOptions = [{
 }];
 // Helper function to safely parse date strings
 var parseDateString = function parseDateString(dateStr) {
-  var parsed = (0,date_fns__WEBPACK_IMPORTED_MODULE_3__.parse)(dateStr, "yyyy-MM-dd", new Date());
-  return (0,date_fns__WEBPACK_IMPORTED_MODULE_2__.isValid)(parsed) ? parsed : undefined;
+  var parsed = (0,date_fns__WEBPACK_IMPORTED_MODULE_2__.parse)(dateStr, "yyyy-MM-dd", new Date());
+  return (0,date_fns__WEBPACK_IMPORTED_MODULE_1__.isValid)(parsed) ? parsed : undefined;
 };
 
 /***/ }),
@@ -2440,6 +2435,44 @@ var Reservations = /*#__PURE__*/function (_ApiBase) {
         }, _callee5, this);
       }));
     }
+  }, {
+    key: "getReservationsTimeSlots",
+    value: function getReservationsTimeSlots(params) {
+      return __awaiter(this, void 0, void 0, /*#__PURE__*/_regenerator().m(function _callee6() {
+        return _regenerator().w(function (_context6) {
+          while (1) switch (_context6.n) {
+            case 0:
+              return _context6.a(2, this.get("time-slots", params));
+          }
+        }, _callee6, this);
+      }));
+    }
+  }, {
+    key: "getSeatCapacity",
+    value: function getSeatCapacity(params) {
+      return __awaiter(this, void 0, void 0, /*#__PURE__*/_regenerator().m(function _callee7() {
+        return _regenerator().w(function (_context7) {
+          while (1) switch (_context7.n) {
+            case 0:
+              return _context7.a(2, this.get("reservation-capacity", params));
+          }
+        }, _callee7, this);
+      }));
+    }
+  }, {
+    key: "cancelReservation",
+    value: function cancelReservation(params) {
+      return __awaiter(this, void 0, void 0, /*#__PURE__*/_regenerator().m(function _callee8() {
+        var query;
+        return _regenerator().w(function (_context8) {
+          while (1) switch (_context8.n) {
+            case 0:
+              query = new URLSearchParams(params).toString();
+              return _context8.a(2, this.put("reservation-cancel?".concat(query), {}));
+          }
+        }, _callee8, this);
+      }));
+    }
   }]);
 }(_api_base__WEBPACK_IMPORTED_MODULE_1__["default"]);
 
@@ -3230,7 +3263,8 @@ var reservationFormCustomization = [{
     required: false,
     visible: false,
     inGroup: true,
-    isPro: true
+    isPro: true,
+    module: "table_layout"
   }, {
     id: "name",
     label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Your Name", "wpcafe"),
@@ -3258,7 +3292,7 @@ var reservationFormCustomization = [{
     id: "total_guest",
     label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Total Guests", "wpcafe"),
     type: "number",
-    placeholder: "1",
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Number of Guests", "wpcafe"),
     required: true,
     visible: true,
     notDeletable: true
@@ -3275,7 +3309,8 @@ var reservationFormCustomization = [{
     type: "food_menu",
     required: false,
     visible: false,
-    isPro: true
+    isPro: true,
+    module: "food_ordering"
   }]
 }];
 var defaultSettings = {
@@ -3299,6 +3334,7 @@ var pagination = {
 var stores = (_c = (_b = (_a = window === null || window === void 0 ? void 0 : window.wp) === null || _a === void 0 ? void 0 : _a.hooks) === null || _b === void 0 ? void 0 : _b.applyFilters) === null || _c === void 0 ? void 0 : _c.call(_b, "wpcafe_stores", {
   modules: "wpcafe/modules",
   settings: "wpcafe/settings",
+  sidebar: "wpcafe/sidebar",
   onboard: "wpcafe/onboard",
   reservation: "wpcafe/reservation",
   location: "wpcafe/location",
@@ -3480,6 +3516,38 @@ var generateRandomId = function generateRandomId() {
 
 /***/ }),
 
+/***/ "./assets/src/helpers/getDefaultDateRange.ts":
+/*!***************************************************!*\
+  !*** ./assets/src/helpers/getDefaultDateRange.ts ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getDefaultDateRange: () => (/* binding */ getDefaultDateRange)
+/* harmony export */ });
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/addMonths.js");
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/format.js");
+/**
+ * External Dependencies
+ */
+
+/**
+ * Get default date range for reservation system
+ * Returns today's date as start and 15th of next month as end
+ */
+var getDefaultDateRange = function getDefaultDateRange() {
+  var today = new Date();
+  var nextMonth = (0,date_fns__WEBPACK_IMPORTED_MODULE_0__.addMonths)(today, 1);
+  var fifteenthOfNextMonth = new Date(nextMonth.getFullYear(), nextMonth.getMonth(), 15);
+  return {
+    startDate: (0,date_fns__WEBPACK_IMPORTED_MODULE_1__.format)(today, "yyyy-MM-dd"),
+    endDate: (0,date_fns__WEBPACK_IMPORTED_MODULE_1__.format)(fifteenthOfNextMonth, "yyyy-MM-dd")
+  };
+};
+
+/***/ }),
+
 /***/ "./assets/src/helpers/index.ts":
 /*!*************************************!*\
   !*** ./assets/src/helpers/index.ts ***!
@@ -3492,6 +3560,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   formatDate: () => (/* reexport safe */ _formatDate__WEBPACK_IMPORTED_MODULE_3__.formatDate),
 /* harmony export */   generateRandomId: () => (/* reexport safe */ _generateRandomId__WEBPACK_IMPORTED_MODULE_6__.generateRandomId),
 /* harmony export */   getDateFnsLocale: () => (/* reexport safe */ _dateLocales__WEBPACK_IMPORTED_MODULE_2__.getDateFnsLocale),
+/* harmony export */   getDefaultDateRange: () => (/* reexport safe */ _getDefaultDateRange__WEBPACK_IMPORTED_MODULE_8__.getDefaultDateRange),
 /* harmony export */   openNotification: () => (/* reexport safe */ _openNotification__WEBPACK_IMPORTED_MODULE_4__.openNotification),
 /* harmony export */   scrollBottomToModal: () => (/* reexport safe */ _scrollBottomOfShortcodeModal__WEBPACK_IMPORTED_MODULE_7__.scrollBottomToModal),
 /* harmony export */   scrollTop: () => (/* reexport safe */ _scrollTop__WEBPACK_IMPORTED_MODULE_0__.scrollTop),
@@ -3506,6 +3575,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wpDateFormat__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./wpDateFormat */ "./assets/src/helpers/wpDateFormat.ts");
 /* harmony import */ var _generateRandomId__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./generateRandomId */ "./assets/src/helpers/generateRandomId.ts");
 /* harmony import */ var _scrollBottomOfShortcodeModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./scrollBottomOfShortcodeModal */ "./assets/src/helpers/scrollBottomOfShortcodeModal.ts");
+/* harmony import */ var _getDefaultDateRange__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./getDefaultDateRange */ "./assets/src/helpers/getDefaultDateRange.ts");
+
 
 
 
@@ -3694,12 +3765,13 @@ __webpack_require__.r(__webpack_exports__);
 // Shared helpers to format dates using WordPress date_format
 // Supports common PHP date() tokens: d,j,S,m,n,M,F,y,Y,D,l
 // Escaping with \\ is supported to output literal characters.
-function wpDateFormat(date) {
-  var locale = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "en-US";
-  var _a;
+function wpDateFormat(date, locale) {
+  var _a, _b, _c;
   var pattern = (_a = window === null || window === void 0 ? void 0 : window.wpCafe) === null || _a === void 0 ? void 0 : _a.date_format;
+  // Use provided locale, fallback to wpCafeI18nLoader locale, then navigator language, finally 'en-US'
+  var resolvedLocale = locale || ((_c = (_b = window === null || window === void 0 ? void 0 : window.wpCafeI18nLoader) === null || _b === void 0 ? void 0 : _b.state) === null || _c === void 0 ? void 0 : _c.locale) || (typeof navigator !== "undefined" ? navigator.language : "en-US");
   var fallback = function fallback() {
-    return date.toLocaleDateString(locale, {
+    return date.toLocaleDateString(resolvedLocale, {
       day: "2-digit",
       month: "long",
       year: "numeric"
@@ -3712,7 +3784,7 @@ function wpDateFormat(date) {
   var day = date.getDate();
   var monthIndex = date.getMonth();
   var year = date.getFullYear();
-  var resolved = locale || (typeof navigator !== "undefined" ? navigator.language : "en-US");
+  var resolved = resolvedLocale;
   var monthLong = new Intl.DateTimeFormat(resolved, {
     month: "long"
   }).format(date);
@@ -3896,13 +3968,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/chevron-down.js");
-/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/chevron-left.js");
-/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/chevron-right.js");
-/* harmony import */ var react_day_picker__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-day-picker */ "./node_modules/react-day-picker/dist/esm/helpers/getDefaultClassNames.js");
-/* harmony import */ var react_day_picker__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-day-picker */ "./node_modules/react-day-picker/dist/esm/DayPicker.js");
-/* harmony import */ var _shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/shadcn/lib/utils */ "./assets/src/shadcn/lib/utils.ts");
-/* harmony import */ var _shadcn_components_ui_button__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/shadcn/components/ui/button */ "./assets/src/shadcn/components/ui/button.tsx");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/loader-circle.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/chevron-down.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/chevron-left.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/chevron-right.js");
+/* harmony import */ var react_day_picker__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-day-picker */ "./node_modules/react-day-picker/dist/esm/helpers/getDefaultClassNames.js");
+/* harmony import */ var react_day_picker__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-day-picker */ "./node_modules/react-day-picker/dist/esm/DayPicker.js");
+/* harmony import */ var _shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/shadcn/lib/utils */ "./assets/src/shadcn/lib/utils.ts");
+/* harmony import */ var _shadcn_components_ui_button__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/shadcn/components/ui/button */ "./assets/src/shadcn/components/ui/button.tsx");
 var _templateObject, _templateObject2;
 function _taggedTemplateLiteral(e, t) { return t || (t = e.slice(0)), Object.freeze(Object.defineProperties(e, { raw: { value: Object.freeze(t) } })); }
 var __rest = undefined && undefined.__rest || function (s, e) {
@@ -3930,105 +4003,121 @@ function Calendar(_a) {
     buttonVariant = _a$buttonVariant === void 0 ? "ghost" : _a$buttonVariant,
     formatters = _a.formatters,
     components = _a.components,
-    props = __rest(_a, ["className", "classNames", "showOutsideDays", "captionLayout", "buttonVariant", "formatters", "components"]);
-  var defaultClassNames = (0,react_day_picker__WEBPACK_IMPORTED_MODULE_5__.getDefaultClassNames)();
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_day_picker__WEBPACK_IMPORTED_MODULE_6__.DayPicker, Object.assign({
-    showOutsideDays: showOutsideDays,
-    className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("bg-background group/calendar p-3 [--cell-size:--spacing(8)] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent", String.raw(_templateObject || (_templateObject = _taggedTemplateLiteral(["rtl:**:[.rdp-button_next>svg]:rotate-180"], ["rtl:**:[.rdp-button\\_next>svg]:rotate-180"]))), String.raw(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral(["rtl:**:[.rdp-button_previous>svg]:rotate-180"], ["rtl:**:[.rdp-button\\_previous>svg]:rotate-180"]))), className),
-    captionLayout: captionLayout,
-    formatters: Object.assign({
-      formatMonthDropdown: function formatMonthDropdown(date) {
-        return date.toLocaleString("default", {
-          month: "short"
-        });
-      }
-    }, formatters),
-    classNames: Object.assign({
-      root: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("w-fit", defaultClassNames.root),
-      months: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("flex gap-4 flex-col md:flex-row relative", defaultClassNames.months),
-      month: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("flex flex-col w-full gap-4", defaultClassNames.month),
-      nav: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("flex items-center gap-1 w-full absolute top-0 inset-x-0 justify-between", defaultClassNames.nav),
-      button_previous: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)((0,_shadcn_components_ui_button__WEBPACK_IMPORTED_MODULE_8__.buttonVariants)({
-        variant: buttonVariant
-      }), "size-(--cell-size) aria-disabled:opacity-50 p-0 select-none", defaultClassNames.button_previous),
-      button_next: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)((0,_shadcn_components_ui_button__WEBPACK_IMPORTED_MODULE_8__.buttonVariants)({
-        variant: buttonVariant
-      }), "size-(--cell-size) aria-disabled:opacity-50 p-0 select-none", defaultClassNames.button_next),
-      month_caption: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("flex items-center justify-center h-(--cell-size) w-full px-(--cell-size)", defaultClassNames.month_caption),
-      dropdowns: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("w-full flex items-center text-sm font-medium justify-center h-(--cell-size) gap-1.5", defaultClassNames.dropdowns),
-      dropdown_root: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("relative has-focus:border-ring border border-input shadow-xs has-focus:ring-ring/50 has-focus:ring-[3px] rounded-md", defaultClassNames.dropdown_root),
-      dropdown: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("absolute bg-popover inset-0 opacity-0", defaultClassNames.dropdown),
-      caption_label: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("select-none font-medium", captionLayout === "label" ? "text-sm" : "rounded-md pl-2 pr-1 flex items-center gap-1 text-sm h-8 [&>svg]:text-muted-foreground [&>svg]:size-3.5", defaultClassNames.caption_label),
-      table: "w-full border-collapse",
-      weekdays: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("flex", defaultClassNames.weekdays),
-      weekday: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("text-muted-foreground rounded-md flex-1 font-normal text-[0.8rem] select-none", defaultClassNames.weekday),
-      week: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("flex w-full mt-2", defaultClassNames.week),
-      week_number_header: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("select-none w-(--cell-size)", defaultClassNames.week_number_header),
-      week_number: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("text-[0.8rem] select-none text-muted-foreground", defaultClassNames.week_number),
-      day: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("relative w-full h-full p-0 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md group/day aspect-square select-none", defaultClassNames.day),
-      range_start: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("rounded-l-md bg-accent", defaultClassNames.range_start),
-      range_middle: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("rounded-none", defaultClassNames.range_middle),
-      range_end: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("rounded-r-md bg-accent", defaultClassNames.range_end),
-      today: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("bg-accent text-accent-foreground rounded-md data-[selected=true]:rounded-none", defaultClassNames.today),
-      outside: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("text-muted-foreground aria-selected:text-muted-foreground", defaultClassNames.outside),
-      disabled: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("text-muted-foreground opacity-50", defaultClassNames.disabled),
-      hidden: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("invisible", defaultClassNames.hidden)
-    }, classNames),
-    components: Object.assign({
-      Root: function Root(_a) {
-        var className = _a.className,
-          rootRef = _a.rootRef,
-          props = __rest(_a, ["className", "rootRef"]);
-        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", Object.assign({
-          "data-slot": "calendar",
-          ref: rootRef,
-          className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)(className)
-        }, props));
-      },
-      Chevron: function Chevron(_a) {
-        var className = _a.className,
-          orientation = _a.orientation,
-          props = __rest(_a, ["className", "orientation"]);
-        if (orientation === "left") {
+    _a$loading = _a.loading,
+    loading = _a$loading === void 0 ? false : _a$loading,
+    props = __rest(_a, ["className", "classNames", "showOutsideDays", "captionLayout", "buttonVariant", "formatters", "components", "loading"]);
+  var defaultClassNames = (0,react_day_picker__WEBPACK_IMPORTED_MODULE_6__.getDefaultClassNames)();
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "relative",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_day_picker__WEBPACK_IMPORTED_MODULE_7__.DayPicker, Object.assign({
+      showOutsideDays: showOutsideDays,
+      className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("bg-background group/calendar p-3 [--cell-size:--spacing(8)] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent", String.raw(_templateObject || (_templateObject = _taggedTemplateLiteral(["rtl:**:[.rdp-button_next>svg]:rotate-180"], ["rtl:**:[.rdp-button\\_next>svg]:rotate-180"]))), String.raw(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral(["rtl:**:[.rdp-button_previous>svg]:rotate-180"], ["rtl:**:[.rdp-button\\_previous>svg]:rotate-180"]))), loading && "pointer-events-none", className),
+      captionLayout: captionLayout,
+      formatters: Object.assign({
+        formatMonthDropdown: function formatMonthDropdown(date) {
+          return date.toLocaleString("default", {
+            month: "short"
+          });
+        }
+      }, formatters),
+      classNames: Object.assign({
+        root: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("w-fit", defaultClassNames.root),
+        months: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("flex gap-4 flex-col md:flex-row relative", defaultClassNames.months),
+        month: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("flex flex-col w-full gap-4", defaultClassNames.month),
+        nav: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("flex items-center gap-1 w-full absolute top-0 inset-x-0 justify-between", defaultClassNames.nav),
+        button_previous: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)((0,_shadcn_components_ui_button__WEBPACK_IMPORTED_MODULE_9__.buttonVariants)({
+          variant: buttonVariant
+        }), "size-(--cell-size) aria-disabled:opacity-50 p-0 select-none", defaultClassNames.button_previous),
+        button_next: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)((0,_shadcn_components_ui_button__WEBPACK_IMPORTED_MODULE_9__.buttonVariants)({
+          variant: buttonVariant
+        }), "size-(--cell-size) aria-disabled:opacity-50 p-0 select-none", defaultClassNames.button_next),
+        month_caption: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("flex items-center justify-center h-(--cell-size) w-full px-(--cell-size)", defaultClassNames.month_caption),
+        dropdowns: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("w-full flex items-center text-sm font-medium justify-center h-(--cell-size) gap-1.5", defaultClassNames.dropdowns),
+        dropdown_root: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("relative has-focus:border-ring border border-input shadow-xs has-focus:ring-ring/50 has-focus:ring-[3px] rounded-md", defaultClassNames.dropdown_root),
+        dropdown: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("absolute bg-popover inset-0 opacity-0", defaultClassNames.dropdown),
+        caption_label: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("select-none font-medium", captionLayout === "label" ? "text-sm" : "rounded-md pl-2 pr-1 flex items-center gap-1 text-sm h-8 [&>svg]:text-muted-foreground [&>svg]:size-3.5", defaultClassNames.caption_label),
+        table: "w-full border-collapse",
+        weekdays: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("flex", defaultClassNames.weekdays),
+        weekday: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("text-muted-foreground rounded-md flex-1 font-normal text-[0.8rem] select-none", defaultClassNames.weekday),
+        week: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("flex w-full mt-2", defaultClassNames.week),
+        week_number_header: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("select-none w-(--cell-size)", defaultClassNames.week_number_header),
+        week_number: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("text-[0.8rem] select-none text-muted-foreground", defaultClassNames.week_number),
+        day: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("relative w-full h-full p-0 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md group/day aspect-square select-none", defaultClassNames.day),
+        range_start: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("rounded-l-md bg-accent", defaultClassNames.range_start),
+        range_middle: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("rounded-none", defaultClassNames.range_middle),
+        range_end: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("rounded-r-md bg-accent", defaultClassNames.range_end),
+        today: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("bg-accent text-accent-foreground rounded-md data-[selected=true]:rounded-none", defaultClassNames.today),
+        outside: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("text-muted-foreground aria-selected:text-muted-foreground", defaultClassNames.outside),
+        disabled: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("text-muted-foreground opacity-50", defaultClassNames.disabled),
+        hidden: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("invisible", defaultClassNames.hidden)
+      }, classNames),
+      components: Object.assign({
+        Root: function Root(_a) {
+          var className = _a.className,
+            rootRef = _a.rootRef,
+            props = __rest(_a, ["className", "rootRef"]);
+          return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", Object.assign({
+            "data-slot": "calendar",
+            ref: rootRef,
+            className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)(className)
+          }, props));
+        },
+        Chevron: function Chevron(_a) {
+          var className = _a.className,
+            orientation = _a.orientation,
+            props = __rest(_a, ["className", "orientation"]);
+          if (orientation === "left") {
+            return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_4__["default"], Object.assign({
+              className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("size-4", className)
+            }, props));
+          }
+          if (orientation === "right") {
+            return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_5__["default"], Object.assign({
+              className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("size-4", className)
+            }, props));
+          }
           return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_3__["default"], Object.assign({
-            className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("size-4", className)
+            className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("size-4", className)
           }, props));
+        },
+        DayButton: CalendarDayButton,
+        WeekNumber: function WeekNumber(_a) {
+          var children = _a.children,
+            props = __rest(_a, ["children"]);
+          return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("td", Object.assign({}, props, {
+            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+              className: "flex size-(--cell-size) items-center justify-center text-center",
+              children: children
+            })
+          }));
         }
-        if (orientation === "right") {
-          return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_4__["default"], Object.assign({
-            className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("size-4", className)
-          }, props));
-        }
-        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_2__["default"], Object.assign({
-          className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("size-4", className)
-        }, props));
-      },
-      DayButton: CalendarDayButton,
-      WeekNumber: function WeekNumber(_a) {
-        var children = _a.children,
-          props = __rest(_a, ["children"]);
-        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("td", Object.assign({}, props, {
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-            className: "flex size-(--cell-size) items-center justify-center text-center",
-            children: children
-          })
-        }));
-      }
-    }, components)
-  }, props));
+      }, components)
+    }, props)), loading && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "absolute inset-0 bg-white/70 flex justify-center items-center rounded-lg",
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "flex flex-col items-center",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          className: "h-8 w-8 animate-spin text-primary"
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+          className: "mt-3 text-gray-600 text-sm",
+          children: "Loading..."
+        })]
+      })
+    })]
+  });
 }
 function CalendarDayButton(_a) {
   var className = _a.className,
     day = _a.day,
     modifiers = _a.modifiers,
     props = __rest(_a, ["className", "day", "modifiers"]);
-  var defaultClassNames = (0,react_day_picker__WEBPACK_IMPORTED_MODULE_5__.getDefaultClassNames)();
+  var defaultClassNames = (0,react_day_picker__WEBPACK_IMPORTED_MODULE_6__.getDefaultClassNames)();
   var ref = _wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useRef(null);
   _wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect(function () {
     var _a;
     if (modifiers.focused) (_a = ref.current) === null || _a === void 0 ? void 0 : _a.focus();
   }, [modifiers.focused]);
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_button__WEBPACK_IMPORTED_MODULE_8__.Button, Object.assign({
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_button__WEBPACK_IMPORTED_MODULE_9__.Button, Object.assign({
     ref: ref,
     variant: "ghost",
     size: "icon",
@@ -4037,7 +4126,7 @@ function CalendarDayButton(_a) {
     "data-range-start": modifiers.range_start,
     "data-range-end": modifiers.range_end,
     "data-range-middle": modifiers.range_middle,
-    className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)("data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground data-[range-middle=true]:bg-accent data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 dark:hover:text-accent-foreground flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70", defaultClassNames.day, className)
+    className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_8__.cn)("data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground data-[range-middle=true]:bg-accent data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 dark:hover:text-accent-foreground flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70", defaultClassNames.day, className)
   }, props));
 }
 

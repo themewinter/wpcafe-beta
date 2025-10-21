@@ -56,7 +56,7 @@ class Order_Filter implements Hookable_Service_Contract {
                     value="<?php echo esc_attr( $value ); ?>"
                     <?php selected( $location_selected, $value ); ?>
                 >
-                    <?php echo $location->restaurants_name; ?>
+                    <?php echo $location->restaurant_name; ?>
                 </option>
             <?php endforeach; ?>
         </select>
@@ -108,7 +108,7 @@ class Order_Filter implements Hookable_Service_Contract {
         $location = Location_Model::find($location_id);
         ?>
             <?php if ( $location ): ?>
-                <mark class="order-status order-status--delivery" style="background-color: #c5e2df; color: #356964;"><span><?php echo esc_html( $location->restaurants_name ); ?></span></mark>
+                <mark class="order-status order-status--delivery" style="background-color: #c5e2df; color: #356964;"><span><?php echo esc_html( $location->restaurant_name ); ?></span></mark>
             <?php else: ?>
                 --
             <?php endif; ?>

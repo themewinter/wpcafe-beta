@@ -22,6 +22,6 @@ class Tipping_Form {
      * @return void
      */
     public function render() {
-        include wpcafe_pro()->template_directory . "/tip/tip-view.php";
+        include wpcafe()->template_directory . "/tip/tip-view.php";
     }
 }

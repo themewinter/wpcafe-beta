@@ -149,7 +149,8 @@ var reservationFormCustomization = [{
     required: false,
     visible: false,
     inGroup: true,
-    isPro: true
+    isPro: true,
+    module: "table_layout"
   }, {
     id: "name",
     label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Your Name", "wpcafe"),
@@ -177,7 +178,7 @@ var reservationFormCustomization = [{
     id: "total_guest",
     label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Total Guests", "wpcafe"),
     type: "number",
-    placeholder: "1",
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Number of Guests", "wpcafe"),
     required: true,
     visible: true,
     notDeletable: true
@@ -194,7 +195,8 @@ var reservationFormCustomization = [{
     type: "food_menu",
     required: false,
     visible: false,
-    isPro: true
+    isPro: true,
+    module: "food_ordering"
   }]
 }];
 var defaultSettings = {
@@ -218,6 +220,7 @@ var pagination = {
 var stores = (_c = (_b = (_a = window === null || window === void 0 ? void 0 : window.wp) === null || _a === void 0 ? void 0 : _a.hooks) === null || _b === void 0 ? void 0 : _b.applyFilters) === null || _c === void 0 ? void 0 : _c.call(_b, "wpcafe_stores", {
   modules: "wpcafe/modules",
   settings: "wpcafe/settings",
+  sidebar: "wpcafe/sidebar",
   onboard: "wpcafe/onboard",
   reservation: "wpcafe/reservation",
   location: "wpcafe/location",
@@ -399,6 +402,38 @@ var generateRandomId = function generateRandomId() {
 
 /***/ }),
 
+/***/ "./assets/src/helpers/getDefaultDateRange.ts":
+/*!***************************************************!*\
+  !*** ./assets/src/helpers/getDefaultDateRange.ts ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getDefaultDateRange: () => (/* binding */ getDefaultDateRange)
+/* harmony export */ });
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/addMonths.js");
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/format.js");
+/**
+ * External Dependencies
+ */
+
+/**
+ * Get default date range for reservation system
+ * Returns today's date as start and 15th of next month as end
+ */
+var getDefaultDateRange = function getDefaultDateRange() {
+  var today = new Date();
+  var nextMonth = (0,date_fns__WEBPACK_IMPORTED_MODULE_0__.addMonths)(today, 1);
+  var fifteenthOfNextMonth = new Date(nextMonth.getFullYear(), nextMonth.getMonth(), 15);
+  return {
+    startDate: (0,date_fns__WEBPACK_IMPORTED_MODULE_1__.format)(today, "yyyy-MM-dd"),
+    endDate: (0,date_fns__WEBPACK_IMPORTED_MODULE_1__.format)(fifteenthOfNextMonth, "yyyy-MM-dd")
+  };
+};
+
+/***/ }),
+
 /***/ "./assets/src/helpers/index.ts":
 /*!*************************************!*\
   !*** ./assets/src/helpers/index.ts ***!
@@ -411,6 +446,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   formatDate: () => (/* reexport safe */ _formatDate__WEBPACK_IMPORTED_MODULE_3__.formatDate),
 /* harmony export */   generateRandomId: () => (/* reexport safe */ _generateRandomId__WEBPACK_IMPORTED_MODULE_6__.generateRandomId),
 /* harmony export */   getDateFnsLocale: () => (/* reexport safe */ _dateLocales__WEBPACK_IMPORTED_MODULE_2__.getDateFnsLocale),
+/* harmony export */   getDefaultDateRange: () => (/* reexport safe */ _getDefaultDateRange__WEBPACK_IMPORTED_MODULE_8__.getDefaultDateRange),
 /* harmony export */   openNotification: () => (/* reexport safe */ _openNotification__WEBPACK_IMPORTED_MODULE_4__.openNotification),
 /* harmony export */   scrollBottomToModal: () => (/* reexport safe */ _scrollBottomOfShortcodeModal__WEBPACK_IMPORTED_MODULE_7__.scrollBottomToModal),
 /* harmony export */   scrollTop: () => (/* reexport safe */ _scrollTop__WEBPACK_IMPORTED_MODULE_0__.scrollTop),
@@ -425,6 +461,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wpDateFormat__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./wpDateFormat */ "./assets/src/helpers/wpDateFormat.ts");
 /* harmony import */ var _generateRandomId__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./generateRandomId */ "./assets/src/helpers/generateRandomId.ts");
 /* harmony import */ var _scrollBottomOfShortcodeModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./scrollBottomOfShortcodeModal */ "./assets/src/helpers/scrollBottomOfShortcodeModal.ts");
+/* harmony import */ var _getDefaultDateRange__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./getDefaultDateRange */ "./assets/src/helpers/getDefaultDateRange.ts");
+
 
 
 
@@ -613,12 +651,13 @@ __webpack_require__.r(__webpack_exports__);
 // Shared helpers to format dates using WordPress date_format
 // Supports common PHP date() tokens: d,j,S,m,n,M,F,y,Y,D,l
 // Escaping with \\ is supported to output literal characters.
-function wpDateFormat(date) {
-  var locale = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "en-US";
-  var _a;
+function wpDateFormat(date, locale) {
+  var _a, _b, _c;
   var pattern = (_a = window === null || window === void 0 ? void 0 : window.wpCafe) === null || _a === void 0 ? void 0 : _a.date_format;
+  // Use provided locale, fallback to wpCafeI18nLoader locale, then navigator language, finally 'en-US'
+  var resolvedLocale = locale || ((_c = (_b = window === null || window === void 0 ? void 0 : window.wpCafeI18nLoader) === null || _b === void 0 ? void 0 : _b.state) === null || _c === void 0 ? void 0 : _c.locale) || (typeof navigator !== "undefined" ? navigator.language : "en-US");
   var fallback = function fallback() {
-    return date.toLocaleDateString(locale, {
+    return date.toLocaleDateString(resolvedLocale, {
       day: "2-digit",
       month: "long",
       year: "numeric"
@@ -631,7 +670,7 @@ function wpDateFormat(date) {
   var day = date.getDate();
   var monthIndex = date.getMonth();
   var year = date.getFullYear();
-  var resolved = locale || (typeof navigator !== "undefined" ? navigator.language : "en-US");
+  var resolved = resolvedLocale;
   var monthLong = new Intl.DateTimeFormat(resolved, {
     month: "long"
   }).format(date);

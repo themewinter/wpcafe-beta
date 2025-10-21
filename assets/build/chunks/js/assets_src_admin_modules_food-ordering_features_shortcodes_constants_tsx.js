@@ -10,6 +10,7 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   alignmentOptions: () => (/* binding */ alignmentOptions),
+/* harmony export */   navPositionOptions: () => (/* binding */ navPositionOptions),
 /* harmony export */   orderOptions: () => (/* binding */ orderOptions),
 /* harmony export */   shortcodes: () => (/* binding */ shortcodes),
 /* harmony export */   yesNoOptions: () => (/* binding */ yesNoOptions)
@@ -153,6 +154,13 @@ var alignmentOptions = [{
 }, {
   label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Right", "wpcafe"),
   value: "right"
+}];
+var navPositionOptions = [{
+  label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Top", "wpcafe"),
+  value: "top"
+}, {
+  label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Bottom", "wpcafe"),
+  value: "bottom"
 }];
 
 /***/ })

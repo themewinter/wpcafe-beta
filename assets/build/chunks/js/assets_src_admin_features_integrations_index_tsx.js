@@ -275,7 +275,7 @@ var Integrations = function Integrations() {
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           className: "bg-white rounded-lg border border-muted p-6",
           children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-            className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4",
+            className: "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4",
             children: integrationsArray.length > 0 ? integrationsArray.map(function (integration) {
               return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_IntegrationCard__WEBPACK_IMPORTED_MODULE_6__["default"], {
                 name: integration.name,

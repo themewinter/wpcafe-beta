@@ -15,6 +15,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _shadcn_components_ui_dialog__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/shadcn/components/ui/dialog */ "./assets/src/shadcn/components/ui/dialog.tsx");
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/helpers */ "./assets/src/helpers/index.ts");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/link-2.js");
 
 /**
  * WordPress Dependencies
@@ -23,6 +25,8 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * Internal Dependencies
  */
+
+
 
 var OrderPreview = function OrderPreview(_ref) {
   var open = _ref.open,
@@ -59,20 +63,36 @@ var OrderPreview = function OrderPreview(_ref) {
                 children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Customer Info", "wpcafe")
               }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
                 className: "space-y-1",
-                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                  children: reservation.name
-                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                  children: reservation.phone
-                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                  children: reservation.email
+                children: [reservation.name && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+                    className: "font-medium",
+                    children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Name", "wpcafe"), ":"]
+                  }), " ", reservation.name]
+                }), reservation.phone && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+                    className: "font-medium",
+                    children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Phone", "wpcafe"), ":"]
+                  }), " ", reservation.phone]
+                }), reservation.email && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+                    className: "font-medium",
+                    children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Email", "wpcafe"), ":"]
+                  }), " ", reservation.email]
                 })]
               })]
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            }), (reservation === null || reservation === void 0 ? void 0 : reservation.total_amount) && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
               children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
                 className: "font-medium text-sm text-gray-500 mb-1",
                 children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Total Amount", "wpcafe")
               }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
                 children: [reservation === null || reservation === void 0 ? void 0 : reservation.currency, " ", reservation === null || reservation === void 0 ? void 0 : reservation.total_amount]
+              })]
+            }), (reservation === null || reservation === void 0 ? void 0 : reservation.notes) && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                className: "font-medium text-sm text-gray-500 mb-1",
+                children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Notes", "wpcafe")
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                children: reservation === null || reservation === void 0 ? void 0 : reservation.notes
               })]
             })]
           })]
@@ -85,29 +105,31 @@ var OrderPreview = function OrderPreview(_ref) {
             }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
               className: "space-y-1",
               children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                children: reservation === null || reservation === void 0 ? void 0 : reservation.date
+                children: (0,_helpers__WEBPACK_IMPORTED_MODULE_3__.wpDateFormat)(new Date(reservation === null || reservation === void 0 ? void 0 : reservation.date))
               }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
                 className: "text-sm text-neutral-400",
                 children: [reservation.start_time, " -", " ", reservation.end_time]
               })]
             })]
-          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+          }), (reservation === null || reservation === void 0 ? void 0 : reservation.table_id) && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
             children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
               className: "font-medium text-sm text-gray-500 mb-1",
               children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Table Name", "wpcafe")
             }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
               children: reservation === null || reservation === void 0 ? void 0 : reservation.table_id
             })]
-          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+          }), (reservation === null || reservation === void 0 ? void 0 : reservation.food_items) && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
             children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
               className: "font-medium text-sm text-gray-500 mb-1",
               children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Order Details", "wpcafe")
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-              className: "block truncate text-primary/85 hover:text-primary cursor-pointer",
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+              className: "truncate text-primary/85 hover:text-primary cursor-pointer flex items-center gap-2",
               onClick: function onClick() {
                 return window.open(orderDetailsUrl, "_blank");
               },
-              children: orderDetailsUrl
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_4__["default"], {
+                className: "w-4 h-4 text-primary"
+              }), "#".concat(reservation === null || reservation === void 0 ? void 0 : reservation.invoice)]
             })]
           })]
         })]
@@ -248,9 +270,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/format.js");
-/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/isValid.js");
-/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/parse.js");
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/isValid.js");
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/parse.js");
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/helpers */ "./assets/src/helpers/index.ts");
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
@@ -269,6 +291,7 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
  * Date utility functions for reservation list
  */
 
+
 /**
  * Format date string for display
  * @param dateString - Date in DD-MM-YYYY format
@@ -276,15 +299,9 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
  */
 var formatDateForDisplay = function formatDateForDisplay(dateString) {
   try {
-    // Handle DD-MM-YYYY format from API
-    var parsedDate = (0,date_fns__WEBPACK_IMPORTED_MODULE_3__.parse)(dateString, "dd-MM-yyyy", new Date());
-    if ((0,date_fns__WEBPACK_IMPORTED_MODULE_2__.isValid)(parsedDate)) {
-      return (0,date_fns__WEBPACK_IMPORTED_MODULE_1__.format)(parsedDate, "MMMM d, yyyy");
-    }
-    // Fallback: try other common date formats
-    var isoDate = (0,date_fns__WEBPACK_IMPORTED_MODULE_3__.parse)(dateString, "yyyy-MM-dd", new Date());
-    if ((0,date_fns__WEBPACK_IMPORTED_MODULE_2__.isValid)(isoDate)) {
-      return (0,date_fns__WEBPACK_IMPORTED_MODULE_1__.format)(isoDate, "MMMM d, yyyy");
+    var isoDate = (0,date_fns__WEBPACK_IMPORTED_MODULE_2__.parse)(dateString, "yyyy-MM-dd", new Date());
+    if ((0,date_fns__WEBPACK_IMPORTED_MODULE_1__.isValid)(isoDate)) {
+      return (0,_helpers__WEBPACK_IMPORTED_MODULE_3__.wpDateFormat)(isoDate);
     }
     return dateString;
   } catch (_a) {
@@ -319,9 +336,9 @@ var groupReservationsByDate = function groupReservationsByDate(reservationList) 
   }).sort(function (a, b) {
     // Sort by date (newest first)
     try {
-      var dateA = (0,date_fns__WEBPACK_IMPORTED_MODULE_3__.parse)(a.date, "dd-MM-yyyy", new Date());
-      var dateB = (0,date_fns__WEBPACK_IMPORTED_MODULE_3__.parse)(b.date, "dd-MM-yyyy", new Date());
-      if ((0,date_fns__WEBPACK_IMPORTED_MODULE_2__.isValid)(dateA) && (0,date_fns__WEBPACK_IMPORTED_MODULE_2__.isValid)(dateB)) {
+      var dateA = (0,date_fns__WEBPACK_IMPORTED_MODULE_2__.parse)(a.date, "dd-MM-yyyy", new Date());
+      var dateB = (0,date_fns__WEBPACK_IMPORTED_MODULE_2__.parse)(b.date, "dd-MM-yyyy", new Date());
+      if ((0,date_fns__WEBPACK_IMPORTED_MODULE_1__.isValid)(dateA) && (0,date_fns__WEBPACK_IMPORTED_MODULE_1__.isValid)(dateB)) {
         return dateB.getTime() - dateA.getTime();
       }
       // Fallback: string comparison
@@ -454,8 +471,8 @@ var foodOrderOptions = [{
 }];
 // Helper function to safely parse date strings
 var parseDateString = function parseDateString(dateStr) {
-  var parsed = (0,date_fns__WEBPACK_IMPORTED_MODULE_3__.parse)(dateStr, "yyyy-MM-dd", new Date());
-  return (0,date_fns__WEBPACK_IMPORTED_MODULE_2__.isValid)(parsed) ? parsed : undefined;
+  var parsed = (0,date_fns__WEBPACK_IMPORTED_MODULE_2__.parse)(dateStr, "yyyy-MM-dd", new Date());
+  return (0,date_fns__WEBPACK_IMPORTED_MODULE_1__.isValid)(parsed) ? parsed : undefined;
 };
 
 /***/ }),
@@ -1493,14 +1510,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _common_components__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/common/components */ "./assets/src/common/components/index.ts");
-/* harmony import */ var _ReservationFilter__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ReservationFilter */ "./assets/src/admin/modules/reservation/features/reservation-list/ReservationFilter.tsx");
-/* harmony import */ var _table__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./table */ "./assets/src/admin/modules/reservation/features/reservation-list/table/index.tsx");
-/* harmony import */ var _hooks_useReservationApi__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./hooks/useReservationApi */ "./assets/src/admin/modules/reservation/features/reservation-list/hooks/useReservationApi.ts");
-/* harmony import */ var _hooks_useReservationHandler__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./hooks/useReservationHandler */ "./assets/src/admin/modules/reservation/features/reservation-list/hooks/useReservationHandler.ts");
-/* harmony import */ var _globalConstant__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/globalConstant */ "./assets/src/globalConstant.ts");
-/* harmony import */ var _common_hooks__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @/common/hooks */ "./assets/src/common/hooks/index.ts");
-/* harmony import */ var _hooks_useReservationFilter__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./hooks/useReservationFilter */ "./assets/src/admin/modules/reservation/features/reservation-list/hooks/useReservationFilter.ts");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
+/* harmony import */ var _common_components__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/common/components */ "./assets/src/common/components/index.ts");
+/* harmony import */ var _ReservationFilter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ReservationFilter */ "./assets/src/admin/modules/reservation/features/reservation-list/ReservationFilter.tsx");
+/* harmony import */ var _table__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./table */ "./assets/src/admin/modules/reservation/features/reservation-list/table/index.tsx");
+/* harmony import */ var _hooks_useReservationApi__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./hooks/useReservationApi */ "./assets/src/admin/modules/reservation/features/reservation-list/hooks/useReservationApi.ts");
+/* harmony import */ var _hooks_useReservationHandler__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./hooks/useReservationHandler */ "./assets/src/admin/modules/reservation/features/reservation-list/hooks/useReservationHandler.ts");
+/* harmony import */ var _globalConstant__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @/globalConstant */ "./assets/src/globalConstant.ts");
+/* harmony import */ var _common_hooks__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @/common/hooks */ "./assets/src/common/hooks/index.ts");
+/* harmony import */ var _hooks_useReservationFilter__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./hooks/useReservationFilter */ "./assets/src/admin/modules/reservation/features/reservation-list/hooks/useReservationFilter.ts");
 function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -1513,6 +1531,10 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
  */
 
 
+
+/**
+ * External Dependencies
+ */
 
 /**
  * Internal Dependencies
@@ -1530,54 +1552,54 @@ var ReservationList = function ReservationList() {
     _useState2 = _slicedToArray(_useState, 2),
     selectedRows = _useState2[0],
     setSelectedRows = _useState2[1];
-  var _useReservationApi = (0,_hooks_useReservationApi__WEBPACK_IMPORTED_MODULE_7__["default"])(),
+  var navigate = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_4__.useNavigate)();
+  var _useReservationApi = (0,_hooks_useReservationApi__WEBPACK_IMPORTED_MODULE_8__["default"])(),
     getReservations = _useReservationApi.getReservations;
-  var _useReservationFilter = (0,_hooks_useReservationFilter__WEBPACK_IMPORTED_MODULE_11__.useReservationFilter)(),
+  var _useReservationFilter = (0,_hooks_useReservationFilter__WEBPACK_IMPORTED_MODULE_12__.useReservationFilter)(),
     handleClearFilters = _useReservationFilter.handleClearFilters,
     handleSearchChange = _useReservationFilter.handleSearchChange;
-  var storeName = _globalConstant__WEBPACK_IMPORTED_MODULE_9__.stores === null || _globalConstant__WEBPACK_IMPORTED_MODULE_9__.stores === void 0 ? void 0 : _globalConstant__WEBPACK_IMPORTED_MODULE_9__.stores.reservation;
+  var storeName = _globalConstant__WEBPACK_IMPORTED_MODULE_10__.stores === null || _globalConstant__WEBPACK_IMPORTED_MODULE_10__.stores === void 0 ? void 0 : _globalConstant__WEBPACK_IMPORTED_MODULE_10__.stores.reservation;
   var _useSelect = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.useSelect)(function (select) {
       return select(storeName).getReservationState();
     }, []),
     reservationList = _useSelect.reservationList,
     searchQuery = _useSelect.searchQuery;
   // Check if user has applied any search/filter
-  var _useSearchEmptyState = (0,_common_hooks__WEBPACK_IMPORTED_MODULE_10__.useSearchEmptyState)(searchQuery || {}),
+  var _useSearchEmptyState = (0,_common_hooks__WEBPACK_IMPORTED_MODULE_11__.useSearchEmptyState)(searchQuery || {}),
     isQueried = _useSearchEmptyState.isQueried;
-  var _useReservationHandle = (0,_hooks_useReservationHandler__WEBPACK_IMPORTED_MODULE_8__["default"])({
+  var _useReservationHandle = (0,_hooks_useReservationHandler__WEBPACK_IMPORTED_MODULE_9__["default"])({
       selectedRows: selectedRows,
       setSelectedRows: setSelectedRows
     }),
     handleEditReservation = _useReservationHandle.handleEditReservation,
     handleBulkDelete = _useReservationHandle.handleBulkDelete;
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useEffect)(function () {
-    if (reservationList) {
-      return;
-    }
     getReservations();
   }, []);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components__WEBPACK_IMPORTED_MODULE_4__.TopHeader, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components__WEBPACK_IMPORTED_MODULE_5__.TopHeader, {
       title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reservations", "wpcafe")
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components__WEBPACK_IMPORTED_MODULE_4__.Container, {
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components__WEBPACK_IMPORTED_MODULE_5__.Container, {
       children:
       // Show empty screen if no reservations found and no search/filter applied (Initial state)
-      !isQueried && (reservationList === null || reservationList === void 0 ? void 0 : reservationList.length) === 0 ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components__WEBPACK_IMPORTED_MODULE_4__.EmptyScreen, {
+      !isQueried && (reservationList === null || reservationList === void 0 ? void 0 : reservationList.length) === 0 ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components__WEBPACK_IMPORTED_MODULE_5__.EmptyScreen, {
         title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No reservations found", "wpcafe"),
-        description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("You don't have any reservations yet. Reservations will appear here once customers start booking tables.", "wpcafe"),
+        description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("You don't have any reservations yet. Reservations will appear here once customers start booking tables. You can customize the reservation form in the settings.", "wpcafe"),
         learnMoreText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Read Documentation", "wpcafe"),
         learnMoreUrl: "https://support.themewinter.com/docs/plugins/plugin-docs/food-ordering/reservation-settings/",
         videoTooltip: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("How to manage reservations in Wp Cafe?", "wpcafe"),
-        addButtonText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Add Reservation", "wpcafe")
-      }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ReservationFilter__WEBPACK_IMPORTED_MODULE_5__.ReservationFilter, {
+        addButtonText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Customize Reservation form", "wpcafe"),
+        onAddButtonClick: function onAddButtonClick() {
+          return navigate("/settings?tab=reservation-rules");
+        }
+      }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ReservationFilter__WEBPACK_IMPORTED_MODULE_6__.ReservationFilter, {
           onSearchChange: handleSearchChange,
           selectedCount: selectedRows.length,
           onBulkDelete: handleBulkDelete,
           searchValue: (searchQuery === null || searchQuery === void 0 ? void 0 : searchQuery.search) || "",
           disabled: (reservationList === null || reservationList === void 0 ? void 0 : reservationList.length) === 0 || !reservationList
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_table__WEBPACK_IMPORTED_MODULE_6__.GroupedReservationTable, {
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_table__WEBPACK_IMPORTED_MODULE_7__.GroupedReservationTable, {
           onEditReservation: handleEditReservation,
           onSelectionChange: setSelectedRows,
           selectedRows: selectedRows,
@@ -2146,6 +2168,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ReservationGroupHeader__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./ReservationGroupHeader */ "./assets/src/admin/modules/reservation/features/reservation-list/table/ReservationGroupHeader.tsx");
 /* harmony import */ var _ReservationRow__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./ReservationRow */ "./assets/src/admin/modules/reservation/features/reservation-list/table/ReservationRow.tsx");
 /* harmony import */ var _shadcn_components_ui__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @/shadcn/components/ui */ "./assets/src/shadcn/components/ui/index.tsx");
+/* harmony import */ var _common_components_table_hooks_useTableWidth__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @/common/components/table/hooks/useTableWidth */ "./assets/src/common/components/table/hooks/useTableWidth.ts");
 
 /**
  * WordPress Dependencies
@@ -2169,11 +2192,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 var GroupedReservationTable = function GroupedReservationTable(_ref) {
   var onEditReservation = _ref.onEditReservation,
     onSelectionChange = _ref.onSelectionChange,
     selectedRows = _ref.selectedRows,
     onResetFilters = _ref.onResetFilters;
+  var _useTableWidth = (0,_common_components_table_hooks_useTableWidth__WEBPACK_IMPORTED_MODULE_15__.useTableWidth)(),
+    width = _useTableWidth.width;
   // Use the custom hook for all table logic
   var _useGroupedReservatio = (0,_hooks_useGroupedReservationTable__WEBPACK_IMPORTED_MODULE_10__.useGroupedReservationTable)({
       selectedRows: selectedRows,
@@ -2193,6 +2219,9 @@ var GroupedReservationTable = function GroupedReservationTable(_ref) {
   if (!reservationList) {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "bg-white rounded-lg border border-gray-200 border-t-0 rounded-t-none",
+      style: {
+        width: "".concat(width, "px")
+      },
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components_table_TableSkeleton__WEBPACK_IMPORTED_MODULE_7__.TableSkeleton, {
         rows: 5,
         columns: tableColumns.length
@@ -2221,39 +2250,39 @@ var GroupedReservationTable = function GroupedReservationTable(_ref) {
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "bg-white rounded-lg border border-gray-200 border-t-0 rounded-t-none",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "overflow-x-auto",
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_5__.ShadcnTable, {
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ReservationTableHeader__WEBPACK_IMPORTED_MODULE_11__.ReservationTableHeader, {
-          tableColumns: tableColumns,
-          selectedRows: selectedRows,
-          reservationList: reservationList,
-          onSelectionChange: onSelectionChange
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_5__.TableBody, {
-          children: groupedReservations === null || groupedReservations === void 0 ? void 0 : groupedReservations.map(function (group, groupIndex) {
-            var groupSelectionState = getGroupSelection(group);
-            return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
-              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ReservationGroupHeader__WEBPACK_IMPORTED_MODULE_12__.ReservationGroupHeader, {
-                group: group,
-                groupSelectionState: groupSelectionState,
+    style: {
+      width: "".concat(width, "px")
+    },
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_5__.ShadcnTable, {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ReservationTableHeader__WEBPACK_IMPORTED_MODULE_11__.ReservationTableHeader, {
+        tableColumns: tableColumns,
+        selectedRows: selectedRows,
+        reservationList: reservationList,
+        onSelectionChange: onSelectionChange
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui_table__WEBPACK_IMPORTED_MODULE_5__.TableBody, {
+        children: groupedReservations === null || groupedReservations === void 0 ? void 0 : groupedReservations.map(function (group, groupIndex) {
+          var groupSelectionState = getGroupSelection(group);
+          return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ReservationGroupHeader__WEBPACK_IMPORTED_MODULE_12__.ReservationGroupHeader, {
+              group: group,
+              groupSelectionState: groupSelectionState,
+              selectedRows: selectedRows,
+              onSelectionChange: onSelectionChange,
+              colSpan: tableColumns.length + 1
+            }), group.reservations.map(function (reservation, index) {
+              var isSelected = selectedRows.includes(reservation.id);
+              return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ReservationRow__WEBPACK_IMPORTED_MODULE_13__.ReservationRow, {
+                reservation: reservation,
+                index: index,
+                isSelected: isSelected,
                 selectedRows: selectedRows,
                 onSelectionChange: onSelectionChange,
-                colSpan: tableColumns.length + 1
-              }), group.reservations.map(function (reservation, index) {
-                var isSelected = selectedRows.includes(reservation.id);
-                return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ReservationRow__WEBPACK_IMPORTED_MODULE_13__.ReservationRow, {
-                  reservation: reservation,
-                  index: index,
-                  isSelected: isSelected,
-                  selectedRows: selectedRows,
-                  onSelectionChange: onSelectionChange,
-                  tableColumns: tableColumns
-                }, reservation.id);
-              })]
-            }, "group-".concat(group.date, "-").concat(groupIndex));
-          })
-        })]
-      })
+                tableColumns: tableColumns
+              }, reservation.id);
+            })]
+          }, "group-".concat(group.date, "-").concat(groupIndex));
+        })
+      })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components_table_TablePagination__WEBPACK_IMPORTED_MODULE_6__.TablePaginationComponent, {
       current: pagination.currentPage,
       total: pagination.totalItems,
@@ -2511,6 +2540,40 @@ const Funnel = (0,_createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__["default"])(
 
 
 //# sourceMappingURL=funnel.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/lucide-react/dist/esm/icons/link-2.js":
+/*!************************************************************!*\
+  !*** ./node_modules/lucide-react/dist/esm/icons/link-2.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   __iconNode: () => (/* binding */ __iconNode),
+/* harmony export */   "default": () => (/* binding */ Link2)
+/* harmony export */ });
+/* harmony import */ var _createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../createLucideIcon.js */ "./node_modules/lucide-react/dist/esm/createLucideIcon.js");
+/**
+ * @license lucide-react v0.525.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+
+const __iconNode = [
+  ["path", { d: "M9 17H7A5 5 0 0 1 7 7h2", key: "8i5ue5" }],
+  ["path", { d: "M15 7h2a5 5 0 1 1 0 10h-2", key: "1b9ql8" }],
+  ["line", { x1: "8", x2: "16", y1: "12", y2: "12", key: "1jonct" }]
+];
+const Link2 = (0,_createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__["default"])("link-2", __iconNode);
+
+
+//# sourceMappingURL=link-2.js.map
 
 
 /***/ }),

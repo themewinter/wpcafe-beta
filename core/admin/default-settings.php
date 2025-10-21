@@ -32,6 +32,7 @@ class Default_Settings implements Hookable_Service_Contract {
             'currency_symbol_position' => get_option('woocommerce_currency_pos', 'left'),
             'currency_price_separator' => get_option('woocommerce_price_thousand_sep', ','),
             'currency_decimals'        => get_option('woocommerce_price_num_decimals', 2),
+            'restaurant_schedule'      => wpc_get_schedule(),
         ];
 
         return array_merge( $settings, $default );

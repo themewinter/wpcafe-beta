@@ -46,7 +46,7 @@ class Product_Filter implements Hookable_Service_Contract {
         <select name="location">
             <option value=""><?php esc_html_e( 'All Locations', 'wpcafe' ); ?></option>
             <?php foreach ( $locations as $location ) { ?>
-                <option value="<?php echo $location->term_id; ?>" <?php selected( $selected, $location->term_id ); ?>><?php echo $location->restaurants_name; ?></option>
+                <option value="<?php echo $location->term_id; ?>" <?php selected( $selected, $location->term_id ); ?>><?php echo $location->restaurant_name; ?></option>
             <?php } ?>
         </select>
         <?php

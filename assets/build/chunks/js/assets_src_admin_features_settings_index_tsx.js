@@ -1,123 +1,6 @@
 "use strict";
 (globalThis["webpackChunkwp_cafe"] = globalThis["webpackChunkwp_cafe"] || []).push([["assets_src_admin_features_settings_index_tsx"],{
 
-/***/ "./assets/src/admin/features/settings/SettingsSkeleton.tsx":
-/*!*****************************************************************!*\
-  !*** ./assets/src/admin/features/settings/SettingsSkeleton.tsx ***!
-  \*****************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   SettingsSkeleton: () => (/* binding */ SettingsSkeleton),
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var _shadcn_components_ui__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/shadcn/components/ui */ "./assets/src/shadcn/components/ui/index.tsx");
-
-/**
- * Internal Dependencies
- */
-
-/**
- * SettingsSkeleton Component
- *
- * A generic skeleton loading state component for settings pages.
- * Provides a flexible skeleton that can be used across different settings sections.
- */
-var SettingsSkeleton = function SettingsSkeleton() {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "space-y-6",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "bg-white border border-gray-200 rounded-lg p-6 shadow-sm",
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "mb-6",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_1__.Skeleton, {
-          className: "h-6 w-56 mb-2"
-        }), " ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_1__.Skeleton, {
-          className: "h-4 w-4/5"
-        }), " "]
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "space-y-6",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-          className: "grid gap-4 sm:grid-cols-2",
-          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-            className: "space-y-2",
-            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_1__.Skeleton, {
-              className: "h-4 w-32"
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_1__.Skeleton, {
-              className: "h-10 w-full"
-            })]
-          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-            className: "space-y-2",
-            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_1__.Skeleton, {
-              className: "h-4 w-40"
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_1__.Skeleton, {
-              className: "h-10 w-full"
-            })]
-          })]
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-          className: "space-y-4",
-          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-            className: "space-y-2",
-            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_1__.Skeleton, {
-              className: "h-4 w-48"
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_1__.Skeleton, {
-              className: "h-24 w-full"
-            })]
-          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-            className: "space-y-2",
-            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_1__.Skeleton, {
-              className: "h-4 w-36"
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_1__.Skeleton, {
-              className: "h-10 w-full"
-            })]
-          })]
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "space-y-3",
-          children: [1, 2, 3].map(function (i) {
-            return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              className: "flex items-center justify-between",
-              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                className: "space-y-1",
-                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_1__.Skeleton, {
-                  className: "h-4 w-44"
-                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_1__.Skeleton, {
-                  className: "h-3 w-64"
-                })]
-              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_1__.Skeleton, {
-                className: "h-6 w-12 rounded-full"
-              })]
-            }, i);
-          })
-        })]
-      })]
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "bg-white border border-gray-200 rounded-lg p-6 shadow-sm",
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "mb-4",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_1__.Skeleton, {
-          className: "h-5 w-44 mb-2"
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_1__.Skeleton, {
-          className: "h-4 w-3/4"
-        })]
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "space-y-4",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_1__.Skeleton, {
-          className: "h-10 w-full"
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_1__.Skeleton, {
-          className: "h-10 w-2/3"
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_1__.Skeleton, {
-          className: "h-16 w-full"
-        })]
-      })]
-    })]
-  });
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SettingsSkeleton);
-
-/***/ }),
-
 /***/ "./assets/src/admin/features/settings/constants.tsx":
 /*!**********************************************************!*\
   !*** ./assets/src/admin/features/settings/constants.tsx ***!
@@ -333,7 +216,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_components__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/common/components */ "./assets/src/common/components/index.ts");
 /* harmony import */ var _providers_SettingsFormProvider__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./providers/SettingsFormProvider */ "./assets/src/admin/features/settings/providers/SettingsFormProvider.tsx");
 /* harmony import */ var _globalConstant__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @/globalConstant */ "./assets/src/globalConstant.ts");
-/* harmony import */ var _admin_features_settings_SettingsSkeleton__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @/admin/features/settings/SettingsSkeleton */ "./assets/src/admin/features/settings/SettingsSkeleton.tsx");
 function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
 function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -361,16 +243,11 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 
 
 
-
 var SettingsContent = function SettingsContent() {
   var _useSelect = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.useSelect)(function (select) {
       return select(_globalConstant__WEBPACK_IMPORTED_MODULE_10__.stores === null || _globalConstant__WEBPACK_IMPORTED_MODULE_10__.stores === void 0 ? void 0 : _globalConstant__WEBPACK_IMPORTED_MODULE_10__.stores.settings).getSettingsState();
     }, []),
     editLoading = _useSelect.editLoading;
-  var _useSelect2 = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.useSelect)(function (select) {
-      return select(_globalConstant__WEBPACK_IMPORTED_MODULE_10__.stores === null || _globalConstant__WEBPACK_IMPORTED_MODULE_10__.stores === void 0 ? void 0 : _globalConstant__WEBPACK_IMPORTED_MODULE_10__.stores.modules).getModulesState();
-    }, []),
-    modulesData = _useSelect2.data;
   var _useSettingsApi = (0,_admin_features_settings_hooks_useSettingsApi__WEBPACK_IMPORTED_MODULE_7__["default"])(),
     editSettings = _useSettingsApi.editSettings;
   var form = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_4__.useFormContext)();
@@ -400,10 +277,6 @@ var SettingsContent = function SettingsContent() {
         }
         // Handle nested menu items with children (sub-tabs)
         if ("children" in item && item.children) {
-          if (!modulesData) {
-            // Use comprehensive settings skeleton for other tabs
-            return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_admin_features_settings_SettingsSkeleton__WEBPACK_IMPORTED_MODULE_11__["default"], {});
-          }
           // Search for the current tab in the children
           var subTab = item.children.find(function (subItem) {
             return subItem.tab === currentTab;
@@ -442,7 +315,7 @@ var SettingsContent = function SettingsContent() {
         children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Save Changes", "wpcafe")
       })
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "flex flex-col lg:flex-row md:gap-4",
+      className: "flex flex-col lg:flex-row",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components__WEBPACK_IMPORTED_MODULE_8__.NavTab, {
         menu: filteredMenu
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components__WEBPACK_IMPORTED_MODULE_8__.Container, {
@@ -453,10 +326,10 @@ var SettingsContent = function SettingsContent() {
   });
 };
 var Settings = function Settings() {
-  var _useSelect3 = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.useSelect)(function (select) {
+  var _useSelect2 = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.useSelect)(function (select) {
       return select(_globalConstant__WEBPACK_IMPORTED_MODULE_10__.stores === null || _globalConstant__WEBPACK_IMPORTED_MODULE_10__.stores === void 0 ? void 0 : _globalConstant__WEBPACK_IMPORTED_MODULE_10__.stores.settings).getSettingsState();
     }, []),
-    data = _useSelect3.data;
+    data = _useSelect2.data;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_providers_SettingsFormProvider__WEBPACK_IMPORTED_MODULE_9__.SettingsFormProvider, {
     defaultValues: data,
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(SettingsContent, {})
@@ -719,6 +592,96 @@ var OverrideSchedulePickup = function OverrideSchedulePickup(_ref) {
 
 /***/ }),
 
+/***/ "./assets/src/admin/features/settings/tabs/schedule/OverrideScheduleReservation.tsx":
+/*!******************************************************************************************!*\
+  !*** ./assets/src/admin/features/settings/tabs/schedule/OverrideScheduleReservation.tsx ***!
+  \******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _common_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/common/components */ "./assets/src/common/components/index.ts");
+/* harmony import */ var _common_components_schedule_management__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/common/components/schedule-management */ "./assets/src/common/components/schedule-management/index.ts");
+
+/**
+ * WordPress dependencies
+ */
+
+/**
+ * Internal dependencies
+ */
+
+
+
+var OverrideScheduleReservation = function OverrideScheduleReservation(_ref) {
+  var formMethods = _ref.formMethods;
+  if (!formMethods) return null;
+  var setValue = formMethods.setValue,
+    watch = formMethods.watch,
+    getValues = formMethods.getValues;
+  var overrideEnabled = watch("override_reservation_schedule") === "1";
+  var handleToggle = function handleToggle(enabled) {
+    setValue("override_reservation_schedule", enabled ? "1" : "0", {
+      shouldDirty: true,
+      shouldTouch: true
+    });
+    // If enabling override, initialize with restaurant schedule or default
+    if (enabled) {
+      var restaurantSchedule = getValues("restaurant_schedule");
+      var currentReservationSchedule = getValues("reservation_schedule");
+      if (!currentReservationSchedule) {
+        setValue("reservation_schedule", restaurantSchedule || _common_components_schedule_management__WEBPACK_IMPORTED_MODULE_3__.defaultSchedule, {
+          shouldDirty: true,
+          shouldTouch: true
+        });
+      }
+      // Initialize slot interval if not set
+      var currentSlotInterval = getValues("reservation_slot_interval");
+      var globalSlotInterval = getValues("slot_interval");
+      if (!currentSlotInterval) {
+        setValue("reservation_slot_interval", globalSlotInterval || 30, {
+          shouldDirty: true,
+          shouldTouch: true
+        });
+      }
+    }
+  };
+  var handleScheduleUpdate = function handleScheduleUpdate(scheduleData) {
+    setValue("reservation_schedule", scheduleData, {
+      shouldDirty: true,
+      shouldTouch: true
+    });
+  };
+  var currentSchedule = getValues("reservation_schedule") || getValues("restaurant_schedule") || _common_components_schedule_management__WEBPACK_IMPORTED_MODULE_3__.defaultSchedule;
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components__WEBPACK_IMPORTED_MODULE_2__.ModuleConditional, {
+    moduleName: "reservation",
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components__WEBPACK_IMPORTED_MODULE_2__.CardWithToggle, {
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Override Reservation Schedule", "wpcafe"),
+      description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Override restaurant schedule for reservation", "wpcafe"),
+      switchable: true,
+      defaultEnabled: overrideEnabled,
+      onToggle: handleToggle,
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components_schedule_management__WEBPACK_IMPORTED_MODULE_3__.ScheduleManagement, {
+        value: currentSchedule,
+        onChange: handleScheduleUpdate,
+        slotIntervalName: "reservation_slot_interval",
+        slotIntervalLabel: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reservation Time Intervals", "wpcafe"),
+        slotIntervalTooltip: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("The interval between reservation slots. This is used to generate the slots for reservation booking.", "wpcafe"),
+        slotIntervalHelperText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("This affects reservation booking slots", "wpcafe"),
+        className: "border-none !p-0"
+      })
+    })
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (OverrideScheduleReservation);
+
+/***/ }),
+
 /***/ "./assets/src/admin/features/settings/tabs/schedule/WeeklySchedule.tsx":
 /*!*****************************************************************************!*\
   !*** ./assets/src/admin/features/settings/tabs/schedule/WeeklySchedule.tsx ***!
@@ -736,6 +699,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/common/components */ "./assets/src/common/components/index.ts");
 /* harmony import */ var _OverrideScheduleDelivery__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./OverrideScheduleDelivery */ "./assets/src/admin/features/settings/tabs/schedule/OverrideScheduleDelivery.tsx");
 /* harmony import */ var _OverrideSchedulePickup__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./OverrideSchedulePickup */ "./assets/src/admin/features/settings/tabs/schedule/OverrideSchedulePickup.tsx");
+/* harmony import */ var _OverrideScheduleReservation__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./OverrideScheduleReservation */ "./assets/src/admin/features/settings/tabs/schedule/OverrideScheduleReservation.tsx");
 
 /**
  * Wordpress Dependencies
@@ -748,6 +712,7 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * Internal Dependencies
  */
+
 
 
 
@@ -779,6 +744,8 @@ var WeeklySchedule = function WeeklySchedule() {
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_OverrideSchedulePickup__WEBPACK_IMPORTED_MODULE_5__["default"], {
         formMethods: formMethods
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_OverrideScheduleDelivery__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        formMethods: formMethods
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_OverrideScheduleReservation__WEBPACK_IMPORTED_MODULE_6__["default"], {
         formMethods: formMethods
       })]
     })

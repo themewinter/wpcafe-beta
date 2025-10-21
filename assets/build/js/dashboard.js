@@ -343,6 +343,7 @@ module.exports = window.wpCafeI18nLoader;
 /******/ 			"assets_src_admin_modules_reservation_features_shortcodes_constants_ts": 0,
 /******/ 			"assets_src_admin_modules_reservation_features_shortcodes_hooks_useReservationShortcode_ts": 0,
 /******/ 			"assets_src_admin_modules_reservation_store_ts": 0,
+/******/ 			"assets_src_admin_modules_reservation_sub-modules_visual-table-reservation_index_tsx-_37690": 0,
 /******/ 			"assets_src_admin_modules_reservation_wp-hooks_index_ts": 0,
 /******/ 			"assets_src_admin_modules_reservation_wp-hooks_reservationOnboard_tsx": 0,
 /******/ 			"assets_src_admin_modules_reservation_wp-hooks_reservationSettings_tsx": 0,
@@ -356,6 +357,7 @@ module.exports = window.wpCafeI18nLoader;
 /******/ 			"assets_src_admin_features_integrations_index_tsx": 0,
 /******/ 			"assets_src_admin_modules_reservation_features_reservation-list_index_tsx-_82fe1": 0,
 /******/ 			"assets_src_admin_features_shortcodes_index_tsx": 0,
+/******/ 			"assets_src_admin_modules_reservation_sub-modules_visual-table-reservation_index_tsx-_37691": 0,
 /******/ 			"assets_src_admin_modules_food-ordering_features_food-menu_index_tsx-_ead41": 0
 /******/ 		};
 /******/ 		

@@ -3,7 +3,7 @@ Contributors: themewinter, ataurr, rezakhan995, abrasel600
 Tags: food menu, food ordering, food delivery, restaurant reservations, restaurant menu
 Requires at least: 5.2
 Tested up to: 6.8.1
-Stable tag: 2.2.34
+Stable tag: 3.0.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: [https://www.gnu.org/licenses/gpl-2.0.html](https://www.gnu.org/licenses/gpl-2.0.html)

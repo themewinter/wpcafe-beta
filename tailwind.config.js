@@ -5,8 +5,8 @@ module.exports = {
         "./core/**/*.php",
         "./templates/**/*.php",
     ],
-    safelist: ["md:p-5", "md:grid-cols-3"],
-    important: [".toplevel_page_wpcafe", "#wpc-reservation-form"],
+    safelist: ["md:p-5", "md:grid-cols-3", "max-h-3/4", "bg-white/70"],
+    important: [".toplevel_page_wpcafe", ".wpc-reservation-form-root"],
     theme: {
         extend: {},
     },

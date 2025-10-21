@@ -80,6 +80,11 @@ class Orders_Report {
         foreach ( $orders as $order_id ) {
             $order = wc_get_order( $order_id );
 
+            // Check if the order object is valid and is not a refund
+            if ( ! $order || ! is_a( $order, 'WC_Order' ) || is_a( $order, 'WC_Order_Refund' ) ) {
+                continue;
+            }
+
             $first_name = $order->get_billing_first_name();
             $last_name  = $order->get_billing_last_name();
 

@@ -12,7 +12,7 @@
             <option value="">-- Select Location --</option>
             <?php if ( $locations ): ?>
             <?php foreach ( $locations as $location ): ?>
-                <option value="<?php echo esc_attr( $location->term_id ); ?>" <?php echo $location->term_id == $selected_location_id ? 'selected' : '' ?>><?php echo esc_html( $location->restaurants_name ); ?></option>
+                <option value="<?php echo esc_attr( $location->term_id ); ?>" <?php echo $location->term_id == $selected_location_id ? 'selected' : '' ?>><?php echo esc_html( $location->restaurant_name ); ?></option>
             <?php endforeach; ?>
             <?php endif; ?>
         </select>

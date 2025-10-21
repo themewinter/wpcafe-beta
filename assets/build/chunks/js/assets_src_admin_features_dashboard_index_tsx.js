@@ -152,7 +152,7 @@ var DashboardOverview = function DashboardOverview() {
         onDateRangeUpdate: handleDateRangeUpdate
       })
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6",
+      className: "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6",
       children: metricsConfig.map(function (metric, index) {
         var IconComponent = metric.iconComponent;
         var metricCard = (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_MetricCard__WEBPACK_IMPORTED_MODULE_5__.MetricCard, {
@@ -497,8 +497,8 @@ var DropdownSelect = function DropdownSelect(_ref) {
   // Transform location data to SelectOption format
   var locationOptions = locationList.map(function (location) {
     return {
-      value: location.restaurants_name,
-      label: location.restaurants_name
+      value: location.restaurant_name,
+      label: location.restaurant_name
     };
   });
   // Add "All" option at the beginning
@@ -892,6 +892,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _common_components_StatusBadge__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/common/components/StatusBadge */ "./assets/src/common/components/StatusBadge.tsx");
 /* harmony import */ var _constant__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../constant */ "./assets/src/admin/features/dashboard/constant.ts");
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/helpers */ "./assets/src/helpers/index.ts");
 
 /**
  * Wordpress dependencies
@@ -900,6 +901,7 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * Internal imports
  */
+
 
 
 /**
@@ -912,7 +914,7 @@ var RESERVATION_TABLE_COLUMNS = [{
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "font-medium",
-        children: record.date || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("N/A", "wpcafe")
+        children: (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.wpDateFormat)(new Date(record.date)) || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("N/A", "wpcafe")
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "text-sm text-gray-500",
         children: record.start_time || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("N/A", "wpcafe")
@@ -1504,6 +1506,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/api */ "./assets/src/api/index.ts");
 /* harmony import */ var _globalConstant__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/globalConstant */ "./assets/src/globalConstant.ts");
 /* harmony import */ var _admin_router_routeDefinition__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/admin/router/routeDefinition */ "./assets/src/admin/router/routeDefinition.ts");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils */ "./assets/src/admin/features/location/utils.ts");
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -1551,6 +1554,7 @@ var _a;
 /**
  * Internal dependencies
  */
+
 
 
 
@@ -1793,7 +1797,7 @@ function useLocationApi() {
    */
   var createLocation = function createLocation(values) {
     return __awaiter(_this, void 0, void 0, /*#__PURE__*/_regenerator().m(function _callee5() {
-      var _a, _b, res, _select$getLocationSt3, currentLocationList, _t5;
+      var _a, _b, payload, res, _select$getLocationSt3, currentLocationList, _t5;
       return _regenerator().w(function (_context5) {
         while (1) switch (_context5.p = _context5.n) {
           case 0:
@@ -1802,10 +1806,11 @@ function useLocationApi() {
               isFiltering: true,
               error: null
             });
+            // Prepare payload with restaurant_type based on overrides
+            payload = (0,_utils__WEBPACK_IMPORTED_MODULE_5__.prepareLocationPayload)(values);
+            console.log("✨ ~ createLocation ~ payload:", payload);
             _context5.n = 1;
-            return (_a = _api__WEBPACK_IMPORTED_MODULE_2__["default"] === null || _api__WEBPACK_IMPORTED_MODULE_2__["default"] === void 0 ? void 0 : _api__WEBPACK_IMPORTED_MODULE_2__["default"].location) === null || _a === void 0 ? void 0 : _a.createLocation(Object.assign(Object.assign({}, values), {
-              status: "publish"
-            }));
+            return (_a = _api__WEBPACK_IMPORTED_MODULE_2__["default"] === null || _api__WEBPACK_IMPORTED_MODULE_2__["default"] === void 0 ? void 0 : _api__WEBPACK_IMPORTED_MODULE_2__["default"].location) === null || _a === void 0 ? void 0 : _a.createLocation(payload);
           case 1:
             res = _context5.v;
             if (!(res === null || res === void 0 ? void 0 : res.success)) {
@@ -1844,7 +1849,7 @@ function useLocationApi() {
    */
   var updateLocation = function updateLocation(id, values) {
     return __awaiter(_this, void 0, void 0, /*#__PURE__*/_regenerator().m(function _callee6() {
-      var _a, res, _select$getLocationSt4, currentLocationList, updatedList, _t6;
+      var _a, payload, res, _select$getLocationSt4, currentLocationList, updatedList, _t6;
       return _regenerator().w(function (_context6) {
         while (1) switch (_context6.p = _context6.n) {
           case 0:
@@ -1854,8 +1859,10 @@ function useLocationApi() {
               updatingLocationId: id,
               error: null
             });
+            // Prepare payload with restaurant_type based on overrides
+            payload = (0,_utils__WEBPACK_IMPORTED_MODULE_5__.prepareLocationPayload)(values);
             _context6.n = 1;
-            return (_a = _api__WEBPACK_IMPORTED_MODULE_2__["default"] === null || _api__WEBPACK_IMPORTED_MODULE_2__["default"] === void 0 ? void 0 : _api__WEBPACK_IMPORTED_MODULE_2__["default"].location) === null || _a === void 0 ? void 0 : _a.updateLocation(id, values);
+            return (_a = _api__WEBPACK_IMPORTED_MODULE_2__["default"] === null || _api__WEBPACK_IMPORTED_MODULE_2__["default"] === void 0 ? void 0 : _api__WEBPACK_IMPORTED_MODULE_2__["default"].location) === null || _a === void 0 ? void 0 : _a.updateLocation(id, payload);
           case 1:
             res = _context6.v;
             if (!(res === null || res === void 0 ? void 0 : res.success)) {
@@ -1918,6 +1925,124 @@ function useLocationApi() {
   };
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useLocationApi);
+
+/***/ }),
+
+/***/ "./assets/src/admin/features/location/utils.ts":
+/*!*****************************************************!*\
+  !*** ./assets/src/admin/features/location/utils.ts ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   calculateLocationHolidays: () => (/* binding */ calculateLocationHolidays),
+/* harmony export */   getHolidaysFromSchedule: () => (/* binding */ getHolidaysFromSchedule),
+/* harmony export */   getLocationAddress: () => (/* binding */ getLocationAddress),
+/* harmony export */   getRestaurantTypeFromOverrides: () => (/* binding */ getRestaurantTypeFromOverrides),
+/* harmony export */   prepareLocationPayload: () => (/* binding */ prepareLocationPayload)
+/* harmony export */ });
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+/**
+ * WordPress Dependencies
+ */
+
+var DAY_NAMES_SHORT = {
+  Mon: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Mon", "wpcafe"),
+  Tue: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Tue", "wpcafe"),
+  Wed: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Wed", "wpcafe"),
+  Thu: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Thu", "wpcafe"),
+  Fri: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Fri", "wpcafe"),
+  Sat: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Sat", "wpcafe"),
+  Sun: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Sun", "wpcafe")
+};
+/**
+ * Extract holidays from schedule data
+ */
+var getHolidaysFromSchedule = function getHolidaysFromSchedule(schedule) {
+  var holidays = [];
+  Object.entries(schedule).forEach(function (_ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+      day = _ref2[0],
+      daySchedule = _ref2[1];
+    if (daySchedule.status === "off") {
+      holidays.push(DAY_NAMES_SHORT[day]);
+    }
+  });
+  return holidays;
+};
+/**
+ * Calculate holidays for a location based on override settings
+ */
+var calculateLocationHolidays = function calculateLocationHolidays(location, globalSchedule) {
+  var holidays = [];
+  if (location.override_restaurant_schedule === "1" && Array.isArray(location.restaurant_schedule) === false) {
+    // Use location-specific schedule
+    holidays = getHolidaysFromSchedule(location.restaurant_schedule);
+  } else if (globalSchedule) {
+    // Use global schedule from settings
+    holidays = getHolidaysFromSchedule(globalSchedule);
+  }
+  if (holidays.length === 0) {
+    return (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("None", "wpcafe");
+  }
+  return holidays.join(", ");
+};
+/**
+ * Extract address string from location data (either string or LocationValue object)
+ */
+var getLocationAddress = function getLocationAddress(location) {
+  if (!location) {
+    return "";
+  }
+  if (typeof location === "string") {
+    return location;
+  }
+  if (_typeof(location) === "object" && location !== null && "address" in location) {
+    return location.address || "";
+  }
+  return "";
+};
+/**
+ * Manipulate restaurant_type array based on override toggles for location payload
+ *
+ * @param formData - The location form data
+ * @returns Array of restaurant types based on override settings
+ */
+var getRestaurantTypeFromOverrides = function getRestaurantTypeFromOverrides(formData) {
+  var restaurantTypes = [];
+  // If override_online_ordering = "1" then push "food_ordering"
+  if (formData.override_online_ordering === "1") {
+    restaurantTypes.push("food_ordering");
+  }
+  // If override_reservation = "1" then push "reservation"
+  if (formData.override_reservation === "1") {
+    restaurantTypes.push("reservation");
+  }
+  // If both are "0", return empty array
+  // If one or both are "1", return the corresponding types
+  return restaurantTypes;
+};
+/**
+ * Prepare location payload by manipulating restaurant_type based on overrides
+ *
+ * @param formData - The location form data
+ * @returns Processed form data ready for API submission
+ */
+var prepareLocationPayload = function prepareLocationPayload(formData) {
+  var payload = Object.assign({}, formData);
+  // Override restaurant_type based on module overrides
+  payload.restaurant_type = getRestaurantTypeFromOverrides(formData);
+  return payload;
+};
 
 /***/ }),
 

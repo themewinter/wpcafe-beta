@@ -220,7 +220,7 @@ var Tabs = function Tabs(_ref) {
     activeTab = _ref.activeTab,
     onTabChange = _ref.onTabChange;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    className: "inline-flex h-18 px-4 bg-white items-center justify-start rounded-md p-1 gap-2 text-muted-foreground shadow w-full",
+    className: "inline-flex p-4 bg-white items-center justify-start rounded-md gap-2 text-muted-foreground shadow w-full flex-wrap",
     children: tabs.map(function (tab) {
       return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
         onClick: function onClick() {
@@ -361,6 +361,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _admin_features_shortcodes_hooks_useShortcodeGeneration__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/admin/features/shortcodes/hooks/useShortcodeGeneration */ "./assets/src/admin/features/shortcodes/hooks/useShortcodeGeneration.ts");
 /* harmony import */ var _components_GenerateShortcodeModal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/GenerateShortcodeModal */ "./assets/src/admin/features/shortcodes/components/GenerateShortcodeModal.tsx");
 /* harmony import */ var _admin_router_routeDefinition__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/admin/router/routeDefinition */ "./assets/src/admin/router/routeDefinition.ts");
+/* harmony import */ var _common_hooks__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @/common/hooks */ "./assets/src/common/hooks/index.ts");
 
 /**
  * WordPress dependencies
@@ -380,17 +381,22 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 var Modules = function Modules() {
+  var _a;
   var _useShortcodeGenerati = (0,_admin_features_shortcodes_hooks_useShortcodeGeneration__WEBPACK_IMPORTED_MODULE_7__["default"])(),
     activeTab = _useShortcodeGenerati.activeTab,
     handleTabChange = _useShortcodeGenerati.handleTabChange;
   var activeTabData = _constants__WEBPACK_IMPORTED_MODULE_5__.STATIC_TABS.find(function (tab) {
     return tab.id === activeTab;
   });
+  var _useModuleStatus = (0,_common_hooks__WEBPACK_IMPORTED_MODULE_10__.useModuleStatus)(),
+    modulesData = _useModuleStatus.modulesData;
   var navigate = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_2__.useNavigate)();
   var navigateToModule = function navigateToModule(module) {
     navigate("".concat(_admin_router_routeDefinition__WEBPACK_IMPORTED_MODULE_9__.MODULES_PATH, "?tab=").concat(module));
   };
+  var tabContent = ((_a = modulesData === null || modulesData === void 0 ? void 0 : modulesData[activeTab === "food-ordering" ? "food_ordering" : activeTab]) === null || _a === void 0 ? void 0 : _a.status) === "on" ? activeTabData === null || activeTabData === void 0 ? void 0 : activeTabData.children : null;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components__WEBPACK_IMPORTED_MODULE_3__.TopHeader, {
       title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Shortcodes", "wpcafe")
@@ -413,7 +419,7 @@ var Modules = function Modules() {
             })]
           }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
             className: "space-y-4 w-full max-w-3xl",
-            children: (activeTabData === null || activeTabData === void 0 ? void 0 : activeTabData.children) || (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components__WEBPACK_IMPORTED_MODULE_3__.EmptyScreen, {
+            children: tabContent || (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components__WEBPACK_IMPORTED_MODULE_3__.EmptyScreen, {
               title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Enable ".concat(activeTabData === null || activeTabData === void 0 ? void 0 : activeTabData.label, " module"), "wpcafe"),
               description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("To access ".concat(activeTabData === null || activeTabData === void 0 ? void 0 : activeTabData.label, " shortcodes, please enable the ").concat(activeTabData === null || activeTabData === void 0 ? void 0 : activeTabData.label, " module from the Modules section."), "wpcafe"),
               addButtonText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Go to ".concat(activeTabData === null || activeTabData === void 0 ? void 0 : activeTabData.label, " module"), "wpcafe"),

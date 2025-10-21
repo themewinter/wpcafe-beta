@@ -26,16 +26,8 @@ class Admin_Assets extends Base_Assets {
         if ( 'toplevel_page_wpcafe' !== $top ) {
             return;
         }
-
-        // Ensure WordPress media library scripts are available for React media upload components.
-        // Only load on WpCafe related admin pages to avoid unnecessary overhead.
-        // $top examples: 'toplevel_page_wpcafe', 'wpcafe_page_wpcafe_settings', etc.
-        if ( strpos( (string) $top, 'wpcafe' ) !== false ) {
-            // Allow disabling via filter if needed by site owners.
-            if ( apply_filters( 'wpcafe_enqueue_media_library', true, $top ) ) {
-                wp_enqueue_media();
-            }
-        }
+        
+        wp_enqueue_media();
 
         $this->i18n_loader();
         wp_enqueue_style( 'wpcafe-admin-style' );

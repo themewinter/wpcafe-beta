@@ -28,6 +28,7 @@ class Localize {
             'wpcafePro'           => function_exists('wpcafe_pro'),
             'user_role'           => $current_user->roles,
             'pages'               => wpc_get_pages(),
+            'table_layout'        => wpc_is_module_enable('table_layout'),
         ];
 
         return apply_filters( 'wpcafe_admin_localize', $data );
@@ -46,7 +47,8 @@ class Localize {
             'time_format'         => get_option( 'time_format' ),
             'current_user_id'     => get_current_user_id(),
             'start_of_week'       => get_option( 'start_of_week', 0 ),
-            'locale_name'         => strtolower( str_replace( '_', '-', get_locale() ) )
+            'locale_name'         => strtolower( str_replace( '_', '-', get_locale() ) ),
+            'table_layout'        => wpc_is_module_enable('table_layout'),
         ];
 
         return apply_filters( 'wpcafe_frontend_localize', $data );

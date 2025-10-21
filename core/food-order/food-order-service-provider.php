@@ -7,6 +7,8 @@ use WpCafe\FoodOrder\Shortcodes\Shortcode_Manager;
 use WpCafe\FoodOrder\Mini_Cart\Mini_Cart_Service;
 use WpCafe\Providers\Base_Service_Provider;
 use WpCafe\FoodOrder\Tip\Tipping_Service;
+use WpCafe\FoodOrder\Qrcode\Qrcode_Service;
+
 /**
  * Food_Order_Service_Provider will responsible for all appointment services
  *
@@ -21,7 +23,8 @@ class Food_Order_Service_Provider extends Base_Service_Provider implements Switc
     protected $services = [
         Shortcode_Manager::class,
         Mini_Cart_Service::class,
-        Tipping_Service::class
+        Tipping_Service::class,
+        Qrcode_Service::class
     ];
 
     /**

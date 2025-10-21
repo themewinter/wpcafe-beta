@@ -3,6 +3,7 @@ namespace WpCafe\Location\Controllers;
 
 use WpCafe\Abstract\Base_Rest_Controller;
 use WpCafe\Models\Location_Model;
+use WpCafe\Resources\Location_Resource;
 use WP_Error;
 use WP_HTTP_Response;
 use WP_REST_Server;
@@ -126,6 +127,8 @@ class Location_Controller extends Base_Rest_Controller {
 
         $result = Location_Model::paginated( $page, $per_page, $search );
 
+        $result['items'] = Location_Resource::collection( $result['items'] );
+
         return $this->response( $result );
     }
 
@@ -142,6 +145,8 @@ class Location_Controller extends Base_Rest_Controller {
             return $this->error(__('Location not found', 'wpcafe'), 404);
         }
 
+        $location = new Location_Resource( $location );
+
         return $this->response( $location );
     }
 
@@ -152,7 +157,7 @@ class Location_Controller extends Base_Rest_Controller {
 	 * @return WP_Error|boolean
 	 */
 	public function get_item_permissions_check( $request ) {
-		return current_user_can( 'manage_options' );
+		return true;
 	}
 
     /**

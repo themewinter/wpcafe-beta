@@ -232,7 +232,7 @@ var SubModuleList = function SubModuleList(_ref) {
     (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_shadcn_components_ui__WEBPACK_IMPORTED_MODULE_2__.Card, {
       className: "rounded-b-sm rounded-t-none border-t-0 bg-white",
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4",
+        className: "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4",
         children: subModules.map(function (subModule) {
           return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_SubModuleCard__WEBPACK_IMPORTED_MODULE_1__["default"], {
             name: subModule.name,
@@ -276,13 +276,13 @@ var Tabs = function Tabs(_ref) {
     activeTab = _ref.activeTab,
     onTabChange = _ref.onTabChange;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    className: "inline-flex h-18 px-4 bg-white items-center justify-start rounded-md p-1 gap-2 text-muted-foreground shadow w-full",
+    className: "inline-flex p-4 bg-white items-center justify-start rounded-md gap-2 text-muted-foreground shadow w-full flex-wrap",
     children: tabs.map(function (tab) {
       return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
         onClick: function onClick() {
           return onTabChange(tab.id);
         },
-        className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_1__.cn)("inline-flex items-center justify-center whitespace-nowrap rounded-sm text-[15px] font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-11 px-[24px] py-[16px] cursor-pointer border", activeTab === tab.id ? "border-primary bg-white text-[#F45925] shadow-sm" : "border-transparent hover:bg-background/60 text-neutral-500"),
+        className: (0,_shadcn_lib_utils__WEBPACK_IMPORTED_MODULE_1__.cn)("inline-flex items-center justify-center whitespace-nowrap rounded-sm text-[15px] font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-11 px-[24px] py-[16px] cursor-pointer border", activeTab === tab.id ? "border-primary bg-white text-primary shadow-sm" : "border-transparent hover:bg-background/60 text-neutral-500"),
         children: [tab.icon && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
           className: "mr-2",
           children: tab.icon

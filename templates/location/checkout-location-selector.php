@@ -23,7 +23,7 @@ $location = Location_Model::find( $selected_loction_id );
                 </div>
                 <div class="wpc-location__address ">
                     <?php if ( $location ) : ?>
-                        <p class="wpc-location__address-postcode"><?php echo esc_html( $location->restaurants_name ); ?></p>
+                        <p class="wpc-location__address-postcode"><?php echo esc_html( $location->restaurant_name ); ?></p>
                         <a class="wpc-location__address-button" wpc-store-popup-open="1" href=""><?php esc_html_e( 'Edit Location', 'wpcafe' ); ?></a>
                     <?php wp_nonce_field( 'wpc_selected_location', 'wpc_selected_location' ) ?>
                     <?php else : ?>

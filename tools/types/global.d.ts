@@ -40,15 +40,15 @@ declare global {
         wpCafe?: Record<string, any>;
         wpCafePro?: Record<string, any>;
         wpcafe_enabled_modules?: string[];
-        wp?: {
-            wpCafeI18nLoader?: {
-                state: {
-                    baseUrl: string | null;
-                    locale: string;
-                    domainMap: Record<string, string>;
-                    domainPaths: Record<string, string>;
-                };
+        wpCafeI18nLoader?: {
+            state: {
+                baseUrl: string | null;
+                locale: string;
+                domainMap: Record<string, string>;
+                domainPaths: Record<string, string>;
             };
+        };
+        wp?: {
             hooks?: {
                 addAction?: (
                     hookName: string,

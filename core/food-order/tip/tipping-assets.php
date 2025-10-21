@@ -20,11 +20,17 @@ class Tipping_Assets {
      * @return void
      */
     public function enqueue() {
-        wp_enqueue_style( 'wpc-pro-tip' );
 
-        wp_enqueue_script( 'wpc-pro-tip' );
+        if ( ! is_checkout() && ! is_cart() ) {
+            return;
+        }
 
-        wp_localize_script( 'wpc-pro-tip', 'wpc_pro_tip_obj', [
+        wp_enqueue_script( 'frontend-script' );
+        wp_enqueue_style( 'wpc-tip' );
+
+        wp_enqueue_script( 'wpc-tip' );
+
+        wp_localize_script( 'wpc-tip', 'wpc_pro_tip_obj', [
             'ajax_url'         => admin_url( 'admin-ajax.php' ),
             'add_tip_nonce'    => wp_create_nonce( 'add_tip_nonce_value' ),
             'remove_tip_nonce' => wp_create_nonce( 'remove_tip_nonce_value' ),

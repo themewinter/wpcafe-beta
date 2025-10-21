@@ -36,7 +36,7 @@ var LocationBasicInfo = function LocationBasicInfo() {
     className: "space-y-6 w-full",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components__WEBPACK_IMPORTED_MODULE_3__.TextInput, {
       control: control,
-      name: "restaurants_name",
+      name: "restaurant_name",
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Restaurant Name", "wpcafe"),
       tooltip: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Enter your restaurant's name as you'd like it to appear to customers", "wpcafe"),
       placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Your restaurant's name", "wpcafe"),
@@ -85,10 +85,10 @@ __webpack_require__.r(__webpack_exports__);
 
 var OverrideOnlineOrdering = function OverrideOnlineOrdering() {
   var _a, _b, _c, _d, _e, _f;
-  var _useFormContext = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_2__.useFormContext)(),
-    setValue = _useFormContext.setValue,
-    watch = _useFormContext.watch,
-    control = _useFormContext.control;
+  var formMethods = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_2__.useFormContext)();
+  var setValue = formMethods.setValue,
+    watch = formMethods.watch,
+    control = formMethods.control;
   var overrideEnabled = watch("override_online_ordering") === "1";
   var handleToggle = function handleToggle(enabled) {
     setValue("override_online_ordering", enabled ? "1" : "0", {
@@ -167,6 +167,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/common/components */ "./assets/src/common/components/index.ts");
 /* harmony import */ var _admin_features_settings_tabs_schedule_OverrideSchedulePickup__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/admin/features/settings/tabs/schedule/OverrideSchedulePickup */ "./assets/src/admin/features/settings/tabs/schedule/OverrideSchedulePickup.tsx");
 /* harmony import */ var _admin_features_settings_tabs_schedule_OverrideScheduleDelivery__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/admin/features/settings/tabs/schedule/OverrideScheduleDelivery */ "./assets/src/admin/features/settings/tabs/schedule/OverrideScheduleDelivery.tsx");
+/* harmony import */ var _admin_features_settings_tabs_schedule_OverrideScheduleReservation__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/admin/features/settings/tabs/schedule/OverrideScheduleReservation */ "./assets/src/admin/features/settings/tabs/schedule/OverrideScheduleReservation.tsx");
 
 /*
  ** Wordpress dependencies
@@ -179,6 +180,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 var OverrideOpenHours = function OverrideOpenHours() {
   var formMethods = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_2__.useFormContext)();
   var setValue = formMethods.setValue,
@@ -187,19 +189,19 @@ var OverrideOpenHours = function OverrideOpenHours() {
   /**
    * Get current schedule value with fallback to default
    */
-  var currentSchedule = getValues("open_hours") || _common_components__WEBPACK_IMPORTED_MODULE_3__.defaultSchedule;
-  var overrideEnabled = watch("override_open_hours") === "1";
+  var currentSchedule = getValues("restaurant_schedule") || _common_components__WEBPACK_IMPORTED_MODULE_3__.defaultSchedule;
+  var overrideEnabled = watch("override_restaurant_schedule") === "1";
   /**
    * Handle schedule update
    */
   var handleScheduleUpdate = function handleScheduleUpdate(scheduleData) {
-    setValue("open_hours", scheduleData, {
+    setValue("restaurant_schedule", scheduleData, {
       shouldDirty: true,
       shouldTouch: true
     });
   };
   var handleToggle = function handleToggle(enabled) {
-    setValue("override_open_hours", enabled ? "1" : "0", {
+    setValue("override_restaurant_schedule", enabled ? "1" : "0", {
       shouldDirty: true,
       shouldTouch: true
     });
@@ -218,6 +220,8 @@ var OverrideOpenHours = function OverrideOpenHours() {
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_admin_features_settings_tabs_schedule_OverrideSchedulePickup__WEBPACK_IMPORTED_MODULE_4__["default"], {
         formMethods: formMethods
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_admin_features_settings_tabs_schedule_OverrideScheduleDelivery__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        formMethods: formMethods
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_admin_features_settings_tabs_schedule_OverrideScheduleReservation__WEBPACK_IMPORTED_MODULE_6__["default"], {
         formMethods: formMethods
       })]
     })
@@ -444,6 +448,7 @@ var LocationCreateEdit = function LocationCreateEdit() {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getLocationDefaultsFromSettings: () => (/* binding */ getLocationDefaultsFromSettings),
 /* harmony export */   locationFormSchema: () => (/* binding */ locationFormSchema)
 /* harmony export */ });
 /* harmony import */ var zod__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! zod */ "./node_modules/zod/v4/classic/schemas.js");
@@ -459,34 +464,44 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /**
- * Location Create/Edit Form Schema
- * Matches settings schema field names for compatibility
+ * Location-specific fields schema
  */
-var locationFormSchema = _admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.settingsSchema.extend({
-  // Required fields
-  restaurants_name: zod__WEBPACK_IMPORTED_MODULE_0__.string().min(1, "Restaurant name is required"),
+var locationSpecificSchema = zod__WEBPACK_IMPORTED_MODULE_0__.object({
+  // Location-specific required fields
   location: _admin_features_onboard_onboardSchema__WEBPACK_IMPORTED_MODULE_2__.onboardSchema.shape.restaurant_location,
-  // Toggle override fields
-  override_open_hours: _admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.trueFalseField.optional(),
+  status: zod__WEBPACK_IMPORTED_MODULE_0__["enum"](["publish", "draft"]),
+  // Location-specific override toggle fields
+  override_restaurant_schedule: _admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.trueFalseField.optional(),
   override_online_ordering: _admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.trueFalseField.optional(),
   override_reservation: _admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.trueFalseField.optional(),
-  // Open hours (when override is enabled) - matches settings schema
-  open_hours: _admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.scheduleSchema.optional(),
-  slot_interval: _admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.numberField.optional(),
-  // Pickup schedule override
-  override_pickup_schedule: _admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.trueFalseField.optional(),
-  pickup_schedule: _admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.scheduleSchema.optional(),
-  pickup_slot_interval: _admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.numberField.optional(),
-  // Delivery schedule override
-  override_delivery_schedule: _admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.trueFalseField.optional(),
-  delivery_schedule: _admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.scheduleSchema.optional(),
-  delivery_slot_interval: _admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.numberField.optional(),
+  // Location-specific module enable/disable fields
   enable_pickup: _admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.trueFalseField.optional(),
   enable_delivery: _admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.trueFalseField.optional(),
-  // Reservation fields (matching settings schema field names)
   enable_reservation: _admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.trueFalseField.optional(),
   reservation_enable_table_layout: _admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.trueFalseField.optional()
 });
+/**
+ * Location Create/Edit Form Schema
+ * Selectively picks needed schemas from settings instead of extending all
+ */
+var locationFormSchema = _admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.restaurantInfoSchema.merge(_admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.scheduleManagementSchema).merge(_admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.pickupSchema).merge(_admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.deliverySchema).merge(_admin_features_settings_settingsSchema__WEBPACK_IMPORTED_MODULE_1__.reservationSchema).merge(locationSpecificSchema).partial(); // All fields are optional except location-specific required ones
+/**
+ * Utility function to extract location-relevant fields from settings data
+ * This ensures we only get the fields that are actually used in location forms
+ */
+var getLocationDefaultsFromSettings = function getLocationDefaultsFromSettings(settingsData) {
+  if (!settingsData) return {};
+  // Get the shape of locationFormSchema to know which fields to pick
+  var locationSchemaKeys = Object.keys(locationFormSchema.shape);
+  // Pick only the fields that exist in both settingsData and locationFormSchema
+  var locationDefaults = {};
+  locationSchemaKeys.forEach(function (key) {
+    if (settingsData[key] !== undefined) {
+      locationDefaults[key] = settingsData[key];
+    }
+  });
+  return locationDefaults;
+};
 
 /***/ }),
 
@@ -506,6 +521,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/api */ "./assets/src/api/index.ts");
 /* harmony import */ var _globalConstant__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/globalConstant */ "./assets/src/globalConstant.ts");
 /* harmony import */ var _admin_router_routeDefinition__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/admin/router/routeDefinition */ "./assets/src/admin/router/routeDefinition.ts");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils */ "./assets/src/admin/features/location/utils.ts");
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -553,6 +569,7 @@ var _a;
 /**
  * Internal dependencies
  */
+
 
 
 
@@ -795,7 +812,7 @@ function useLocationApi() {
    */
   var createLocation = function createLocation(values) {
     return __awaiter(_this, void 0, void 0, /*#__PURE__*/_regenerator().m(function _callee5() {
-      var _a, _b, res, _select$getLocationSt3, currentLocationList, _t5;
+      var _a, _b, payload, res, _select$getLocationSt3, currentLocationList, _t5;
       return _regenerator().w(function (_context5) {
         while (1) switch (_context5.p = _context5.n) {
           case 0:
@@ -804,10 +821,11 @@ function useLocationApi() {
               isFiltering: true,
               error: null
             });
+            // Prepare payload with restaurant_type based on overrides
+            payload = (0,_utils__WEBPACK_IMPORTED_MODULE_5__.prepareLocationPayload)(values);
+            console.log("✨ ~ createLocation ~ payload:", payload);
             _context5.n = 1;
-            return (_a = _api__WEBPACK_IMPORTED_MODULE_2__["default"] === null || _api__WEBPACK_IMPORTED_MODULE_2__["default"] === void 0 ? void 0 : _api__WEBPACK_IMPORTED_MODULE_2__["default"].location) === null || _a === void 0 ? void 0 : _a.createLocation(Object.assign(Object.assign({}, values), {
-              status: "publish"
-            }));
+            return (_a = _api__WEBPACK_IMPORTED_MODULE_2__["default"] === null || _api__WEBPACK_IMPORTED_MODULE_2__["default"] === void 0 ? void 0 : _api__WEBPACK_IMPORTED_MODULE_2__["default"].location) === null || _a === void 0 ? void 0 : _a.createLocation(payload);
           case 1:
             res = _context5.v;
             if (!(res === null || res === void 0 ? void 0 : res.success)) {
@@ -846,7 +864,7 @@ function useLocationApi() {
    */
   var updateLocation = function updateLocation(id, values) {
     return __awaiter(_this, void 0, void 0, /*#__PURE__*/_regenerator().m(function _callee6() {
-      var _a, res, _select$getLocationSt4, currentLocationList, updatedList, _t6;
+      var _a, payload, res, _select$getLocationSt4, currentLocationList, updatedList, _t6;
       return _regenerator().w(function (_context6) {
         while (1) switch (_context6.p = _context6.n) {
           case 0:
@@ -856,8 +874,10 @@ function useLocationApi() {
               updatingLocationId: id,
               error: null
             });
+            // Prepare payload with restaurant_type based on overrides
+            payload = (0,_utils__WEBPACK_IMPORTED_MODULE_5__.prepareLocationPayload)(values);
             _context6.n = 1;
-            return (_a = _api__WEBPACK_IMPORTED_MODULE_2__["default"] === null || _api__WEBPACK_IMPORTED_MODULE_2__["default"] === void 0 ? void 0 : _api__WEBPACK_IMPORTED_MODULE_2__["default"].location) === null || _a === void 0 ? void 0 : _a.updateLocation(id, values);
+            return (_a = _api__WEBPACK_IMPORTED_MODULE_2__["default"] === null || _api__WEBPACK_IMPORTED_MODULE_2__["default"] === void 0 ? void 0 : _api__WEBPACK_IMPORTED_MODULE_2__["default"].location) === null || _a === void 0 ? void 0 : _a.updateLocation(id, payload);
           case 1:
             res = _context6.v;
             if (!(res === null || res === void 0 ? void 0 : res.success)) {
@@ -975,50 +995,61 @@ var useLocationForm = function useLocationForm(_ref) {
       return select(_globalConstant__WEBPACK_IMPORTED_MODULE_6__.stores === null || _globalConstant__WEBPACK_IMPORTED_MODULE_6__.stores === void 0 ? void 0 : _globalConstant__WEBPACK_IMPORTED_MODULE_6__.stores.location).getLocationState();
     }, []),
     singleLocation = _useSelect2.singleLocation;
+  // Get only location-relevant fields from settings data
+  var settingsDefaults = (0,_create_and_update_schema__WEBPACK_IMPORTED_MODULE_4__.getLocationDefaultsFromSettings)(settingsData);
+  var defaultValues = Object.assign(Object.assign({}, settingsDefaults), {
+    // Location-specific defaults
+    restaurant_name: "",
+    location: "",
+    status: "publish",
+    override_restaurant_schedule: "0",
+    override_online_ordering: "0",
+    override_reservation: "0",
+    override_pickup_schedule: "0",
+    override_delivery_schedule: "0",
+    override_reservation_schedule: "0",
+    // Location-specific module enable/disable defaults
+    enable_pickup: "0",
+    enable_delivery: "0",
+    enable_reservation: "0",
+    reservation_enable_table_layout: "0"
+  });
   // Map location data to form values
   var mapLocationToFormValues = function mapLocationToFormValues(location) {
-    var defaultValues = settingsData;
-    return {
-      restaurants_name: (location === null || location === void 0 ? void 0 : location.restaurants_name) || "",
-      location: (location === null || location === void 0 ? void 0 : location.location) || "",
-      override_open_hours: location === null || location === void 0 ? void 0 : location.override_open_hours,
-      override_online_ordering: location === null || location === void 0 ? void 0 : location.override_online_ordering,
-      override_reservation: location === null || location === void 0 ? void 0 : location.override_reservation,
-      override_pickup_schedule: (location === null || location === void 0 ? void 0 : location.override_pickup_schedule) || "0",
-      override_delivery_schedule: (location === null || location === void 0 ? void 0 : location.override_delivery_schedule) || "0",
-      // Handle open_hours which can be OpenHours or empty array
-      open_hours: Array.isArray(location === null || location === void 0 ? void 0 : location.open_hours) ? defaultValues.open_hours : (location === null || location === void 0 ? void 0 : location.open_hours) || defaultValues.open_hours,
-      pickup_schedule: (location === null || location === void 0 ? void 0 : location.pickup_schedule) || defaultValues.pickup_schedule,
-      delivery_schedule: (location === null || location === void 0 ? void 0 : location.delivery_schedule) || defaultValues.delivery_schedule,
-      slot_interval: (location === null || location === void 0 ? void 0 : location.slot_interval) || defaultValues.slot_interval,
-      pickup_slot_interval: (location === null || location === void 0 ? void 0 : location.pickup_slot_interval) || defaultValues.pickup_slot_interval,
-      delivery_slot_interval: (location === null || location === void 0 ? void 0 : location.delivery_slot_interval) || defaultValues.delivery_slot_interval,
-      enable_pickup: location === null || location === void 0 ? void 0 : location.enable_pickup,
-      enable_delivery: location === null || location === void 0 ? void 0 : location.enable_delivery,
-      enable_reservation: location === null || location === void 0 ? void 0 : location.enable_reservation,
-      pickup_minimum_order_amount: parseFloat(location === null || location === void 0 ? void 0 : location.pickup_minmum_order_amount) || defaultValues.pickup_minimum_order_amount,
-      pickup_prepare_time: parseFloat(location === null || location === void 0 ? void 0 : location.pickup_food_prepare_time) || defaultValues.pickup_prepare_time,
-      delivery_minimum_order_amount: parseFloat(location === null || location === void 0 ? void 0 : location.delivery_minimum_order_amount) || defaultValues.delivery_minimum_order_amount,
-      delivery_prepare_time: parseFloat(location === null || location === void 0 ? void 0 : location.delivery_prepare_time) || defaultValues.delivery_prepare_time,
-      reservation_minimum_guest: parseFloat(location === null || location === void 0 ? void 0 : location.reservation_minimum_guest) || defaultValues.reservation_minimum_guest,
-      reservation_maximum_guest: parseFloat(location === null || location === void 0 ? void 0 : location.reservation_maximum_guest) || defaultValues.reservation_maximum_guest,
-      reservation_advanced: parseFloat(location === null || location === void 0 ? void 0 : location.reservation_advanced) || defaultValues.reservation_advanced,
-      reservation_total_seat_capacity: parseFloat(location === null || location === void 0 ? void 0 : location.reservation_total_seat_capacity) || defaultValues.reservation_total_seat_capacity,
-      reservation_hold_time_late_guest: parseFloat(location === null || location === void 0 ? void 0 : location.reservation_hold_time_late_guest) || defaultValues.reservation_hold_time_late_guest,
-      reservation_booking_amount: parseFloat(location === null || location === void 0 ? void 0 : location.reservation_booking_amount) || defaultValues.reservation_booking_amount,
-      reservation_status: (location === null || location === void 0 ? void 0 : location.reservation_status) || defaultValues.reservation_status,
-      multiply_booking_amount_with_guests: (location === null || location === void 0 ? void 0 : location.multiply_booking_amount_with_guests) || defaultValues.multiply_booking_amount_with_guests,
-      reservation_enable_table_layout: (location === null || location === void 0 ? void 0 : location.reservation_enable_table_layout) || defaultValues.reservation_enable_table_layout
-    };
+    // Start with default values and override with location-specific values
+    var mappedValues = Object.assign({}, defaultValues);
+    // Override with location data where available
+    Object.keys(defaultValues).forEach(function (key) {
+      var locationValue = location === null || location === void 0 ? void 0 : location[key];
+      if (locationValue !== undefined && locationValue !== null) {
+        mappedValues[key] = locationValue;
+      }
+    });
+    // Ensure required location-specific fields have proper defaults
+    mappedValues.restaurant_name = (location === null || location === void 0 ? void 0 : location.restaurant_name) || defaultValues.restaurant_name;
+    mappedValues.location = (location === null || location === void 0 ? void 0 : location.location) || defaultValues.location;
+    mappedValues.status = (location === null || location === void 0 ? void 0 : location.status) || defaultValues.status;
+    // Ensure override fields have proper string defaults
+    mappedValues.override_restaurant_schedule = (location === null || location === void 0 ? void 0 : location.override_restaurant_schedule) || defaultValues.override_restaurant_schedule;
+    mappedValues.override_online_ordering = (location === null || location === void 0 ? void 0 : location.override_online_ordering) || defaultValues.override_online_ordering;
+    mappedValues.override_reservation = (location === null || location === void 0 ? void 0 : location.override_reservation) || defaultValues.override_reservation;
+    mappedValues.override_pickup_schedule = (location === null || location === void 0 ? void 0 : location.override_pickup_schedule) || defaultValues.override_pickup_schedule;
+    mappedValues.override_delivery_schedule = (location === null || location === void 0 ? void 0 : location.override_delivery_schedule) || defaultValues.override_delivery_schedule;
+    mappedValues.override_reservation_schedule = (location === null || location === void 0 ? void 0 : location.override_reservation_schedule) || defaultValues.override_reservation_schedule;
+    // Ensure location-specific module enable/disable fields have proper defaults
+    mappedValues.enable_pickup = (location === null || location === void 0 ? void 0 : location.enable_pickup) || defaultValues.enable_pickup;
+    mappedValues.enable_delivery = (location === null || location === void 0 ? void 0 : location.enable_delivery) || defaultValues.enable_delivery;
+    mappedValues.enable_reservation = (location === null || location === void 0 ? void 0 : location.enable_reservation) || defaultValues.enable_reservation;
+    mappedValues.reservation_enable_table_layout = (location === null || location === void 0 ? void 0 : location.reservation_enable_table_layout) || defaultValues.reservation_enable_table_layout;
+    return mappedValues;
   };
   // Initialize form with proper configuration
-  var methods = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_2__.useForm)(Object.assign(Object.assign({
-    resolver: (0,_hookform_resolvers_zod__WEBPACK_IMPORTED_MODULE_3__.zodResolver)(_create_and_update_schema__WEBPACK_IMPORTED_MODULE_4__.locationFormSchema)
+  var methods = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_2__.useForm)(Object.assign({
+    resolver: (0,_hookform_resolvers_zod__WEBPACK_IMPORTED_MODULE_3__.zodResolver)(_create_and_update_schema__WEBPACK_IMPORTED_MODULE_4__.locationFormSchema),
+    // Fallback default values for create mode
+    defaultValues: defaultValues
   }, locationId && singleLocation && {
     values: mapLocationToFormValues(singleLocation)
-  }), {
-    // Fallback default values for create mode
-    defaultValues: settingsData
   }));
   // Fetch location data for edit mode
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(function () {
@@ -1043,6 +1074,124 @@ var useLocationForm = function useLocationForm(_ref) {
     settingsData: settingsData,
     singleLocation: singleLocation
   };
+};
+
+/***/ }),
+
+/***/ "./assets/src/admin/features/location/utils.ts":
+/*!*****************************************************!*\
+  !*** ./assets/src/admin/features/location/utils.ts ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   calculateLocationHolidays: () => (/* binding */ calculateLocationHolidays),
+/* harmony export */   getHolidaysFromSchedule: () => (/* binding */ getHolidaysFromSchedule),
+/* harmony export */   getLocationAddress: () => (/* binding */ getLocationAddress),
+/* harmony export */   getRestaurantTypeFromOverrides: () => (/* binding */ getRestaurantTypeFromOverrides),
+/* harmony export */   prepareLocationPayload: () => (/* binding */ prepareLocationPayload)
+/* harmony export */ });
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+/**
+ * WordPress Dependencies
+ */
+
+var DAY_NAMES_SHORT = {
+  Mon: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Mon", "wpcafe"),
+  Tue: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Tue", "wpcafe"),
+  Wed: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Wed", "wpcafe"),
+  Thu: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Thu", "wpcafe"),
+  Fri: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Fri", "wpcafe"),
+  Sat: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Sat", "wpcafe"),
+  Sun: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Sun", "wpcafe")
+};
+/**
+ * Extract holidays from schedule data
+ */
+var getHolidaysFromSchedule = function getHolidaysFromSchedule(schedule) {
+  var holidays = [];
+  Object.entries(schedule).forEach(function (_ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+      day = _ref2[0],
+      daySchedule = _ref2[1];
+    if (daySchedule.status === "off") {
+      holidays.push(DAY_NAMES_SHORT[day]);
+    }
+  });
+  return holidays;
+};
+/**
+ * Calculate holidays for a location based on override settings
+ */
+var calculateLocationHolidays = function calculateLocationHolidays(location, globalSchedule) {
+  var holidays = [];
+  if (location.override_restaurant_schedule === "1" && Array.isArray(location.restaurant_schedule) === false) {
+    // Use location-specific schedule
+    holidays = getHolidaysFromSchedule(location.restaurant_schedule);
+  } else if (globalSchedule) {
+    // Use global schedule from settings
+    holidays = getHolidaysFromSchedule(globalSchedule);
+  }
+  if (holidays.length === 0) {
+    return (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("None", "wpcafe");
+  }
+  return holidays.join(", ");
+};
+/**
+ * Extract address string from location data (either string or LocationValue object)
+ */
+var getLocationAddress = function getLocationAddress(location) {
+  if (!location) {
+    return "";
+  }
+  if (typeof location === "string") {
+    return location;
+  }
+  if (_typeof(location) === "object" && location !== null && "address" in location) {
+    return location.address || "";
+  }
+  return "";
+};
+/**
+ * Manipulate restaurant_type array based on override toggles for location payload
+ *
+ * @param formData - The location form data
+ * @returns Array of restaurant types based on override settings
+ */
+var getRestaurantTypeFromOverrides = function getRestaurantTypeFromOverrides(formData) {
+  var restaurantTypes = [];
+  // If override_online_ordering = "1" then push "food_ordering"
+  if (formData.override_online_ordering === "1") {
+    restaurantTypes.push("food_ordering");
+  }
+  // If override_reservation = "1" then push "reservation"
+  if (formData.override_reservation === "1") {
+    restaurantTypes.push("reservation");
+  }
+  // If both are "0", return empty array
+  // If one or both are "1", return the corresponding types
+  return restaurantTypes;
+};
+/**
+ * Prepare location payload by manipulating restaurant_type based on overrides
+ *
+ * @param formData - The location form data
+ * @returns Processed form data ready for API submission
+ */
+var prepareLocationPayload = function prepareLocationPayload(formData) {
+  var payload = Object.assign({}, formData);
+  // Override restaurant_type based on module overrides
+  payload.restaurant_type = getRestaurantTypeFromOverrides(formData);
+  return payload;
 };
 
 /***/ }),
@@ -1185,6 +1334,96 @@ var OverrideSchedulePickup = function OverrideSchedulePickup(_ref) {
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (OverrideSchedulePickup);
+
+/***/ }),
+
+/***/ "./assets/src/admin/features/settings/tabs/schedule/OverrideScheduleReservation.tsx":
+/*!******************************************************************************************!*\
+  !*** ./assets/src/admin/features/settings/tabs/schedule/OverrideScheduleReservation.tsx ***!
+  \******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _common_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/common/components */ "./assets/src/common/components/index.ts");
+/* harmony import */ var _common_components_schedule_management__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/common/components/schedule-management */ "./assets/src/common/components/schedule-management/index.ts");
+
+/**
+ * WordPress dependencies
+ */
+
+/**
+ * Internal dependencies
+ */
+
+
+
+var OverrideScheduleReservation = function OverrideScheduleReservation(_ref) {
+  var formMethods = _ref.formMethods;
+  if (!formMethods) return null;
+  var setValue = formMethods.setValue,
+    watch = formMethods.watch,
+    getValues = formMethods.getValues;
+  var overrideEnabled = watch("override_reservation_schedule") === "1";
+  var handleToggle = function handleToggle(enabled) {
+    setValue("override_reservation_schedule", enabled ? "1" : "0", {
+      shouldDirty: true,
+      shouldTouch: true
+    });
+    // If enabling override, initialize with restaurant schedule or default
+    if (enabled) {
+      var restaurantSchedule = getValues("restaurant_schedule");
+      var currentReservationSchedule = getValues("reservation_schedule");
+      if (!currentReservationSchedule) {
+        setValue("reservation_schedule", restaurantSchedule || _common_components_schedule_management__WEBPACK_IMPORTED_MODULE_3__.defaultSchedule, {
+          shouldDirty: true,
+          shouldTouch: true
+        });
+      }
+      // Initialize slot interval if not set
+      var currentSlotInterval = getValues("reservation_slot_interval");
+      var globalSlotInterval = getValues("slot_interval");
+      if (!currentSlotInterval) {
+        setValue("reservation_slot_interval", globalSlotInterval || 30, {
+          shouldDirty: true,
+          shouldTouch: true
+        });
+      }
+    }
+  };
+  var handleScheduleUpdate = function handleScheduleUpdate(scheduleData) {
+    setValue("reservation_schedule", scheduleData, {
+      shouldDirty: true,
+      shouldTouch: true
+    });
+  };
+  var currentSchedule = getValues("reservation_schedule") || getValues("restaurant_schedule") || _common_components_schedule_management__WEBPACK_IMPORTED_MODULE_3__.defaultSchedule;
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components__WEBPACK_IMPORTED_MODULE_2__.ModuleConditional, {
+    moduleName: "reservation",
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components__WEBPACK_IMPORTED_MODULE_2__.CardWithToggle, {
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Override Reservation Schedule", "wpcafe"),
+      description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Override restaurant schedule for reservation", "wpcafe"),
+      switchable: true,
+      defaultEnabled: overrideEnabled,
+      onToggle: handleToggle,
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_common_components_schedule_management__WEBPACK_IMPORTED_MODULE_3__.ScheduleManagement, {
+        value: currentSchedule,
+        onChange: handleScheduleUpdate,
+        slotIntervalName: "reservation_slot_interval",
+        slotIntervalLabel: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Reservation Time Intervals", "wpcafe"),
+        slotIntervalTooltip: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("The interval between reservation slots. This is used to generate the slots for reservation booking.", "wpcafe"),
+        slotIntervalHelperText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("This affects reservation booking slots", "wpcafe"),
+        className: "border-none !p-0"
+      })
+    })
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (OverrideScheduleReservation);
 
 /***/ }),
 

@@ -10,9 +10,9 @@ export function RegisterModule<T extends { new (...args: any[]): {} }>(
             constructor(...args: any[]) {
                 super(...args);
                 // @ts-ignore
-                this.state = (window as any).wp?.wpCafeI18nLoader?.state || {
+                this.state = (window as any).wpCafeI18nLoader?.state || {
                     baseUrl: null,
-                    locale: "en_US",
+                    locale: "en-US",
                     domainMap: {},
                     domainPaths: {},
                 };
@@ -46,7 +46,7 @@ export function ValidateDownloadI18n(
             return;
         }
 
-        if (state.locale === "en_US") {
+        if (state.locale === "en-US") {
             return;
         }
 

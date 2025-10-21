@@ -102,6 +102,12 @@ class Customers_Report {
 
         foreach ( $orders as $order_id ) {
             $order    = wc_get_order( $order_id );
+
+            // Check if the order object is valid and is not a refund
+            if ( ! $order || ! is_a( $order, 'WC_Order' ) || is_a( $order, 'WC_Order_Refund' ) ) {
+                continue;
+            }
+
             $customer = new WC_Customer( $order->get_customer_id() );
 
             if ( $customer && $customer->get_id() ) {
